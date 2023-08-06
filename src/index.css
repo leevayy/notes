@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --text-color: #000000;
+  --bg-color: #F8F8F8;
+  --list-bg-color: #EDEDED;
+  --primary-color: #89D1D1;
+  --secondary-color: #E7C1C1;
+  --accent-color: #3D9E9E;
+
+  --font-family: 'Inter';
+
+  --box-radius: 5px;
+}
+
+body {
+  color: var(--text-color);
+  font-family: var(--font-family);
+}
+
+.board {
+  padding: 30px;
+  background-color: var(--bg-color);
+  height: 100vh;
+}
+
+.board-section {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 36px;
+}
+
+.list {
+  width: 200px;
+  display: grid;
+  grid-template-rows: [header] 40px [main] auto [new-card] 40px;
+  background-color: var(--list-bg-color);
+
+  border-radius: var(--box-radius);
+}
+
+.list-name-header {
+  width: 100%;
+  height: 100%;
+}
+
+input.list-name {
+  height: 100%;
+  width: 100%;
+  
+  border: none;
+  background-color: var(--primary-color);
+  
+  font-family: var(--font-family);
+  font-weight: bold;
+  font-size: 20pt;
+
+  color: var(--text-color);
+  text-align: center;
+  text-decoration: none;
+
+  border-radius: var(--box-radius);
+}
+
+input.list-name:focus {
+  outline: none;
+}
+
+.list-cards-wrapper {
+  min-height: 132px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  list-style-type: none;
+}
+
+.card {
+  min-height: 56px;
+  padding: 6px;
+  background-color: var(--primary-color);
+  border-radius: var(--box-radius);
+}
+
+.make-new-card {
+  background-color: var(--primary-color);
+  
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+
+  padding: 4px;
+
+  border-radius: var(--box-radius);
+}
+
+input.new-card-text {
+  font-family: var(--font-family);
+
+  width: 100%;
+  height: 30px;
+  border-radius: var(--box-radius);
+
+  border: none;
+  outline: none;
+
+  padding: 4px;
+}
+
+.new-card-submit {
+  min-width: 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--box-radius);
+  
+  background-color: var(--accent-color);
+  border: none;
+  appearance: none;
+}
