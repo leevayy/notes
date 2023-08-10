@@ -11,7 +11,7 @@
   --bg-color: #F8F8F8;
   --list-bg-color: #EDEDED;
   --primary-color: #89D1D1;
-  --secondary-color: #E7C1C1;
+  --secondary-color: #B1B1F6;
   --accent-color: #3D9E9E;
 
   --font-family: 'Inter';
@@ -27,7 +27,7 @@ body {
 .board {
   padding: 30px;
   background-color: var(--bg-color);
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .board-section {
@@ -76,9 +76,11 @@ input.list-name:focus {
 .list-cards-wrapper {
   min-height: 132px;
   padding: 10px;
+
   display: flex;
   flex-direction: column;
   gap: 20px;
+
   list-style-type: none;
 }
 
@@ -87,6 +89,10 @@ input.list-name:focus {
   padding: 6px;
   background-color: var(--primary-color);
   border-radius: var(--box-radius);
+}
+
+.card:hover {
+  transform: scale(1.1);
 }
 
 .make-new-card {
@@ -117,6 +123,10 @@ input.new-card-text {
   padding: 4px;
 }
 
+input.new-card-text:focus {
+
+}
+
 .new-card-submit {
   min-width: 30px;
   width: 30px;
@@ -126,4 +136,47 @@ input.new-card-text {
   background-color: var(--accent-color);
   border: none;
   appearance: none;
+}
+
+.menu {
+  height: 48px;
+  padding: 0 30px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: var(--primary-color);
+}
+
+.menu-item {
+  list-style-type: none;
+
+}
+
+button.menu-item-icon {
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+
+  line-height: 1;
+  display: flex;
+}
+
+button.menu-item-icon:hover {
+  transform: scale(1.1);
+}
+
+.calendar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.calendar p {
+  max-width: 600px;
+  font-size: 36pt;
+  background-color: var(--secondary-color);
+  text-align: center;
 }

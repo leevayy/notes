@@ -1,19 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import type { KanbanCard, KanbanList, KanbanBoard, MenuProps, MenuItemProps } from './types'
+import { ReactComponent as MenuIcon } from './icons/menu.svg';
+import { ReactComponent as UserIcon } from './icons/user-icon.svg';
 import './App.css';
-
-type KanbanCard = {
-	text: string
-}
-
-type KanbanList = {
-	name: string,
-	cards: KanbanCard[]
-}
-
-type KanbanBoard = {
-	name: string,
-	lists: KanbanList[]
-}
 
 const board: KanbanBoard = {
 	name: 'Test',
@@ -50,16 +39,35 @@ const board: KanbanBoard = {
 
 function Card({ card }: { card: KanbanCard }) {
 	return (
-	<li className="card" draggable>
-		<p className="card-text">
-			{card.text}
-		</p>
-	</li>)
+		<li className="card" draggable>
+			<p className="card-text">
+				{card.text}
+			</p>
+		</li>)
+}
+
+function MakeNewCardForm() {
+	const [hasFocus, setFocus] = useState(false);
+
+	return (
+		<form
+			className={`make-new-card ${hasFocus ? 'focused' : ''}`} method='GET'>
+			<input
+				name="new-card-text"
+				className="new-card-text"
+				type="text"
+				autoComplete="off"
+				placeholder="Make new card"
+				onFocus={() => setFocus(true)}
+				onBlur={() => setFocus(false)}
+			/>
+			<input value="" className="new-card-submit" type='submit' />
+		</form>);
 }
 
 function List({ list }: { list: KanbanList }) {
 	return (
-		<div className="list" draggable>
+		<li className="list" draggable>
 			<div className="list-name-header">
 				<input className="list-name" type="text" value={list.name} />
 			</div>
@@ -69,11 +77,8 @@ function List({ list }: { list: KanbanList }) {
 						<Card card={card} />)
 				}
 			</ul>
-			<form className="make-new-card" method='GET'>
-				<input name="new-card-text" className="new-card-text" type="text" placeholder='Make new card' />
-				<input value=" " className="new-card-submit" type='submit' />
-			</form>
-		</div>
+			<MakeNewCardForm></MakeNewCardForm>
+		</li>
 	);
 }
 
@@ -82,23 +87,54 @@ function Board({ board }: { board: KanbanBoard }) {
 	let overflow: boolean = false;
 	return (
 		<div className='board'>
-			<div className="board-section">
+			<ul className="board-section">
 				{
 					board.lists.map(list => <List list={list} />)
 				}
-			</div>
+			</ul>
 			{overflow ? <div className="board-scroll-section"> </div> : ''}
 		</div>
 	);
 }
 
-function App() {
-	// const [board, setBoard] : [KanbanBoard, any] = useState({name: '', lists: []});
-	
+function MenuItem(props: MenuItemProps) {
+	function itemImage(icon: MenuItemProps["icon"]) {
+		const IconComponent = icon;
+		return <IconComponent />;
+	}
+
+
 	return (
-	<>
-		<Board board={board} />
-	</>);
+		<li className='menu-item'>
+			<button className="menu-item-icon">
+				{itemImage(props.icon)}
+			</button>
+		</li>
+	);
+}
+
+function Menu(props: MenuProps) {
+	return (
+		<ul className='menu'>
+			{props.children}
+		</ul>
+	);
+}
+
+function Calendar() {
+	return <div className='calendar'> <p>here will be calendar section stay tuned</p></div>
+}
+
+function App() {
+	return (
+		<>
+			<Menu>
+				<MenuItem name="menu" icon={MenuIcon}></MenuItem>
+				<MenuItem name="user-icon" icon={UserIcon}></MenuItem>
+			</Menu>
+			<Board board={board} />
+			<Calendar />
+		</>);
 }
 
 export default App;
