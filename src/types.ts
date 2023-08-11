@@ -15,12 +15,3 @@ export interface KanbanBoard {
 	name: string;
 	lists: KanbanList[];
 };
-
-export interface MenuItemProps {
-	name: string;
-	icon: React.FunctionComponent;
-}
-
-export interface MenuProps {
-	children?: React.ReactNode; 
-}

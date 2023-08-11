@@ -17,11 +17,16 @@
   --font-family: 'Inter';
 
   --box-radius: 5px;
+
+  --big-font-size: 20pt;
+  --main-font-size: 12pt;
+  --small-font-size: 10pt;
 }
 
 body {
   color: var(--text-color);
   font-family: var(--font-family);
+  font-size: var(--main-font-size);
 }
 
 .board {
@@ -54,26 +59,41 @@ body {
   height: 100%;
 }
 
+.list-name {
+  transition: background-color 0.2s ease;
+}
+
+.list-name.has-focus {
+  background-color: var(--secondary-color);
+}
+
+input.focusable-input {
+  font-family: var(--font-family);
+  font-size: inherit;
+
+  border-radius: var(--box-radius);
+
+  border: none;
+  outline: none;
+
+  background-color: inherit;
+}
+
 input.list-name {
   height: 100%;
   width: 100%;
   
-  border: none;
   background-color: var(--primary-color);
   
   font-family: var(--font-family);
   font-weight: bold;
-  font-size: 20pt;
+  font-size: var(--big-font-size);
 
   color: var(--text-color);
   text-align: center;
   text-decoration: none;
 
   border-radius: var(--box-radius);
-}
-
-input.list-name:focus {
-  outline: none;
 }
 
 .list-cards-wrapper {
@@ -92,6 +112,16 @@ input.list-name:focus {
   padding: 6px;
   background-color: var(--primary-color);
   border-radius: var(--box-radius);
+  
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.card.has-focus {
+  background-color: var(--secondary-color);
+}
+
+input.card-text {
+  width: 100%;
 }
 
 .card:hover {
@@ -119,15 +149,12 @@ input.list-name:focus {
 }
 
 input.new-card-text {
-  font-family: var(--font-family);
+  font-size: var(--small-font-size);
 
   width: 100%;
   height: 30px;
-  border-radius: var(--box-radius);
 
-  border: none;
-  outline: none;
-
+  background-color: var(--bg-color);
   padding: 4px;
 }
 

@@ -1,5 +1,10 @@
-import React, { useState, useRef } from 'react';
-import type { HasPosition, KanbanCard, KanbanList, KanbanBoard, MenuProps, MenuItemProps } from './types'
+import React, { useState, useEffect, useRef } from 'react';
+import type {
+	HasPosition,
+	KanbanCard,
+	KanbanList,
+	KanbanBoard
+	} from './types'
 import { ReactComponent as MenuIcon } from './icons/menu.svg';
 import { ReactComponent as UserIcon } from './icons/user-icon.svg';
 import './App.css';
@@ -44,29 +49,65 @@ const board: KanbanBoard = {
 	]
 }
 
-function Card({ card }: { card: KanbanCard }) {
+interface FocusableInputProps extends React.ComponentPropsWithRef<"input"> {
+	setFocus: (state: boolean) => void;
+	setInputText: (state: string) => void;
+}
+
+function FocusableInput(props: FocusableInputProps) {
+	const setFocus = props.setFocus;
+	const setInputText = props.setInputText;
+	const ref = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (document.hasFocus() && ref.current!.contains(document.activeElement)) {
+			setFocus(true);
+		}
+	}, []);
+
 	return (
-		<li className="card" draggable>
-			<p className="card-text">
-				{card.text}
-			</p>
+		<input
+			{...props}
+			ref={ref}
+			className={`${props.className} focusable-input`}
+			onInput={ () => setInputText(ref.current!.value) }
+			onFocus={() => setFocus(true)}
+			onBlur={() => setFocus(false)}
+		/>
+	);
+}
+
+function Card({ card }: { card: KanbanCard }) {
+	const [cardText, setCardText] = useState(card.text)
+	const [hasFocus, setFocus] = useState(false);
+
+	return (
+		<li className={`card ${hasFocus ? 'has-focus' : ''}`} draggable>
+			<FocusableInput 
+				className='card-text'
+				value={cardText}
+				setFocus={setFocus}
+				setInputText={setCardText}
+			/>
 		</li>)
 }
 
+
 function MakeNewCardForm() {
+	const [newCardText, setNewCardText] = useState('');
 	const [hasFocus, setFocus] = useState(false);
 
 	return (
 		<form
 			className={`make-new-card ${hasFocus ? 'has-focus' : ''}`} method='GET'>
-			<input
+			<FocusableInput 
 				name="new-card-text"
 				className="new-card-text"
 				type="text"
 				autoComplete="off"
 				placeholder="Make new card"
-				onFocus={() => setFocus(true)}
-				onBlur={() => setFocus(false)}
+				setFocus={setFocus} 
+				setInputText={setNewCardText}
 			/>
 			<input value="" className="new-card-submit" type='submit' />
 		</form>);
@@ -81,12 +122,35 @@ function toSortedByPosition<T extends HasPosition>(iterable: T[]) {
 	return sorted.sort((el1, el2) => el1.position - el2.position);
 }
 
+interface ListHeaderProps {
+	listName: string;
+	setListName: (state: string) => void;
+}
+
+function ListHeader(props: ListHeaderProps) {
+	const [hasFocus, setFocus] = useState(false);
+
+	return (
+		<div className="list-name-header">
+			<FocusableInput
+				className={`list-name ${hasFocus ? 'has-focus' : ''}`}
+				type="text"
+				value={props.listName}
+				setFocus={setFocus}
+				setInputText={props.setListName}
+			/>
+		</div>
+	);
+}
+
 function List({ list }: { list: KanbanList }) {
+	const [listName, setListName] = useState(list.name);
 	return (
 		<li className="list" draggable>
-			<div className="list-name-header">
-				<input className="list-name" type="text" value={list.name} />
-			</div>
+			<ListHeader 
+				listName={listName}
+				setListName={setListName}
+			/>
 			<ul className="list-cards-wrapper">
 				{
 					toSortedByPosition(list.cards).map(card =>
@@ -110,6 +174,11 @@ function Board({ board }: { board: KanbanBoard }) {
 	);
 }
 
+interface MenuItemProps {
+	name: string;
+	icon: React.FunctionComponent;
+}
+
 function MenuItem(props: MenuItemProps) {
 	function itemImage(icon: MenuItemProps["icon"]) {
 		const IconComponent = icon;
@@ -126,7 +195,7 @@ function MenuItem(props: MenuItemProps) {
 	);
 }
 
-function Menu(props: MenuProps) {
+function Menu(props: React.ComponentPropsWithoutRef<'ul'>) {
 	return (
 		<ul className='menu'>
 			{props.children}
@@ -135,7 +204,7 @@ function Menu(props: MenuProps) {
 }
 
 function Calendar() {
-	return <div className='calendar'> <p>here will be calendar section stay tuned</p></div>
+	return <div className='calendar'> <p>calendar section will be here stay tuned</p></div>
 }
 
 function App() {
