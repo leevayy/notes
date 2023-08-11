@@ -1,22 +1,26 @@
-export type KanbanCard = {
+export interface HasPosition {
+	position: number;
+}
+
+export interface KanbanCard extends HasPosition {
 	text: string;
 };
 
-export type KanbanList = {
+export interface KanbanList extends HasPosition {
 	name: string;
 	cards: KanbanCard[];
 };
 
-export type KanbanBoard = {
+export interface KanbanBoard {
 	name: string;
 	lists: KanbanList[];
 };
 
-export type MenuItemProps = {
+export interface MenuItemProps {
 	name: string;
 	icon: React.FunctionComponent;
 }
 
-export type MenuProps = {
+export interface MenuProps {
 	children?: React.ReactNode; 
 }

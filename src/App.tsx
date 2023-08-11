@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import type { KanbanCard, KanbanList, KanbanBoard, MenuProps, MenuItemProps } from './types'
+import React, { useState, useRef } from 'react';
+import type { HasPosition, KanbanCard, KanbanList, KanbanBoard, MenuProps, MenuItemProps } from './types'
 import { ReactComponent as MenuIcon } from './icons/menu.svg';
 import { ReactComponent as UserIcon } from './icons/user-icon.svg';
 import './App.css';
@@ -9,28 +9,35 @@ const board: KanbanBoard = {
 	lists: [
 		{
 			name: 'Hello!',
+			position: 1,
 			cards: [
 				{
 					text: "what's up. if i add a bunch of text it will result in longer card, right? it must"
+					, position: 0
 				}
 			]
 		},
 		{
 			name: 'hola',
+			position: 0,
 			cards: [
 				{
-					text: "amigo"
+					text: "amigo",
+					position: 0
 				},
 				{
-					text: "el gato"
+					text: "el gato",
+					position: 1
 				},
 				{
-					text: "las ninas estoy un poco loco"
+					text: "las ninas estoy un poco loco",
+					position: 2
 				}
 			]
 		},
 		{
 			name: 'Привет!',
+			position: 2,
 			cards: [
 			]
 		}
@@ -51,7 +58,7 @@ function MakeNewCardForm() {
 
 	return (
 		<form
-			className={`make-new-card ${hasFocus ? 'focused' : ''}`} method='GET'>
+			className={`make-new-card ${hasFocus ? 'has-focus' : ''}`} method='GET'>
 			<input
 				name="new-card-text"
 				className="new-card-text"
@@ -65,6 +72,15 @@ function MakeNewCardForm() {
 		</form>);
 }
 
+function toSortedByPosition<T extends HasPosition>(iterable: T[]) {
+	if (iterable.length === 0) {
+		return [];
+	}
+
+	let sorted = [...iterable];
+	return sorted.sort((el1, el2) => el1.position - el2.position);
+}
+
 function List({ list }: { list: KanbanList }) {
 	return (
 		<li className="list" draggable>
@@ -73,7 +89,7 @@ function List({ list }: { list: KanbanList }) {
 			</div>
 			<ul className="list-cards-wrapper">
 				{
-					list.cards.map(card =>
+					toSortedByPosition(list.cards).map(card =>
 						<Card card={card} />)
 				}
 			</ul>
@@ -83,16 +99,13 @@ function List({ list }: { list: KanbanList }) {
 }
 
 function Board({ board }: { board: KanbanBoard }) {
-
-	let overflow: boolean = false;
 	return (
 		<div className='board'>
 			<ul className="board-section">
 				{
-					board.lists.map(list => <List list={list} />)
+					toSortedByPosition(board.lists).map(list => <List list={list} />)
 				}
-			</ul>
-			{overflow ? <div className="board-scroll-section"> </div> : ''}
+			</ul>			
 		</div>
 	);
 }

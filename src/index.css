@@ -35,10 +35,13 @@ body {
   flex-direction: row;
   align-items: flex-start;
   gap: 36px;
+
+  overflow-x: scroll;
 }
 
 .list {
-  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
   display: grid;
   grid-template-rows: [header] 40px [main] auto [new-card] 40px;
   background-color: var(--list-bg-color);
@@ -108,6 +111,11 @@ input.list-name:focus {
   padding: 4px;
 
   border-radius: var(--box-radius);
+  transition: background-color 0.2s ease;
+}
+
+.make-new-card.has-focus {
+  background-color: var(--secondary-color);
 }
 
 input.new-card-text {
@@ -121,10 +129,6 @@ input.new-card-text {
   outline: none;
 
   padding: 4px;
-}
-
-input.new-card-text:focus {
-
 }
 
 .new-card-submit {
