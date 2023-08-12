@@ -34,6 +34,10 @@ type ListProps = {
 
 export function List(props: ListProps) {
 	const list = props.list;
+
+	function appendCard(card: KanbanCard) {
+		props.setCards([card, ...list.cards])
+	}
 	
 	const [listName, setListName] = useState(list.name);
 	return (
@@ -44,7 +48,7 @@ export function List(props: ListProps) {
 					<Card card={card} key={card.id} />
 				))}
 			</ul>
-			<MakeNewCardForm></MakeNewCardForm>
+			<MakeNewCardForm appendCard={appendCard}></MakeNewCardForm>
 		</li>
 	);
 }

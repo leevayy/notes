@@ -12,7 +12,12 @@
 	--list-bg-color: #ededed;
 	--primary-color: #89d1d1;
 	--secondary-color: #d0e2e2;
-	--accent-color: #38b2b2;
+
+	--accent-color-500: #38b2b2;
+	--accent-color-600: #389999;
+	--accent-color-700: #357979;
+	--accent-color-800: #2a4747;
+	--accent-color-900: #182020;
 
 	--font-family: "Inter";
 
@@ -24,6 +29,8 @@
 
 	--min-card-height: 56px;
 	--list-width: 200px;
+
+	--transitions-speed: 0.2s;
 }
 
 body {
@@ -64,7 +71,7 @@ body {
 }
 
 .list-name {
-	transition: background-color 0.2s ease;
+	transition: background-color var(--transitions-speed) ease;
 }
 
 .list-name.has-focus {
@@ -111,6 +118,10 @@ input.focusable-input {
 	border-radius: var(--box-radius);
 }
 
+.input-like.list-name.has-focus {
+	background-color: var(--secondary-color);
+}
+
 .list-cards-wrapper {
 	min-height: 132px;
 	padding: 10px;
@@ -128,7 +139,7 @@ input.focusable-input {
 	background-color: var(--primary-color);
 	border-radius: var(--box-radius);
 
-	transition: transform 0.2s ease, background-color 0.2s ease;
+	transition: transform var(--transitions-speed) ease, background-color var(--transitions-speed)s ease;
 }
 
 .card.has-focus {
@@ -156,7 +167,7 @@ input.card-text {
 	padding: 4px;
 
 	border-radius: var(--box-radius);
-	transition: background-color 0.2s ease;
+	transition: background-color var(--transitions-speed) ease-out;
 }
 
 .make-new-card.has-focus {
@@ -173,15 +184,28 @@ input.new-card-text {
 	padding: 4px;
 }
 
-.new-card-submit {
+input.new-card-submit {
 	min-width: 30px;
 	width: 30px;
 	height: 30px;
 	border-radius: var(--box-radius);
 
-	background-color: var(--accent-color);
+	background-color: var(--accent-color-500);
 	border: none;
 	appearance: none;
+
+	cursor: pointer;
+
+	transition: transform var(--transitions-speed) ease, background-color var(--transitions-speed) ease-out;
+}
+
+input.new-card-submit:hover {
+	transform: scale(1.05);
+}
+
+.new-card-submit:active {
+	background-color: var(--accent-color-700);
+    transition-duration: 0s;
 }
 
 button.make-new-list {
@@ -198,15 +222,17 @@ button.make-new-list {
 
 	background-color: var(--secondary-color);
 
+	transition: transform var(--transitions-speed) ease, background-color 0.5s ease-out;
 	cursor: pointer;
 }
 
 button.make-new-list:active {
-	background-color: var(--accent-color);
+	background-color: var(--accent-color-500);
+    transition-duration: 0s;
 }
 
 button.make-new-list:hover {
-	transform: scale(1.05);
+	transform: scale(1.1);
 }
 
 .menu {
