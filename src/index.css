@@ -11,8 +11,8 @@
   --bg-color: #F8F8F8;
   --list-bg-color: #EDEDED;
   --primary-color: #89D1D1;
-  --secondary-color: #B1B1F6;
-  --accent-color: #3D9E9E;
+  --secondary-color: #D0E2E2;
+  --accent-color: #38B2B2;
 
   --font-family: 'Inter';
 
@@ -21,6 +21,9 @@
   --big-font-size: 20pt;
   --main-font-size: 12pt;
   --small-font-size: 10pt;
+
+  --min-card-height: 56px;
+  --list-width: 200px;
 }
 
 body {
@@ -45,8 +48,9 @@ body {
 }
 
 .list {
-  min-width: 200px;
-  max-width: 200px;
+  min-width: var(--list-width);
+  max-width: var(--list-width);
+
   display: grid;
   grid-template-rows: [header] 40px [main] auto [new-card] 40px;
   background-color: var(--list-bg-color);
@@ -108,7 +112,7 @@ input.list-name {
 }
 
 .card {
-  min-height: 56px;
+  min-height: var(--min-card-height);
   padding: 6px;
   background-color: var(--primary-color);
   border-radius: var(--box-radius);
@@ -169,6 +173,25 @@ input.new-card-text {
   appearance: none;
 }
 
+button.make-new-list {
+  font-family: inherit;
+  font-size: var(--main-font-size);
+
+  min-width: var(--list-width);
+  max-width: var(--list-width);
+
+  height: var(--min-card-height);
+
+  border: none;
+  background-color: var(--secondary-color);
+
+  cursor: pointer;
+}
+
+button.make-new-list:active {
+  background-color: var(--accent-color);
+}
+
 .menu {
   height: 48px;
   padding: 0 30px;
@@ -183,7 +206,6 @@ input.new-card-text {
 
 .menu-item {
   list-style-type: none;
-
 }
 
 button.menu-item-icon {

@@ -14,42 +14,50 @@ const board: KanbanBoard = {
 	lists: [
 		{
 			name: 'Hello!',
-			position: 1,
-			cards: [
-				{
-					text: "what's up. if i add a bunch of text it will result in longer card, right? it must"
-					, position: 0
-				}
-			]
-		},
-		{
-			name: 'hola',
 			position: 0,
 			cards: [
 				{
+					text: "what's up. if i add a bunch of text it will result in longer card, right? it must"
+					, position: 0,
+					id: 'cueo'
+				}
+			],
+			id: 'x9rh'
+		},
+		{
+			name: 'hola',
+			position: 1,
+			cards: [
+				{
 					text: "amigo",
-					position: 0
+					position: 0,
+					id: 'qclh'
 				},
 				{
 					text: "el gato",
-					position: 1
+					position: 1,
+					id: '0p16'
 				},
 				{
 					text: "las ninas estoy un poco loco",
-					position: 2
+					position: 2,
+					id: 'z85y'
 				}
-			]
+			],
+			id: 'niq4'
 		},
 		{
 			name: 'Привет!',
-			position: 2,
+			position: 0,
 			cards: [
-			]
+			],
+			id: 've9l'
 		}
-	]
+	],
+	id: 'vfr8'
 }
 
-interface FocusableInputProps extends React.ComponentPropsWithRef<"input"> {
+type FocusableInputProps = React.ComponentPropsWithRef<"input"> & {
 	setFocus: (state: boolean) => void;
 	setInputText: (state: string) => void;
 }
@@ -57,10 +65,17 @@ interface FocusableInputProps extends React.ComponentPropsWithRef<"input"> {
 function FocusableInput(props: FocusableInputProps) {
 	const setFocus = props.setFocus;
 	const setInputText = props.setInputText;
-	const ref = useRef<HTMLInputElement>(null);
+ 
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		if (document.hasFocus() && ref.current!.contains(document.activeElement)) {
+		if (inputRef.current === null) {
+			throw Error(`FocusableInput inputRef.current is null`)
+		}
+
+		if (
+			document.hasFocus() && inputRef.current.contains(document.activeElement)
+		) {
 			setFocus(true);
 		}
 	}, []);
@@ -68,9 +83,9 @@ function FocusableInput(props: FocusableInputProps) {
 	return (
 		<input
 			{...props}
-			ref={ref}
+			ref={inputRef}
 			className={`${props.className} focusable-input`}
-			onInput={ () => setInputText(ref.current!.value) }
+			onInput={ () => setInputText(inputRef.current!.value) }
 			onFocus={() => setFocus(true)}
 			onBlur={() => setFocus(false)}
 		/>
@@ -83,13 +98,13 @@ function Card({ card }: { card: KanbanCard }) {
 
 	return (
 		<li className={`card ${hasFocus ? 'has-focus' : ''}`} draggable>
-			<FocusableInput 
+			<FocusableInput
 				className='card-text'
 				value={cardText}
 				setFocus={setFocus}
 				setInputText={setCardText}
 			/>
-		</li>)
+		</li>);
 }
 
 
@@ -98,14 +113,16 @@ function MakeNewCardForm() {
 	const [hasFocus, setFocus] = useState(false);
 
 	return (
-		<form
+		<form name='make-new-card'
 			className={`make-new-card ${hasFocus ? 'has-focus' : ''}`} method='GET'>
 			<FocusableInput 
 				name="new-card-text"
+				form='make-new-card'
 				className="new-card-text"
 				type="text"
 				autoComplete="off"
 				placeholder="Make new card"
+				value={newCardText}
 				setFocus={setFocus} 
 				setInputText={setNewCardText}
 			/>
@@ -122,7 +139,7 @@ function toSortedByPosition<T extends HasPosition>(iterable: T[]) {
 	return sorted.sort((el1, el2) => el1.position - el2.position);
 }
 
-interface ListHeaderProps {
+type ListHeaderProps = {
 	listName: string;
 	setListName: (state: string) => void;
 }
@@ -154,7 +171,7 @@ function List({ list }: { list: KanbanList }) {
 			<ul className="list-cards-wrapper">
 				{
 					toSortedByPosition(list.cards).map(card =>
-						<Card card={card} />)
+						<Card card={card} key={card.id}/>)
 				}
 			</ul>
 			<MakeNewCardForm></MakeNewCardForm>
@@ -162,19 +179,56 @@ function List({ list }: { list: KanbanList }) {
 	);
 }
 
+function getId() {
+	return String(parseInt(String(Math.random() * 10000000)))
+}
+
+type MakeNewListsProps = {
+	lists: KanbanList[];
+	setLists: (state: KanbanList[]) => void;
+}
+
+function MakeNewList(props: MakeNewListsProps) {
+	const emptyList: KanbanList = {
+		name: '',
+		position: props.lists.length + 1,
+		cards: [],
+		id: getId()
+	}
+
+	function handleClick() {
+		props.setLists([...props.lists, emptyList])
+	}
+
+	return (
+		<button 
+			className='make-new-list'
+			onClick={handleClick}
+		>
+			Make New List
+		</button>
+	);
+}
+
 function Board({ board }: { board: KanbanBoard }) {
+	const [lists, setLists] = useState( board.lists );
+
 	return (
 		<div className='board'>
 			<ul className="board-section">
 				{
-					toSortedByPosition(board.lists).map(list => <List list={list} />)
+					toSortedByPosition(lists).map(list => <List list={list} key={list.id}/>)
 				}
-			</ul>			
+				<MakeNewList
+					lists={lists}
+					setLists={setLists}
+				/>
+			</ul>
 		</div>
 	);
 }
 
-interface MenuItemProps {
+type MenuItemProps = {
 	name: string;
 	icon: React.FunctionComponent;
 }

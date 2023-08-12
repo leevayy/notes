@@ -1,17 +1,20 @@
-export interface HasPosition {
+export type HasPosition = {
 	position: number;
 }
 
-export interface KanbanCard extends HasPosition {
+export type KanbanCard = HasPosition & {
 	text: string;
+	id: string;
 };
 
-export interface KanbanList extends HasPosition {
+export type KanbanList = HasPosition & {
 	name: string;
 	cards: KanbanCard[];
+	id: string;
 };
 
-export interface KanbanBoard {
+export type KanbanBoard = {
 	name: string;
 	lists: KanbanList[];
+	id: string;
 };
