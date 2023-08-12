@@ -2,6 +2,7 @@ import {useState} from 'react';
 import {
 	KanbanList,
 	KanbanBoard,
+	KanbanCard,
 } from './../../types';
 import { 
 	toSortedByPosition,
@@ -39,11 +40,21 @@ function MakeNewList(props: MakeNewListsProps) {
 export function Board({ board }: { board: KanbanBoard }) {
 	const [lists, setLists] = useState( board.lists );
 
+	function setCards(cards: KanbanCard[]) {
+		
+	}
+
 	return (
 		<div className='board'>
 			<ul className="board-section">
 				{
-					toSortedByPosition(lists).map(list => <List list={list} key={list.id}/>)
+					toSortedByPosition(lists).map(list => 
+						<List 
+							list={list} 
+							setCards={setCards}
+							key={list.id}
+						/>
+					)
 				}
 				<MakeNewList
 					lists={lists}

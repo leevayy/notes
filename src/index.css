@@ -1,235 +1,252 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
 
 * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
 }
 
 :root {
-  --text-color: #000000;
-  --bg-color: #F8F8F8;
-  --list-bg-color: #EDEDED;
-  --primary-color: #89D1D1;
-  --secondary-color: #D0E2E2;
-  --accent-color: #38B2B2;
+	--text-color: #000000;
+	--bg-color: #f8f8f8;
+	--list-bg-color: #ededed;
+	--primary-color: #89d1d1;
+	--secondary-color: #d0e2e2;
+	--accent-color: #38b2b2;
 
-  --font-family: 'Inter';
+	--font-family: "Inter";
 
-  --box-radius: 5px;
+	--box-radius: 5px;
 
-  --big-font-size: 20pt;
-  --main-font-size: 12pt;
-  --small-font-size: 10pt;
+	--big-font-size: 20pt;
+	--main-font-size: 12pt;
+	--small-font-size: 10pt;
 
-  --min-card-height: 56px;
-  --list-width: 200px;
+	--min-card-height: 56px;
+	--list-width: 200px;
 }
 
 body {
-  color: var(--text-color);
-  font-family: var(--font-family);
-  font-size: var(--main-font-size);
+	color: var(--text-color);
+	font-family: var(--font-family);
+	font-size: var(--main-font-size);
 }
 
 .board {
-  padding: 30px;
-  background-color: var(--bg-color);
-  /* height: 100vh; */
+	background-color: var(--bg-color);
+	/* height: 100vh; */
 }
 
 .board-section {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 36px;
+	padding: 30px 30px;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 36px;
 
-  overflow-x: scroll;
+	overflow-x: scroll;
 }
 
 .list {
-  min-width: var(--list-width);
-  max-width: var(--list-width);
+	min-width: var(--list-width);
+	max-width: var(--list-width);
 
-  display: grid;
-  grid-template-rows: [header] 40px [main] auto [new-card] 40px;
-  background-color: var(--list-bg-color);
+	display: grid;
+	grid-template-rows: [header] 40px [main] auto [new-card] 40px;
+	background-color: var(--list-bg-color);
 
-  border-radius: var(--box-radius);
+	border-radius: var(--box-radius);
 }
 
 .list-name-header {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 .list-name {
-  transition: background-color 0.2s ease;
+	transition: background-color 0.2s ease;
 }
 
 .list-name.has-focus {
-  background-color: var(--secondary-color);
+	background-color: var(--secondary-color);
 }
 
 input.focusable-input {
-  font-family: var(--font-family);
-  font-size: inherit;
+	font-family: var(--font-family);
+	font-size: inherit;
 
-  border-radius: var(--box-radius);
+	border-radius: var(--box-radius);
 
-  border: none;
-  outline: none;
+	border: none;
+	outline: none;
 
-  background-color: inherit;
+	background-color: inherit;
 }
 
-input.list-name {
-  height: 100%;
-  width: 100%;
-  
-  background-color: var(--primary-color);
-  
-  font-family: var(--font-family);
-  font-weight: bold;
-  font-size: var(--big-font-size);
+.input-like {
+	width: 100%;
+	height: 100%;
+}
 
-  color: var(--text-color);
-  text-align: center;
-  text-decoration: none;
+.input-like:focus {
+	outline: none;
+}
 
-  border-radius: var(--box-radius);
+.input-like.list-name {
+	padding: 4px;
+
+	height: 100%;
+	width: 100%;
+
+	background-color: var(--primary-color);
+
+	font-family: var(--font-family);
+	font-weight: bold;
+	font-size: var(--big-font-size);
+
+	color: var(--text-color);
+	text-align: center;
+	text-decoration: none;
+
+	border-radius: var(--box-radius);
 }
 
 .list-cards-wrapper {
-  min-height: 132px;
-  padding: 10px;
+	min-height: 132px;
+	padding: 10px;
 
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 
-  list-style-type: none;
+	list-style-type: none;
 }
 
 .card {
-  min-height: var(--min-card-height);
-  padding: 6px;
-  background-color: var(--primary-color);
-  border-radius: var(--box-radius);
-  
-  transition: transform 0.2s ease, background-color 0.2s ease;
+	min-height: var(--min-card-height);
+	padding: 6px;
+	background-color: var(--primary-color);
+	border-radius: var(--box-radius);
+
+	transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .card.has-focus {
-  background-color: var(--secondary-color);
+	background-color: var(--secondary-color);
 }
 
 input.card-text {
-  width: 100%;
+	width: 100%;
 }
 
 .card:hover {
-  transform: scale(1.1);
+	transform: scale(1.1);
 }
 
 .make-new-card {
-  background-color: var(--primary-color);
-  
-  width: 100%;
-  height: 100%;
+	background-color: var(--primary-color);
 
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
+	width: 100%;
+	height: 100%;
 
-  padding: 4px;
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
 
-  border-radius: var(--box-radius);
-  transition: background-color 0.2s ease;
+	padding: 4px;
+
+	border-radius: var(--box-radius);
+	transition: background-color 0.2s ease;
 }
 
 .make-new-card.has-focus {
-  background-color: var(--secondary-color);
+	background-color: var(--secondary-color);
 }
 
 input.new-card-text {
-  font-size: var(--small-font-size);
+	font-size: var(--small-font-size);
 
-  width: 100%;
-  height: 30px;
+	width: 100%;
+	height: 30px;
 
-  background-color: var(--bg-color);
-  padding: 4px;
+	background-color: var(--bg-color);
+	padding: 4px;
 }
 
 .new-card-submit {
-  min-width: 30px;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--box-radius);
-  
-  background-color: var(--accent-color);
-  border: none;
-  appearance: none;
+	min-width: 30px;
+	width: 30px;
+	height: 30px;
+	border-radius: var(--box-radius);
+
+	background-color: var(--accent-color);
+	border: none;
+	appearance: none;
 }
 
 button.make-new-list {
-  font-family: inherit;
-  font-size: var(--main-font-size);
+	font-family: inherit;
+	font-size: var(--main-font-size);
 
-  min-width: var(--list-width);
-  max-width: var(--list-width);
+	min-width: var(--list-width);
+	max-width: var(--list-width);
 
-  height: var(--min-card-height);
+	height: var(--min-card-height);
 
-  border: none;
-  background-color: var(--secondary-color);
+	border: none;
+	border-radius: var(--box-radius);
 
-  cursor: pointer;
+	background-color: var(--secondary-color);
+
+	cursor: pointer;
 }
 
 button.make-new-list:active {
-  background-color: var(--accent-color);
+	background-color: var(--accent-color);
+}
+
+button.make-new-list:hover {
+	transform: scale(1.05);
 }
 
 .menu {
-  height: 48px;
-  padding: 0 30px;
-  
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+	height: 48px;
+	padding: 0 30px;
 
-  background-color: var(--primary-color);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	background-color: var(--primary-color);
 }
 
 .menu-item {
-  list-style-type: none;
+	list-style-type: none;
 }
 
 button.menu-item-icon {
-  border: none;
-  background-color: inherit;
-  cursor: pointer;
+	border: none;
+	background-color: inherit;
+	cursor: pointer;
 
-  line-height: 1;
-  display: flex;
+	line-height: 1;
+	display: flex;
 }
 
 button.menu-item-icon:hover {
-  transform: scale(1.1);
+	transform: scale(1.1);
 }
 
 .calendar {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
 }
 
 .calendar p {
-  max-width: 600px;
-  font-size: 36pt;
-  background-color: var(--secondary-color);
-  text-align: center;
+	max-width: 600px;
+	font-size: 36pt;
+	background-color: var(--secondary-color);
+	text-align: center;
 }
