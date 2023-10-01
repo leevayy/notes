@@ -78,6 +78,10 @@ body {
 	background-color: var(--secondary-color);
 }
 
+.list.current-list {
+	background-color: red;
+}
+
 input.focusable-input {
 	font-family: var(--font-family);
 	font-size: inherit;

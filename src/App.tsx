@@ -1,7 +1,6 @@
 import type { KanbanBoard } from "./types";
 import { ReactComponent as MenuIcon } from "./icons/menu.svg";
 import { ReactComponent as UserIcon } from "./icons/user-icon.svg";
-import "./App.css";
 import { Menu, MenuItem } from "./components/menu/menu";
 import { Board } from "./components/board/board";
 import { Calendar } from "./components/calendar/calendar";

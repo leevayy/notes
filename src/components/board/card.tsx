@@ -7,7 +7,14 @@ export function Card({ card }: { card: KanbanCard }) {
 	const [hasFocus, setFocus] = useState(false);
 
 	return (
-		<li className={`card ${hasFocus ? 'has-focus' : ''}`} draggable>
+		<li 
+			className={`card ${hasFocus ? 'has-focus' : ''}`}
+			draggable
+			onMouseDown={(e) => {
+				e.stopPropagation();
+				console.log(e.target);
+			}}
+		>
 			<FocusableTextInput
 				inputType='input-like'
 				className='card-text'

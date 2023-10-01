@@ -9,7 +9,6 @@ export function MenuItem(props: MenuItemProps) {
 		return <IconComponent />;
 	}
 
-
 	return (
 		<li className='menu-item'>
 			<button className="menu-item-icon">
