@@ -44,7 +44,7 @@ const board: KanbanBoard = {
 		},
 		{
 			name: "Привет!",
-			position: 0,
+			position: 2,
 			cards: [],
 			id: "ve9l"
 		}

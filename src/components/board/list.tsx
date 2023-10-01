@@ -10,17 +10,15 @@ type ListProps = {
 	setCards: (state: KanbanCard[]) => void;
 	currentList: KanbanList | null;
 	setCurrentList: (list: KanbanList | null) => void;
-	setListPosition: (postition: number) => void;
+	setListPosition: (oldPosition: number, newPositions: number) => void;
 }
 
 export function List(props: ListProps) {
-	const list = props.list;
-
 	function appendCard(card: KanbanCard) {
-		props.setCards([card, ...list.cards]);
+		props.setCards([card, ...props.list.cards]);
 	}
 	
-	const [listName, setListName] = useState(list.name);
+	const [listName, setListName] = useState(props.list.name);
 	function dragStartHandler(e: DragEvent<HTMLLIElement>, list: KanbanList) {
 		props.setCurrentList(list);
 	}
@@ -38,21 +36,24 @@ export function List(props: ListProps) {
 
 	function dropHandler(e: DragEvent<HTMLLIElement>, list: KanbanList) {
 		e.preventDefault();
-		props.setListPosition(list.position);
+		if (props.currentList === null) {
+			throw new Error("props.currentList is null then onDrop event is handled");
+		}
+		props.setListPosition(props.currentList.position, list.position);
 	}
 
 	return (
-		<li className={`list ${props.currentList?.id === list.id ? 'current-list' : ''}`} 
+		<li className={`list ${props.currentList?.id === props.list.id ? 'current-list' : ''}`} 
 			draggable
-			onDragStart={e => dragStartHandler(e, list)}
+			onDragStart={e => dragStartHandler(e, props.list)}
 			onDragLeave={e => dragLeaveHandler(e)}
 			onDragEnd={e => dragEndHandler(e)}
 			onDragOver={e => dragOverHandler(e)}
-			onDrop={e => dropHandler(e, list)}
+			onDrop={e => dropHandler(e, props.list)}
 		>
 			<ListHeader listName={listName} setListName={setListName} />
 			<ul className="list-cards-wrapper">
-				{toSortedByPosition(list.cards).map((card) => (
+				{toSortedByPosition(props.list.cards).map((card) => (
 					<Card card={card} key={card.id} />
 				))}
 			</ul>

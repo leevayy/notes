@@ -79,7 +79,7 @@ body {
 }
 
 .list.current-list {
-	background-color: red;
+	cursor: grab;
 }
 
 input.focusable-input {
