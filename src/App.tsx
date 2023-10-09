@@ -1,12 +1,13 @@
 import type { KanbanBoard } from "./types";
 import { ReactComponent as MenuIcon } from "./icons/menu.svg";
 import { ReactComponent as UserIcon } from "./icons/user-icon.svg";
+import { ReactComponent as CalendarIcon } from "./icons/calendar-icon.svg";
 import { Menu, MenuItem } from "./components/menu/menu";
 import { Board } from "./components/board/board";
 import { Calendar } from "./components/calendar/calendar";
 
 const board: KanbanBoard = {
-	name: "Test",
+	name: "Some longer header to test this out",
 	lists: [
 		{
 			name: "Hello!",
@@ -55,9 +56,12 @@ const board: KanbanBoard = {
 function App() {
 	return (
 		<>
-			<Menu>
-				<MenuItem name="menu" icon={MenuIcon}></MenuItem>
-				<MenuItem name="user-icon" icon={UserIcon}></MenuItem>
+			<Menu items={[
+				{name: "menu", icon: MenuIcon},
+				{name: "calendar", icon: CalendarIcon},
+				{name: "user-icon", icon: UserIcon,  align: "right"},
+				{name: "board-name", text: board.name, align: "center"}
+			]}>
 			</Menu>
 			<Board board={board} />
 			<Calendar />

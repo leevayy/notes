@@ -143,7 +143,7 @@ input.focusable-input {
 	background-color: var(--primary-color);
 	border-radius: var(--box-radius);
 
-	transition: transform var(--transitions-speed) ease, background-color var(--transitions-speed)s ease;
+	transition: transform var(--transitions-speed) ease, background-color var(--transitions-speed) ease;
 }
 
 .card.has-focus {
@@ -253,19 +253,40 @@ button.make-new-list:hover {
 
 .menu-item {
 	list-style-type: none;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	gap: 20px;
 }
 
-button.menu-item-icon {
+.menu-item.left {
+	align-items: left;
+}
+.menu-item.center {
+	align-items: center;
+}
+.menu-item.right {
+	align-items: right;
+}
+
+button.menu-item-content {
 	border: none;
 	background-color: inherit;
 	cursor: pointer;
 
 	line-height: 1;
 	display: flex;
+
+	transition: transform var(--transitions-speed) ease;
 }
 
-button.menu-item-icon:hover {
-	transform: scale(1.1);
+button.menu-item-content:has(> h1):hover {
+	transform: translate(0, -5%);
+}
+
+button.menu-item-content:hover {
+	transform: scale(1.05);
 }
 
 .calendar {
