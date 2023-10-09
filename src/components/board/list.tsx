@@ -80,7 +80,7 @@ function ListHeader(props: ListHeaderProps) {
   const [hasFocus, setFocus] = useState(false);
 
   return (
-    <div className="list-name-header">
+    <h2 className="list-name-header">
       <FocusableTextInput
         inputType="input-like"
         className={`list-name ${hasFocus ? "has-focus" : ""}`}
@@ -89,6 +89,6 @@ function ListHeader(props: ListHeaderProps) {
         setFocus={setFocus}
         setInputText={props.setListName}
       />
-    </div>
+    </h2>
   );
 }
