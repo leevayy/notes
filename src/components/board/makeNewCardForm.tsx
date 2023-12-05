@@ -38,7 +38,6 @@ export function MakeNewCardForm(props: MakeNewCardFormProps) {
 				className="new-card-text"
 				type="text"
 				autoComplete="off"
-				placeholder="Make new card"
 				value={newCardText}
 				setFocus={setFocus} 
 				setInputText={setNewCardText}
