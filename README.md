@@ -7,6 +7,8 @@
 # Установка
 
 ```
+git clone https://github.com/leevayy/kanban
+cd kanban
 npm install
 npm start
 ```
