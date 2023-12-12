@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useRef } from "react";
 
 type InputLikeProps = React.ComponentPropsWithRef<"input">;
 
@@ -17,30 +17,15 @@ const TextInputLike = forwardRef(function TextInputLike(
 	);
 });
 
-type FocusableInputProps = React.ComponentPropsWithRef<"input"> & {
-	setFocus: (state: boolean) => void;
+type TextInputProps = React.ComponentPropsWithRef<"input"> & {
 	setInputText: (state: string) => void;
 	inputType: "input" | "input-like";
 };
 
-export function FocusableTextInput(props: FocusableInputProps) {
-	const setFocus = props.setFocus;
+export function TextInput(props: TextInputProps) {
 	const setInputText = props.setInputText;
 
 	const inputRef = useRef<HTMLInputElement>(null);
-
-	useEffect(() => {
-		if (inputRef.current === null) {
-			throw Error(`FocusableInput inputRef.current is null`);
-		}
-
-		if (
-			document.hasFocus() &&
-			inputRef.current.contains(document.activeElement)
-		) {
-			setFocus(true);
-		}
-	}, []);
 
 	if (props.inputType === "input") {
 		return (
@@ -49,8 +34,6 @@ export function FocusableTextInput(props: FocusableInputProps) {
 				ref={inputRef}
 				className={`${props.className} focusable-input`}
 				onInput={() => setInputText(inputRef.current!.value)}
-				onFocus={() => setFocus(true)}
-				onBlur={() => setFocus(false)}
 			/>
 		);
 	}
@@ -61,11 +44,9 @@ export function FocusableTextInput(props: FocusableInputProps) {
 				ref={inputRef}
 				className={`${props.className} focusable-input`}
 				onInput={() => setInputText(inputRef.current!.value)}
-				onFocus={() => setFocus(true)}
-				onBlur={() => setFocus(false)}
 			/>
 		);
 	}
 
-	throw Error(`Unkown FocusableInput inputType: ${props.inputType}`);
+	throw Error(`Unkown TextInput inputType: ${props.inputType}`);
 }

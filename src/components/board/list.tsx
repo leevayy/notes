@@ -1,5 +1,5 @@
 import { DragEvent, useState } from "react";
-import { FocusableTextInput } from "../utils/focusableTextInput";
+import { TextInput } from "../utils/textInput";
 import { KanbanCard, KanbanList } from "./../../types";
 import { Card } from "./card";
 import { toSortedByPosition } from "../../utils/utils";
@@ -77,16 +77,13 @@ type ListHeaderProps = {
 };
 
 function ListHeader(props: ListHeaderProps) {
-  const [hasFocus, setFocus] = useState(false);
-
   return (
     <h2 className="list-name-header">
-      <FocusableTextInput
+      <TextInput
         inputType="input-like"
-        className={`list-name ${hasFocus ? "has-focus" : ""}`}
+        className={`list-name`}
         type="text"
         value={props.listName}
-        setFocus={setFocus}
         setInputText={props.setListName}
       />
     </h2>

@@ -1,4 +1,4 @@
-import { FocusableTextInput } from "../utils/focusableTextInput";
+import { TextInput } from "../utils/textInput";
 import { useState } from "react";
 import { KanbanCard } from "../../types";
 import { getId } from "../../utils/utils";
@@ -9,7 +9,6 @@ type MakeNewCardFormProps = {
 
 export function MakeNewCardForm(props: MakeNewCardFormProps) {
 	const [newCardText, setNewCardText] = useState('');
-	const [hasFocus, setFocus] = useState(false);
 
 	function handleClick() {
 		if (newCardText === '') {
@@ -28,10 +27,10 @@ export function MakeNewCardForm(props: MakeNewCardFormProps) {
 
 	return (
 		<form name='make-new-card'
-			className={`make-new-card ${hasFocus ? 'has-focus' : ''}`} 
+			className={`make-new-card`} 
 			method='GET'
 		>
-			<FocusableTextInput 
+			<TextInput 
 				inputType='input'
 				name="new-card-text"
 				form='make-new-card'
@@ -39,8 +38,12 @@ export function MakeNewCardForm(props: MakeNewCardFormProps) {
 				type="text"
 				autoComplete="off"
 				value={newCardText}
-				setFocus={setFocus} 
 				setInputText={setNewCardText}
+				onKeyDown={({key}) => {
+					if (key === 'Enter') {
+						handleClick()
+					}
+				}}
 			/>
 			<input 
 				value="" 

@@ -37,21 +37,27 @@ body {
 	color: var(--text-color);
 	font-family: var(--font-family);
 	font-size: var(--main-font-size);
+	background-color: var(--bg-color);
+}
+
+#root {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
 }
 
 .board {
-	background-color: var(--bg-color);
-	/* height: 100vh; */
-}
-
-.board-section {
 	padding: 30px 30px;
 	display: flex;
 	flex-direction: row;
 	align-items: flex-start;
 	gap: 36px;
 
-	overflow-x: scroll;
+	max-height: 100%;
+	width: 100%;
+	flex: 1;
+
+	overflow: scroll;
 }
 
 .list {
@@ -72,10 +78,6 @@ body {
 
 .list-name {
 	transition: background-color var(--transitions-speed) ease;
-}
-
-.list-name.has-focus {
-	background-color: var(--secondary-color);
 }
 
 .list.current-list {
@@ -122,7 +124,7 @@ input.focusable-input {
 	border-radius: var(--box-radius);
 }
 
-.input-like.list-name.has-focus {
+.input-like.list-name:focus {
 	background-color: var(--secondary-color);
 }
 
@@ -146,7 +148,7 @@ input.focusable-input {
 	transition: transform var(--transitions-speed) ease, background-color var(--transitions-speed) ease;
 }
 
-.card.has-focus {
+.card:has(:focus) {
 	background-color: var(--secondary-color);
 }
 
@@ -176,7 +178,7 @@ input.card-text {
 	transition: background-color var(--transitions-speed) ease-out;
 }
 
-.make-new-card.has-focus {
+.make-new-card:has(:focus) {
 	background-color: var(--secondary-color);
 }
 

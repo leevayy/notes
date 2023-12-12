@@ -25,8 +25,7 @@ export function Board({ board }: { board: KanbanBoard }) {
   }
 
   return (
-    <div className="board">
-      <ul className="board-section">
+      <ul className="board">
         {toSortedByPosition(lists).map((list) => (
           <List
             list={list}
@@ -39,7 +38,6 @@ export function Board({ board }: { board: KanbanBoard }) {
         ))}
         <MakeNewList lists={lists} setLists={setLists} />
       </ul>
-    </div>
   );
 }
 

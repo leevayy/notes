@@ -64,7 +64,7 @@ function App() {
 			]}>
 			</Menu>
 			<Board board={board} />
-			<Calendar />
+			{/* <Calendar /> */}
 		</>
 	);
 }

@@ -1,6 +1,6 @@
 import { KanbanCard } from "../../types";
 import { DragEvent, useState } from "react";
-import { FocusableTextInput } from "../utils/focusableTextInput";
+import { TextInput } from "../utils/textInput";
 
 type CardProps = {
   card: KanbanCard;
@@ -11,7 +11,6 @@ type CardProps = {
 
 export function Card(props: CardProps) {
   const [cardText, setCardText] = useState(props.card.text);
-  const [hasFocus, setFocus] = useState(false);
 
   function dragStartHandler(e: DragEvent<HTMLLIElement>, card: KanbanCard) {
     props.setCurrentCard(card);
@@ -36,18 +35,17 @@ export function Card(props: CardProps) {
 
   return (
     <li
-      className={`card ${hasFocus ? "has-focus" : ""}`}
+      className={`card`}
       draggable
       onDragStart={(e) => dragStartHandler(e, props.card)}
       onDragEnd={(e) => dragEndHandler(e)}
       onDragOver={(e) => dragOverHandler(e)}
       onDrop={(e) => dropHandler(e, props.card)}
     >
-      <FocusableTextInput
+      <TextInput
         inputType="input-like"
         className="card-text"
         value={cardText}
-        setFocus={setFocus}
         setInputText={setCardText}
       />
     </li>
