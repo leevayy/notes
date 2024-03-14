@@ -1,0 +1,19 @@
+.editable_text {
+
+}
+
+.editable_text textarea {
+	width: 100%;
+	/* height: 100%; */
+	font-family: var(--font-family);
+	font-size: inherit;
+
+	border-radius: var(--box-radius);
+
+	overflow: auto;
+	border: none;
+	outline: none;
+	resize: none;
+
+	background-color: inherit;
+}
