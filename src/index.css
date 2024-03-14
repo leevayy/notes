@@ -60,7 +60,7 @@ body {
 	overflow: scroll;
 }
 
-.list {
+/* .list {
 	min-width: var(--list-width);
 	max-width: var(--list-width);
 
@@ -69,7 +69,7 @@ body {
 	background-color: var(--list-bg-color);
 
 	border-radius: var(--box-radius);
-}
+} */
 
 .list-name-header {
 	width: 100%;
@@ -82,27 +82,6 @@ body {
 
 .list.current-list {
 	cursor: grab;
-}
-
-input.focusable-input {
-	font-family: var(--font-family);
-	font-size: inherit;
-
-	border-radius: var(--box-radius);
-
-	border: none;
-	outline: none;
-
-	background-color: inherit;
-}
-
-.input-like {
-	width: 100%;
-	height: 100%;
-}
-
-.input-like:focus {
-	outline: none;
 }
 
 .input-like.list-name {
@@ -128,7 +107,7 @@ input.focusable-input {
 	background-color: var(--secondary-color);
 }
 
-.list-cards-wrapper {
+/* .list-cards-wrapper {
 	min-height: 132px;
 	padding: 10px;
 
@@ -137,28 +116,7 @@ input.focusable-input {
 	gap: 20px;
 
 	list-style-type: none;
-}
-
-.card {
-	min-height: var(--min-card-height);
-	padding: 6px;
-	background-color: var(--primary-color);
-	border-radius: var(--box-radius);
-
-	transition: transform var(--transitions-speed) ease, background-color var(--transitions-speed) ease;
-}
-
-.card:has(:focus) {
-	background-color: var(--secondary-color);
-}
-
-input.card-text {
-	width: 100%;
-}
-
-.card:hover {
-	transform: scale(1.1);
-}
+} */
 
 .make-new-card {
 	background-color: var(--primary-color);
