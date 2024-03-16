@@ -1,10 +1,8 @@
-import type { KanbanBoard } from "./types";
-import { ReactComponent as MenuIcon } from "./icons/menu.svg";
-import { ReactComponent as UserIcon } from "./icons/user-icon.svg";
-import { ReactComponent as CalendarIcon } from "./icons/calendar-icon.svg";
-import { Menu, MenuItem } from "./components/menu/menu";
-import { Board } from "./components/board/board";
-import { Calendar } from "./components/calendar/calendar";
+import { useList } from "effector-react";
+import Card from "./components/board/Card/Card";
+import List from "./components/board/List/List";
+import type { KanbanBoard, KanbanList } from "./types";
+import { createStore } from "effector";
 
 const board: KanbanBoard = {
 	name: "Some longer header to test this out",
@@ -53,20 +51,12 @@ const board: KanbanBoard = {
 	id: "vfr8"
 };
 
-function App() {
+export default function App() {
 	return (
-		<>
-			<Menu items={[
-				{name: "menu", icon: MenuIcon},
-				{name: "calendar", icon: CalendarIcon},
-				{name: "user-icon", icon: UserIcon,  align: "right"},
-				{name: "board-name", text: board.name, align: "center"}
-			]}>
-			</Menu>
-			<Board board={board} />
-			{/* <Calendar /> */}
-		</>
-	);
+		<List>
+			{
+				board.lists[1].cards.map(card => <Card card={card}/>)
+			}
+		</List>
+	)
 }
-
-export default App;

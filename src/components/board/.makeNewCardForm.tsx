@@ -1,4 +1,3 @@
-import { TextInput } from "../utils/textInput";
 import { useState } from "react";
 import { KanbanCard } from "../../types";
 import { getId } from "../../utils/utils";

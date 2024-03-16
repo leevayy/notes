@@ -71,21 +71,4 @@ export function List(props: ListProps) {
   );
 }
 
-type ListHeaderProps = {
-  listName: string;
-  setListName: (state: string) => void;
-};
 
-function ListHeader(props: ListHeaderProps) {
-  return (
-    <h2 className="list-name-header">
-      <TextInput
-        inputType="input-like"
-        className={`list-name`}
-        type="text"
-        value={props.listName}
-        setInputText={props.setListName}
-      />
-    </h2>
-  );
-}
