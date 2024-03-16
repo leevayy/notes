@@ -2,6 +2,10 @@
 
 <img width="798" alt="image" src="https://github.com/leevayy/kanban/assets/86363699/9796d4c3-dbaa-400c-b364-e1919ec550cf">
 
+# Стэк
+
+React + Effector, css-modules
+
 # TODO
 1. Пофиксить перетаскивание карточек между списками
 2. Добавить перетаскивание списков
