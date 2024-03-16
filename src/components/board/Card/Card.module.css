@@ -1,5 +1,7 @@
 .card {
 	min-height: var(--min-card-height);
+	word-break: break-word;
+
 	padding: 6px;
 	background-color: var(--primary-color);
 	border-radius: var(--box-radius);
