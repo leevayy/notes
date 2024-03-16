@@ -1,10 +1,11 @@
 .editable_text {
-
+	height: 100%;
+	width: 100%;
 }
 
 .editable_text textarea {
 	width: 100%;
-	/* height: 100%; */
+
 	font-family: var(--font-family);
 	font-size: inherit;
 
