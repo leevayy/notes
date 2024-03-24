@@ -6,9 +6,10 @@ import styles from "./EditableText.module.css";
 type EditableTextProps = {
 	value: string;
 	id: string;
+	onChange: React.ChangeEventHandler<HTMLTextAreaElement>
 };
 
-export function EditableText({ value, id }: EditableTextProps) {
+export function EditableText({ value, id, onChange }: EditableTextProps) {
 	const [inEditModeId, handleEditableTextClicked, handleEditableTextBlured] = useUnit([
 		$inEditModeId,
 		editableTextClicked,
@@ -38,8 +39,9 @@ export function EditableText({ value, id }: EditableTextProps) {
 				<textarea 
 					autoFocus={true}
 					onBlur={handleEditableTextBlured} 
-					defaultValue={value} 
+					value={value} 
 					ref={(el) => setTextareaRef(el)} 
+					onChange={onChange}
 				/>
 			) : (
 				value
