@@ -17,11 +17,6 @@ type ListProps = React.PropsWithChildren & {
 // needs to be readjasted with each design change
 const CARDS_PADDING = 10;
 
-/**
- * returns card position which is number from 1
- * @param dropY 
- * @returns 
- */
 const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 	const cards = dragEvent.currentTarget.children.item(1);
 
