@@ -43,3 +43,20 @@ sample({
     },
     target: listUpdated
 })
+
+export const listNameChanged = createEvent<{nextName: KanbanList["name"], updatedList: KanbanList}>();
+
+sample({
+    source: $board,
+    clock: listNameChanged,
+    fn: (_, {nextName, updatedList}) => {
+        const nextList = {
+			...updatedList, 
+			name: nextName
+		}
+
+        return nextList;
+    },
+    target: listUpdated
+})
+

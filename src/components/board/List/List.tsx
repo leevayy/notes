@@ -3,7 +3,7 @@ import { KanbanCard, KanbanList } from "../../../types";
 import { EditableText } from "../../utils/EditableText/EditableText";
 import styles from "./List.module.css";
 import MakeNewCard from "./MakeNewCard/MakeNewCard";
-import { cardInserted } from "./model";
+import { cardInserted, listNameChanged } from "./model";
 import { $draggedCard, cardRemoved } from "../model";
 import { getId } from "../../../utils/utils";
 
@@ -54,7 +54,7 @@ const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 		const nextInsertionY = currentInsertionY + card.clientHeight + (cardIndex !== 0 ? gap : 0);
 
 		const droppedBeforeNextOffset = nextInsertionY > dropY;
-		
+
 		if (droppedBeforeNextOffset) {
 			const droppedInFirstHalfOfCard = dropY > currentInsertionY + gap + card.clientHeight / 2;
 
@@ -115,27 +115,55 @@ export default function List({ children, list, setDropPosition }: ListProps) {
 
 	return (
 		<li className={styles.list} onDragOver={dragOverHandler} onDrop={dropHandler}>
-			<ListHeader listName={list.name} id={list.id} />
+			<ListHeader list={list} />
 			<ul className={styles.list_cards_wrapper}>{children}</ul>
 			<MakeNewCard unshiftCard={unshiftCard} />
 		</li>
 	);
 }
 
+const BIG_FONT_SIZE = 20;
+
 type ListHeaderProps = {
-	listName: string;
-	id: string;
+	list: KanbanList;
 };
 
-function ListHeader({ listName, id }: ListHeaderProps) {
+function ListHeader({ list }: ListHeaderProps) {
+	const changeListName = useUnit(listNameChanged);
+
+	const decreasingFontSize = (name: KanbanList["name"]) => {
+		const MAXIMUM_OK_HEADER_LENGTH = 12;
+		const headerIsSmall = name.length < MAXIMUM_OK_HEADER_LENGTH;
+		
+		if (headerIsSmall) {
+			return `${BIG_FONT_SIZE}pt`;
+		}
+
+		const decreaseFunction = (x: number) => 2 * Math.sqrt(x);
+
+		return `${BIG_FONT_SIZE - decreaseFunction(name.length - MAXIMUM_OK_HEADER_LENGTH)}pt`
+	}
+
+	function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+		const nextName = e.target.value;
+		if (nextName.length > 16) {
+			return;
+		}
+
+		changeListName({nextName: nextName, updatedList: list})
+	}
+
 	return (
-		<h2 className={styles.list_name_header}>
+		<h2 
+			className={styles.list_name_header}
+			style={{
+				fontSize: decreasingFontSize(list.name),
+			}}		
+		>
 			<EditableText
-				value={listName}
-				id={id}
-				onChange={(e) => {
-					console.log("onChange for ListHeader wasn't implemented yet");
-				}}
+				value={list.name}
+				id={list.id + 'e'}
+				onChange={handleChange}
 			/>
 		</h2>
 	);
