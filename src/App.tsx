@@ -4,7 +4,7 @@ import List from "./components/board/List/List";
 import { $board, boardUpdated, fetchBoardFx } from "./components/board/model";
 import { useEffect, useState } from "react";
 import { Board } from "./components/board/Board/Board";
-import dummy_styles from "./DropDummy.module.module.css";
+import dummy_styles from "./DropDummy.module.css";
 import { Menu } from "./components/menu/menu";
 
 import { ReactComponent as MenuIcon } from "./icons/menu.svg";
