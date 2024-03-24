@@ -6,10 +6,11 @@ import MakeNewCard from "./MakeNewCard/MakeNewCard";
 import { cardInserted, listNameChanged } from "./model";
 import { $draggedCard, cardRemoved } from "../model";
 import { getId } from "../../../utils/utils";
+import { Position } from "../../../App";
 
 type ListProps = React.PropsWithChildren & {
 	list: KanbanList;
-	setDropPosition: React.Dispatch<React.SetStateAction<number>>;
+	setDropPosition: React.Dispatch<React.SetStateAction<Position>>;
 };
 
 // bad code, but i can't figure out how to calculate it on the fly
@@ -24,16 +25,24 @@ const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 	}
 
 	const cardsArr = Array.from(cards.children);
+	const cardsRect = cards.getBoundingClientRect();
+	const cardsHeight = cardsRect.height;
 
-	const calculateDropYWithOffset = (dropY: number, cards: Element) => {
-		const cardsTopScreenOffset = cards.getBoundingClientRect().top;
+	const getTopOffset = (cardsRect: DOMRect) => {
+		const cardsTopScreenOffset = cardsRect.top;
 		const windowScroll = window.scrollY;
 		const topOffset = cardsTopScreenOffset - windowScroll;
 
-		return dropY - topOffset
+		return topOffset;
 	}
 
-	const dropY = calculateDropYWithOffset(dragEvent.clientY, cards);
+	const topOffset = getTopOffset(cardsRect);
+
+	const calculateDropYWithoutOffset = (dropY: number, topOffset: number) => {
+		return dropY - topOffset;
+	}
+
+	const dropY = calculateDropYWithoutOffset(dragEvent.clientY, topOffset);
 
 	const calculateGap = (cardsArr: Element[], cardsHeight: number) => {
 		if (cardsArr.length <= 1) {
@@ -47,7 +56,7 @@ const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 		return (nonCardSpace - 2 * CARDS_PADDING) / (cardsArr.length - 1)
 	}
 
-	const gap = calculateGap(cardsArr, cards.clientHeight);
+	const gap = calculateGap(cardsArr, cardsHeight);
 
 	let currentInsertionY = CARDS_PADDING;
 	for (const [cardIndex, card] of cardsArr.entries()) {
@@ -59,15 +68,27 @@ const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 			const droppedInFirstHalfOfCard = dropY > currentInsertionY + gap + card.clientHeight / 2;
 
 			if (droppedInFirstHalfOfCard) {
-				return cardIndex + 1;
+				return {
+					position: cardIndex + 1,
+					insertionY: currentInsertionY + topOffset,
+					insertionX: cardsRect.x + CARDS_PADDING
+				}
 			} else {
-				return cardIndex;
+				return {
+					position: cardIndex,
+					insertionY: currentInsertionY + topOffset,
+					insertionX: cardsRect.x + CARDS_PADDING
+				}
 			}
 		}
 		currentInsertionY = nextInsertionY;
 	}
 
-	return cardsArr.length;
+	return {
+		position: cardsArr.length,
+		insertionY: currentInsertionY + topOffset,
+		insertionX: cardsRect.x + CARDS_PADDING
+	}
 };
 
 export default function List({ children, list, setDropPosition }: ListProps) {
@@ -89,8 +110,9 @@ export default function List({ children, list, setDropPosition }: ListProps) {
 			throw new Error("Dragged card is null");
 		}
 
-		const cardDropPosition = getCardDropPosition(e);
-		setDropPosition(cardDropPosition);
+		const {insertionX: x, insertionY: y} = getCardDropPosition(e);
+		
+		setDropPosition({x, y});
 	}
 
 	function dropHandler(e: React.DragEvent<HTMLLIElement>) {
@@ -100,7 +122,7 @@ export default function List({ children, list, setDropPosition }: ListProps) {
 			throw new Error("Dragged card is null");
 		}
 
-		const cardDropPosition = getCardDropPosition(e);
+		const {position: cardDropPosition} = getCardDropPosition(e);
 
 		insertCard({
 			card: { ...draggedCard, id: getId(), position: cardDropPosition },
@@ -109,8 +131,6 @@ export default function List({ children, list, setDropPosition }: ListProps) {
 		});
 
 		removeCard(draggedCard!["id"]);
-
-		setDropPosition(0);
 	}
 
 	return (

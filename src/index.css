@@ -29,6 +29,7 @@
 
 	--min-card-height: 56px;
 	--list-width: 200px;
+	--cards-padding: 10px;
 
 	--transitions-speed: 0.2s;
 }
@@ -59,8 +60,6 @@ body {
 
 	overflow: scroll;
 }
-
-
 
 .list.current-list {
 	cursor: grab;

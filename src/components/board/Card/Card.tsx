@@ -7,9 +7,10 @@ import { cardDragged } from "../model";
 
 type CardProps = {
 	card: KanbanCard;
+	onDragEnd: () => void;
 };
 
-export default function Card({ card }: CardProps) {
+export default function Card({ card, onDragEnd }: CardProps) {
 	const updateCard = useUnit(cardUpdated);
 	const setDraggedCard = useUnit(cardDragged);
 
@@ -30,6 +31,7 @@ export default function Card({ card }: CardProps) {
 			onDragEnd={(e) => {
 				e.preventDefault();
 				setDraggedCard(null);
+				onDragEnd();
 			}}
 		>
 			<EditableText value={card.text} id={card.id} onChange={(e) => handleChange(e.target.value)} />

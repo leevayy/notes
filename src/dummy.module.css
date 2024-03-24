@@ -1,0 +1,28 @@
+.dummy {
+    position: absolute;
+    width: calc(var(--list-width) - var(--cards-padding) * 2);
+    height: 10px;
+    border-radius: var(--box-radius);
+
+    transition: top 0.2s ease-out, left 0.2s ease-out;
+}
+
+@keyframes dash {
+    to {
+        background-position: 100%;
+    }
+}
+
+.dummy::before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background-image: linear-gradient(90deg, var(--primary-color) 50%, transparent 50%);
+    border-radius: inherit;
+    background-size: 20px 20px;
+    animation: dash 20s linear infinite;
+}
