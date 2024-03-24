@@ -6,6 +6,8 @@
 	background-color: var(--list-bg-color);
 
 	border-radius: var(--box-radius);
+
+	user-select: none;
 }
 
 .list_cards_wrapper {

@@ -1,63 +1,68 @@
-import { createEffect, createEvent, createStore } from "effector";
-import { KanbanBoard } from "../../types";
+import { createEffect, createEvent, createStore, sample } from "effector";
+import { KanbanBoard, KanbanCard } from "../../types";
+import fetchBoard from "../../api/fetchBoard";
+import { debounce } from "patronum";
+import updateBoard from "../../api/updateBoard";
+import { listUpdated } from "./List/model";
 
-const fetchBoard = async () => {
-    await new Promise((res, rej) => setTimeout(res, 2000));
-    return {
-        name: "Some longer header to test this out",
-        lists: [
-            {
-                name: "Hello!",
-                position: 0,
-                cards: [
-                    {
-                        text: "what's up. if i add a bunch of text it will result in longer card, right? it must",
-                        position: 0,
-                        id: "cueo"
-                    }
-                ],
-                id: "x9rh"
-            },
-            {
-                name: "hola",
-                position: 1,
-                cards: [
-                    {
-                        text: "amigo",
-                        position: 0,
-                        id: "qclh"
-                    },
-                    {
-                        text: "el gato",
-                        position: 1,
-                        id: "0p16"
-                    },
-                    {
-                        text: "las ninas estoy un poco loco",
-                        position: 2,
-                        id: "z85y"
-                    }
-                ],
-                id: "niq4"
-            },
-            {
-                name: "Привет!",
-                position: 2,
-                cards: [],
-                id: "ve9l"
-            }
-        ],
-        id: "vfr8"
-    };
-}
+const DEBOUNCE_TIMEOUT_IN_MS = 1000;
 
-export const $board = createStore<KanbanBoard | null>(null);
+export const $board = createStore<KanbanBoard>({name: 'loading...', lists: [], id: 'loading'});
 
 export const fetchBoardFx = createEffect(fetchBoard);
 
 export const boardUpdated = createEvent<KanbanBoard>();
 
-$board.on(boardUpdated, (_, newBoard) => newBoard);
+export const updateBoardFx = createEffect(updateBoard);
 
-// !
-fetchBoardFx.watch(() => console.log('fetching '));
+$board.on(boardUpdated, (_, newBoard) => {
+    return newBoard;
+});
+
+export const debouncedBoardUpdated = debounce(boardUpdated, DEBOUNCE_TIMEOUT_IN_MS);
+
+sample({
+    clock: debouncedBoardUpdated,
+    target: updateBoardFx
+})
+
+export const $draggedCard = createStore<KanbanCard | null>(null);
+
+export const cardDragged = createEvent<KanbanCard | null>();
+
+$draggedCard.on(cardDragged, (_, draggedCard) => draggedCard);
+
+export const cardRemoved = createEvent<KanbanCard["id"]>();
+
+sample({
+    source: $board,
+    clock: cardRemoved,
+    fn: (board, removedCardId) => {
+        const updatedListIndex = board.lists.findIndex(l => ~l.cards.findIndex(c => c.id === removedCardId));
+
+        if (!~updatedListIndex) {
+            throw new Error(`List with card id: ${removedCardId} was not found`);
+        }
+
+        const updatedList = board.lists[updatedListIndex];
+
+        const nextList = {
+			...updatedList, 
+			cards: updatedList.cards.filter(c => c.id !== removedCardId)
+		}
+
+        const nextBoard = {
+            ...board,
+            lists: board.lists.map(list => {
+                if (list.id === updatedList.id) {
+                    return nextList;
+                }
+
+                return list;
+            })
+        }
+
+        return nextBoard;
+    },
+    target: boardUpdated
+})
