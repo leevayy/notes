@@ -12,7 +12,7 @@
 
 .list_cards_wrapper {
 	min-height: 132px;
-	padding: 10px;
+	padding: var(--cards-padding);
 
 	display: flex;
 	flex-direction: column;
