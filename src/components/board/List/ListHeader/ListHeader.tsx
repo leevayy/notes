@@ -35,7 +35,7 @@ export default function ListHeader({ list }: ListHeaderProps) {
 	}
 
 	function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-		const nextName = e.target.value.replace(/\n/g, '&nbsp');
+		const nextName = e.target.value.replace(/\n/g, ' ');
 		if (nextName.length > 16) {
 			return;
 		}
