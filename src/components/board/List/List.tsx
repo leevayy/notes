@@ -14,7 +14,7 @@ type ListProps = React.PropsWithChildren & {
 	resetDropPosition: () => void;
 };
 
-// bad code, but i can't figure out how to calculate it on the fly
+// bad code, but i can't figure out how to calculate padding on the fly
 // needs to be readjasted with each design change
 const CARDS_PADDING = 10;
 
