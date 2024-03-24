@@ -1,12 +1,12 @@
 import { useUnit } from "effector-react";
 import { KanbanCard, KanbanList } from "../../../types";
-import { EditableText } from "../../utils/EditableText/EditableText";
 import styles from "./List.module.css";
 import MakeNewCard from "./MakeNewCard/MakeNewCard";
 import { cardInserted, listNameChanged } from "./model";
 import { $draggedCard, cardRemoved } from "../model";
 import { getId } from "../../../utils/utils";
 import { Position } from "../../../App";
+import ListHeader from "./ListHeader/ListHeader";
 
 type ListProps = React.PropsWithChildren & {
 	list: KanbanList;
@@ -141,52 +141,5 @@ export default function List({ children, list, setDropPosition, resetDropPositio
 			<ul className={styles.list_cards_wrapper}>{children}</ul>
 			<MakeNewCard unshiftCard={unshiftCard} />
 		</li>
-	);
-}
-
-const BIG_FONT_SIZE = 20;
-
-type ListHeaderProps = {
-	list: KanbanList;
-};
-
-function ListHeader({ list }: ListHeaderProps) {
-	const changeListName = useUnit(listNameChanged);
-
-	const decreasingFontSize = (name: KanbanList["name"]) => {
-		const MAXIMUM_OK_HEADER_LENGTH = 12;
-		const headerIsSmall = name.length < MAXIMUM_OK_HEADER_LENGTH;
-		
-		if (headerIsSmall) {
-			return `${BIG_FONT_SIZE}pt`;
-		}
-
-		const decreaseFunction = (x: number) => 2 * Math.sqrt(x);
-
-		return `${BIG_FONT_SIZE - decreaseFunction(name.length - MAXIMUM_OK_HEADER_LENGTH)}pt`
-	}
-
-	function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-		const nextName = e.target.value.replace(/\n/g, '&nbsp');
-		if (nextName.length > 16) {
-			return;
-		}
-
-		changeListName({nextName: nextName, updatedList: list})
-	}
-
-	return (
-		<h2 
-			className={styles.list_name_header}
-			style={{
-				fontSize: decreasingFontSize(list.name),
-			}}		
-		>
-			<EditableText
-				value={list.name}
-				id={list.id + 'e'}
-				onChange={handleChange}
-			/>
-		</h2>
 	);
 }

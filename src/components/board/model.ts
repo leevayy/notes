@@ -3,7 +3,6 @@ import { KanbanBoard, KanbanCard } from "../../types";
 import fetchBoard from "../../api/fetchBoard";
 import { debounce } from "patronum";
 import updateBoard from "../../api/updateBoard";
-import { listUpdated } from "./List/model";
 
 const DEBOUNCE_TIMEOUT_IN_MS = 1000;
 

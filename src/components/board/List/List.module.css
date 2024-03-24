@@ -21,39 +21,3 @@
 
 	list-style-type: none;
 }
-
-.list_name_header {
-	width: 100%;
-	height: 100%;
-}
-
-.list_name {
-	transition: background-color var(--transitions-speed) ease;
-}
-
-.list_name_header {
-	padding: 4px;
-
-	height: 100%;
-	width: 100%;
-
-	background-color: var(--primary-color);
-
-	font-family: var(--font-family);
-	font-weight: bold;
-	font-size: var(--big-font-size);
-
-	color: var(--text-color);
-	text-align: center;
-	text-decoration: none;
-
-	border-radius: var(--box-radius);
-}
-
-.list_name_header:has(textarea) {
-	background-color: var(--secondary-color);
-}
-
-.list_name_header textarea {
-	text-align: center;
-}

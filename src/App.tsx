@@ -59,7 +59,7 @@ export default function App() {
 				<Board board={board}>
 					{
 						board.lists.map(list => {
-							return <List 
+							return <List
 								key={board.id + '-' + list.id} 
 								list={list} 
 								setDropPosition={setDropPosition}

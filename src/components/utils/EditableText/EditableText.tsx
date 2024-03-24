@@ -6,7 +6,8 @@ import styles from "./EditableText.module.css";
 type EditableTextProps = {
 	value: string;
 	id: string;
-	onChange: React.ChangeEventHandler<HTMLTextAreaElement>
+	onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+	autoFocus?: boolean;
 };
 
 export function EditableText({ value, id, onChange }: EditableTextProps) {
