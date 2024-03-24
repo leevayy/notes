@@ -1,0 +1,14 @@
+.board {
+	padding: 30px 30px;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 36px;
+
+	max-height: 100%;
+	width: 100%;
+	flex: 1;
+
+	overflow-x: scroll;
+	scrollbar-width: thin;
+}

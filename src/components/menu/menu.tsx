@@ -38,13 +38,13 @@ export function Menu(props: MenuProps) {
   return (
     <ul className="menu">
       {sortedProps.left.length !== 0 && (
-				<li className="left menu-item">{sortedProps.left.map(props => <MenuItem {...props}></MenuItem>)}</li>
+				<li className="left menu-item">{sortedProps.left.map((props, i) => <MenuItem key={props.name + i} { ...props}></MenuItem>)}</li>
 			)}
       {sortedProps.center.length !== 0 && (
-        <li className="center menu-item">{sortedProps.center.map(props => <MenuItem {...props}></MenuItem>)}</li>
+        <li className="center menu-item">{sortedProps.center.map((props, i) => <MenuItem key={props.name + i} {...props}></MenuItem>)}</li>
       )}
       {sortedProps.right.length !== 0 && (
-        <li className="right menu-item">{sortedProps.right.map(props => <MenuItem {...props}></MenuItem>)}</li>
+        <li className="right menu-item">{sortedProps.right.map((props, i) => <MenuItem key={props.name + i} {...props}></MenuItem>)}</li>
       )}
     </ul>
   );

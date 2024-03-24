@@ -1,5 +1,6 @@
 .list {
-	width: var(--list-width);
+	min-width: var(--list-width);
+	max-width: var(--list-width);
 
 	display: grid;
 	grid-template-rows: [header] 40px [main] auto [new-card] 40px;

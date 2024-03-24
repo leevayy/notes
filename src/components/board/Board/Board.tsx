@@ -1,13 +1,14 @@
 import { PropsWithChildren } from "react";
 import { KanbanBoard } from "../../../types";
+import styles from "./Board.module.css"
 
 type BoardProps = PropsWithChildren & {
     board: KanbanBoard
 }  
 
-export function Board({ children, board }: BoardProps) {
+export function Board({ children }: BoardProps) {
   return (
-      <ul className="board">
+      <ul className={styles.board}>
         {
             children
         }

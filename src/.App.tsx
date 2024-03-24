@@ -53,20 +53,20 @@
 // 	id: "vfr8"
 // };
 
-// function App() {
-// 	return (
-// 		<>
-// 			<Menu items={[
-// 				{name: "menu", icon: MenuIcon},
-// 				{name: "calendar", icon: CalendarIcon},
-// 				{name: "user-icon", icon: UserIcon,  align: "right"},
-// 				{name: "board-name", text: board.name, align: "center"}
-// 			]}>
-// 			</Menu>
-// 			<Board board={board} />
-// 			{/* <Calendar /> */}
-// 		</>
-// 	);
-// }
+function App() {
+	return (
+		<>
+			<Menu items={[
+				{name: "menu", icon: MenuIcon},
+				{name: "calendar", icon: CalendarIcon},
+				{name: "user-icon", icon: UserIcon,  align: "right"},
+				{name: "board-name", text: board.name, align: "center"}
+			]}>
+			</Menu>
+			<Board board={board} />
+			{/* <Calendar /> */}
+		</>
+	);
+}
 
-// export default App;
+export default App;

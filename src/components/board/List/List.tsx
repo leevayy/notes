@@ -11,6 +11,7 @@ import { Position } from "../../../App";
 type ListProps = React.PropsWithChildren & {
 	list: KanbanList;
 	setDropPosition: React.Dispatch<React.SetStateAction<Position>>;
+	resetDropPosition: () => void;
 };
 
 // bad code, but i can't figure out how to calculate it on the fly
@@ -91,7 +92,7 @@ const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 	}
 };
 
-export default function List({ children, list, setDropPosition }: ListProps) {
+export default function List({ children, list, setDropPosition, resetDropPosition }: ListProps) {
 	const draggedCard = useUnit($draggedCard);
 	const insertCard = useUnit(cardInserted);
 	const removeCard = useUnit(cardRemoved);
@@ -131,6 +132,7 @@ export default function List({ children, list, setDropPosition }: ListProps) {
 		});
 
 		removeCard(draggedCard!["id"]);
+		resetDropPosition();
 	}
 
 	return (
@@ -165,7 +167,7 @@ function ListHeader({ list }: ListHeaderProps) {
 	}
 
 	function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-		const nextName = e.target.value;
+		const nextName = e.target.value.replace(/\n/g, '&nbsp');
 		if (nextName.length > 16) {
 			return;
 		}
