@@ -2,7 +2,7 @@ import { useUnit } from "effector-react";
 import { KanbanCard, KanbanList } from "../../../types";
 import styles from "./List.module.css";
 import MakeNewCard from "./MakeNewCard/MakeNewCard";
-import { cardInserted, listNameChanged } from "./model";
+import { cardInserted } from "./model";
 import { $draggedCard, cardRemoved } from "../model";
 import { getId } from "../../../utils/utils";
 import { Position } from "../../../App";

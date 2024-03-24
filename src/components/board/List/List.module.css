@@ -9,6 +9,9 @@
 	border-radius: var(--box-radius);
 
 	user-select: none;
+
+	position: relative;
+	z-index: 99;
 }
 
 .list_cards_wrapper {

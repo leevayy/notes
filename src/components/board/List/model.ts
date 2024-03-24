@@ -60,3 +60,24 @@ sample({
     target: listUpdated
 })
 
+export const listRemoved = createEvent<KanbanList["id"]>();
+
+sample({
+    source: $board,
+    clock: listRemoved,
+    fn: (board, removedListId) => {
+        const removedListIndex = board.lists.findIndex(l => l.id === removedListId);
+
+        if (!~removedListIndex) {
+            throw new Error(`List with id: ${removedListId} was not found`);
+        }
+
+        const nextBoard = {
+            ...board,
+            lists: board.lists.filter(l => l.id !== removedListId)
+        }
+
+        return nextBoard;
+    },
+    target: boardUpdated
+})

@@ -40,6 +40,11 @@ export function EditableText({ value, id, onChange }: EditableTextProps) {
 				<textarea 
 					autoFocus={true}
 					onBlur={handleEditableTextBlured} 
+					onKeyDown={({key}) => {
+						if (key === 'Enter') {
+							handleEditableTextBlured()
+						}
+					}}
 					value={value} 
 					ref={(el) => setTextareaRef(el)} 
 					onChange={onChange}

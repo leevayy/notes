@@ -2,9 +2,10 @@ import { useUnit } from "effector-react";
 import { KanbanList } from "../../../../types";
 import { EditableText } from "../../../utils/EditableText/EditableText";
 import styles from "./ListHeader.module.css";
-import { listNameChanged } from "../model";
+import { listNameChanged, listRemoved } from "../model";
 import { editableTextClicked } from "../../../utils/EditableText/model";
 import { useEffect } from "react";
+import DeleteButton from "../../DeleteButton/DeleteButton";
 
 const BIG_FONT_SIZE = 20;
 
@@ -15,6 +16,7 @@ type ListHeaderProps = {
 export default function ListHeader({ list }: ListHeaderProps) {
 	const changeListName = useUnit(listNameChanged);
 	const clickEditableText = useUnit(editableTextClicked);
+	const removeList = useUnit(listRemoved);
 
 	useEffect(() => {
 		const shouldFocus = list.name === '';
@@ -50,6 +52,7 @@ export default function ListHeader({ list }: ListHeaderProps) {
 				fontSize: decreasingFontSize(list.name),
 			}}
 		>
+			<DeleteButton onClick={() => removeList(list.id)}/>
 			<EditableText
 				value={list.name}
 				id={list.id}

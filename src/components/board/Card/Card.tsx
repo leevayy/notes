@@ -4,6 +4,7 @@ import { EditableText } from "../../utils/EditableText/EditableText";
 import styles from "./Card.module.css";
 import { cardUpdated } from "./model";
 import { cardDragged, cardRemoved } from "../model";
+import DeleteButton from "../DeleteButton/DeleteButton";
 
 type CardProps = {
 	card: KanbanCard;
@@ -35,10 +36,7 @@ export default function Card({ card, onDragEnd }: CardProps) {
 				onDragEnd();
 			}}
 		>
-			<button
-				className={styles.delete_button}
-				onClick={() => removeCard(card.id)}
-			/>
+			<DeleteButton onClick={() => removeCard(card.id)}/>
 			<EditableText value={card.text} id={card.id} onChange={(e) => handleChange(e.target.value)} />
 		</li>
 	);
