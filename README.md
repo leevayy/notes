@@ -4,7 +4,7 @@
 
 # Стэк
 
-React + Effector, css-modules
+React + Effector, TypeScript, css-modules
 
 # TODO
 1. Пофиксить перетаскивание карточек между списками
