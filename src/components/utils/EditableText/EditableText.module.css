@@ -4,6 +4,7 @@
 }
 
 .editable_text textarea {
+	height: 100%;
 	width: 100%;
 
 	font-family: var(--font-family);
@@ -11,10 +12,21 @@
 
 	border-radius: var(--box-radius);
 
-	overflow: auto;
+	overflow: hidden;
 	border: none;
 	outline: none;
 	resize: none;
 
+
 	background-color: inherit;
+}
+
+.center:not(:has(textarea)) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.editable_text.center textarea {
+	text-align: center;
 }

@@ -7,10 +7,11 @@ type EditableTextProps = {
 	value: string;
 	id: string;
 	onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
-	autoFocus?: boolean;
+	alignCenter?: boolean;
+	shouldAutoResize?: boolean;
 };
 
-export function EditableText({ value, id, onChange }: EditableTextProps) {
+export function EditableText({ value, id, onChange, alignCenter, shouldAutoResize }: EditableTextProps) {
 	const [inEditModeId, handleEditableTextClicked, handleEditableTextBlured] = useUnit([
 		$inEditModeId,
 		editableTextClicked,
@@ -20,7 +21,7 @@ export function EditableText({ value, id, onChange }: EditableTextProps) {
 
 	useEffect(() => {
 		const textarea = textareaRef;
-		if (textarea) {
+		if (textarea && shouldAutoResize) {
 			textarea.style.height = "auto";
 			textarea.style.height = textarea.scrollHeight + "px";
 		}
@@ -35,9 +36,15 @@ export function EditableText({ value, id, onChange }: EditableTextProps) {
 	const isInEditMode = inEditModeId === id;
 
 	return (
-		<div className={styles.editable_text} onClick={() => handleEditableTextClicked(id)}>
+		<div 
+			className={`${styles.editable_text} ${alignCenter ? styles.center : ''}`} 
+			onClick={() => handleEditableTextClicked(id)}
+		>
 			{isInEditMode ? (
-				<textarea 
+				<textarea
+					style={{
+						overflow: shouldAutoResize ? 'auto' : 'hidden'
+					}}
 					autoFocus={true}
 					onBlur={handleEditableTextBlured} 
 					onKeyDown={({key}) => {

@@ -54,6 +54,8 @@ export default function ListHeader({ list }: ListHeaderProps) {
 		>
 			<DeleteButton onClick={() => removeList(list.id)}/>
 			<EditableText
+				alignCenter={true}
+				shouldAutoResize={false}
 				value={list.name}
 				id={list.id}
 				onChange={handleChange}

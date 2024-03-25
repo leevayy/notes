@@ -37,7 +37,11 @@ export default function Card({ card, onDragEnd }: CardProps) {
 			}}
 		>
 			<DeleteButton onClick={() => removeCard(card.id)}/>
-			<EditableText value={card.text} id={card.id} onChange={(e) => handleChange(e.target.value)} />
+			<EditableText 
+				shouldAutoResize={true}
+				value={card.text} id={card.id} 
+				onChange={(e) => handleChange(e.target.value)} 
+			/>
 		</li>
 	);
 }
