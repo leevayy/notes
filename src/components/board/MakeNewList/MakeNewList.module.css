@@ -1,0 +1,27 @@
+
+button.make_new_list {
+	font-family: inherit;
+	font-size: var(--main-font-size);
+
+	min-width: var(--list-width);
+	max-width: var(--list-width);
+
+	height: var(--min-card-height);
+
+	border: none;
+	border-radius: var(--box-radius);
+
+	background-color: var(--primary-color);
+
+	transition: transform var(--transitions-speed) ease, background-color 0.5s ease-out;
+	cursor: pointer;
+}
+
+button.make_new_list:active {
+	background-color: var(--accent-color-500);
+    transition-duration: 0s;
+}
+
+button.make_new_list:hover {
+	transform: scale(1.1);
+}

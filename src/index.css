@@ -8,16 +8,12 @@
 
 :root {
 	--text-color: #000000;
-	--bg-color: #f8f8f8;
-	--list-bg-color: #ededed;
-	--primary-color: #89d1d1;
-	--secondary-color: #d0e2e2;
+	--bg-color: #fff;
+	--list-bg-color: #DFF6F5;
+	--primary-color: #9ae3e0;
+	--secondary-color: #7FDCD9;
 
-	--accent-color-500: #38b2b2;
-	--accent-color-600: #389999;
-	--accent-color-700: #357979;
-	--accent-color-800: #2a4747;
-	--accent-color-900: #182020;
+	--accent-color-500: #4FCFCA;
 
 	--font-family: "Inter";
 
@@ -45,39 +41,6 @@ body {
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
-}
-
-
-
-.list.current-list {
-	cursor: grab;
-}
-
-button.make-new-list {
-	font-family: inherit;
-	font-size: var(--main-font-size);
-
-	min-width: var(--list-width);
-	max-width: var(--list-width);
-
-	height: var(--min-card-height);
-
-	border: none;
-	border-radius: var(--box-radius);
-
-	background-color: var(--secondary-color);
-
-	transition: transform var(--transitions-speed) ease, background-color 0.5s ease-out;
-	cursor: pointer;
-}
-
-button.make-new-list:active {
-	background-color: var(--accent-color-500);
-    transition-duration: 0s;
-}
-
-button.make-new-list:hover {
-	transform: scale(1.1);
 }
 
 .menu {
