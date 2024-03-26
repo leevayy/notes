@@ -10,6 +10,11 @@
     z-index: 100;
 }
 
+.dummy.vertical {
+    height: calc(var(--min-list-height) + 2*var(--list-element-height));
+    width: 12px;
+}
+
 @keyframes dash {
     to {
         background-position: 100%;
@@ -24,8 +29,14 @@
     width: 100%;
     height: 100%;
     
-    background-image: linear-gradient(90deg, var(--primary-color) 50%, transparent 50%);
+    background-image: linear-gradient(90deg, var(--accent-color-500) 50%, transparent 50%);
     border-radius: inherit;
     background-size: 20px 20px;
     animation: dash 20s linear infinite;
+}
+
+.dummy.vertical::before {
+    background-image: linear-gradient(0, var(--accent-color-500) 50%, transparent 50%);
+
+    animation: dash 10s linear infinite;
 }

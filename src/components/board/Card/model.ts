@@ -1,5 +1,5 @@
 import { createEvent, sample } from "effector";
-import { $board, boardUpdated } from "../model";
+import { $board, boardUpdated } from "../Board/model";
 import { KanbanCard } from "../../../types";
 
 export const cardUpdated = createEvent<KanbanCard>();

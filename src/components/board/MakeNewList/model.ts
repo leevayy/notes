@@ -1,5 +1,5 @@
 import { createEvent } from "effector";
-import { $board } from "../model";
+import { $board } from "../Board/model";
 import { KanbanList } from "../../../types";
 
 export const listCreated = createEvent<KanbanList>();

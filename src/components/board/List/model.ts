@@ -1,5 +1,5 @@
 import { createEvent, sample } from "effector";
-import { $board, boardUpdated } from "../model";
+import { $board, boardUpdated } from "../Board/model";
 import { KanbanCard, KanbanList } from "../../../types";
 
 export const listUpdated = createEvent<KanbanList>();
@@ -58,26 +58,4 @@ sample({
         return nextList;
     },
     target: listUpdated
-})
-
-export const listRemoved = createEvent<KanbanList["id"]>();
-
-sample({
-    source: $board,
-    clock: listRemoved,
-    fn: (board, removedListId) => {
-        const removedListIndex = board.lists.findIndex(l => l.id === removedListId);
-
-        if (!~removedListIndex) {
-            throw new Error(`List with id: ${removedListId} was not found`);
-        }
-
-        const nextBoard = {
-            ...board,
-            lists: board.lists.filter(l => l.id !== removedListId)
-        }
-
-        return nextBoard;
-    },
-    target: boardUpdated
 })

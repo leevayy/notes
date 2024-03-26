@@ -24,8 +24,11 @@
 	--small-font-size: 10pt;
 
 	--min-card-height: 56px;
-	--list-width: 200px;
 	--cards-padding: 10px;
+
+	--list-element-height: 40px;
+	--list-width: 200px;
+	--min-list-height: 132px;
 
 	--transitions-speed: 0.2s;
 }

@@ -1,16 +1,17 @@
 import { useUnit } from "effector-react";
 import Card from "./components/board/Card/Card";
 import List from "./components/board/List/List";
-import { $board, boardUpdated, fetchBoardFx } from "./components/board/model";
+import { $board, boardUpdated, fetchBoardFx } from "./components/board/Board/model";
 import { useEffect, useState } from "react";
 import { Board } from "./components/board/Board/Board";
-import dummy_styles from "./DropDummy.module.css";
 import { Menu } from "./components/menu/menu";
 
 import { ReactComponent as MenuIcon } from "./icons/menu.svg";
 import { ReactComponent as UserIcon } from "./icons/user-icon.svg";
 import { ReactComponent as CalendarIcon } from "./icons/calendar-icon.svg";
 import MakeNewList from "./components/board/MakeNewList/MakeNewList";
+import DropDummyCard from "./components/board/DropDummy/DropDummyCard";
+import DropDummyList from "./components/board/DropDummy/DropDummyList";
 
 export type Position = {
 	x: number;
@@ -20,9 +21,16 @@ export type Position = {
 export default function App() {
 	const board = useUnit($board);
 	const isPending = useUnit(fetchBoardFx.pending);
-	const [dropPosition, setDropPosition] = useState<Position>({ x: 0, y: 0 });
 
-	const resetDropPosition = () => setDropPosition({ x: 0, y: 0 });
+	const defaultDropPosition = { x: 0, y: 0 };
+
+	const [dropPosition, setDropPosition] =
+		useState<Position>(defaultDropPosition);
+	const resetDropPosition = () => setDropPosition(defaultDropPosition);
+
+	const [listDropPosition, setListDropPosition] =
+		useState<Position>(defaultDropPosition);
+	const resetListDropPosition = () => setListDropPosition(defaultDropPosition);
 
 	useEffect(() => {
 		async function fetchData() {
@@ -31,6 +39,14 @@ export default function App() {
 
 		fetchData();
 	}, []);
+
+	const dropPositionIsDefault =
+		dropPosition.x === defaultDropPosition.x &&
+		dropPosition.y === defaultDropPosition.y;
+
+	const listDropPositionIsDefault =
+		listDropPosition.x === defaultDropPosition.x &&
+		listDropPosition.y === defaultDropPosition.y;
 
 	return (
 		<>
@@ -42,11 +58,20 @@ export default function App() {
 					{ name: "board-name", text: board.name, align: "center" },
 				]}
 			/>
-			{dropPosition.x !== 0 && dropPosition.y !== 0 && <DropDummy dropPosition={dropPosition} />}
+			{!dropPositionIsDefault && (
+				<DropDummyCard dropPosition={dropPosition} />
+			)}
+			{!listDropPositionIsDefault && (
+				<DropDummyList dropPosition={listDropPosition} />
+			)}
 			{isPending ? (
 				"fetching"
 			) : (
-				<Board board={board}>
+				<Board
+					board={board}
+					setListDropPosition={setListDropPosition}
+					resetListDropPosition={resetListDropPosition}
+				>
 					{board.lists.map((list) => {
 						return (
 							<List
@@ -56,7 +81,13 @@ export default function App() {
 								resetDropPosition={resetDropPosition}
 							>
 								{list.cards.map((card) => {
-									return <Card key={list.id + "-" + card.id} card={card} onDragEnd={resetDropPosition} />;
+									return (
+										<Card
+											key={list.id + "-" + card.id}
+											card={card}
+											onDragEnd={resetDropPosition}
+										/>
+									);
 								})}
 							</List>
 						);
@@ -65,22 +96,5 @@ export default function App() {
 				</Board>
 			)}
 		</>
-	);
-}
-
-type DropDummyProps = {
-	dropPosition: Position;
-};
-
-function DropDummy({ dropPosition }: DropDummyProps) {
-	return (
-		<div
-			className={dummy_styles.dummy}
-			onDragOver={(e) => e.preventDefault()}
-			style={{
-				top: dropPosition.y + 5 + "px",
-				left: dropPosition.x + "px",
-			}}
-		/>
 	);
 }

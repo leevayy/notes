@@ -3,7 +3,7 @@ import { KanbanCard, KanbanList } from "../../../types";
 import styles from "./List.module.css";
 import MakeNewCard from "./MakeNewCard/MakeNewCard";
 import { cardInserted } from "./model";
-import { $draggedCard, cardRemoved } from "../model";
+import { $draggedCard, $draggedList, cardDragged, cardRemoved, listDragged } from "../Board/model";
 import { getId } from "../../../utils/utils";
 import { Position } from "../../../App";
 import ListHeader from "./ListHeader/ListHeader";
@@ -18,6 +18,14 @@ type ListProps = React.PropsWithChildren & {
 // needs to be readjasted with each design change
 const CARDS_PADDING = 10;
 
+export const getTopOffset = (rect: DOMRect) => {
+	const cardsTopScreenOffset = rect.top;
+	const windowScroll = window.scrollY;
+	const topOffset = cardsTopScreenOffset - windowScroll;
+
+	return topOffset;
+};
+
 const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 	const cards = dragEvent.currentTarget.children.item(1);
 
@@ -29,19 +37,11 @@ const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 	const cardsRect = cards.getBoundingClientRect();
 	const cardsHeight = cardsRect.height;
 
-	const getTopOffset = (cardsRect: DOMRect) => {
-		const cardsTopScreenOffset = cardsRect.top;
-		const windowScroll = window.scrollY;
-		const topOffset = cardsTopScreenOffset - windowScroll;
-
-		return topOffset;
-	}
-
 	const topOffset = getTopOffset(cardsRect);
 
 	const calculateDropYWithoutOffset = (dropY: number, topOffset: number) => {
 		return dropY - topOffset;
-	}
+	};
 
 	const dropY = calculateDropYWithoutOffset(dragEvent.clientY, topOffset);
 
@@ -49,37 +49,39 @@ const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 		if (cardsArr.length <= 1) {
 			return 0;
 		}
-	
+
 		const nonCardSpace = cardsArr.reduce((nonCardSpace, card) => {
 			return nonCardSpace - card.clientHeight;
 		}, cardsHeight);
 
-		return (nonCardSpace - 2 * CARDS_PADDING) / (cardsArr.length - 1)
-	}
+		return (nonCardSpace - 2 * CARDS_PADDING) / (cardsArr.length - 1);
+	};
 
 	const gap = calculateGap(cardsArr, cardsHeight);
 
 	let currentInsertionY = CARDS_PADDING;
 	for (const [cardIndex, card] of cardsArr.entries()) {
-		const nextInsertionY = currentInsertionY + card.clientHeight + (cardIndex !== 0 ? gap : 0);
+		const nextInsertionY =
+			currentInsertionY + card.clientHeight + (cardIndex !== 0 ? gap : 0);
 
 		const droppedBeforeNextOffset = nextInsertionY > dropY;
 
 		if (droppedBeforeNextOffset) {
-			const droppedInFirstHalfOfCard = dropY > currentInsertionY + gap + card.clientHeight / 2;
+			const droppedInFirstHalfOfCard =
+				dropY < currentInsertionY + gap + card.clientHeight / 2;
 
 			if (droppedInFirstHalfOfCard) {
 				return {
-					position: cardIndex + 1,
-					insertionY: currentInsertionY + topOffset,
-					insertionX: cardsRect.x + CARDS_PADDING
-				}
-			} else {
-				return {
 					position: cardIndex,
 					insertionY: currentInsertionY + topOffset,
-					insertionX: cardsRect.x + CARDS_PADDING
-				}
+					insertionX: cardsRect.x + CARDS_PADDING,
+				};
+			} else {
+				return {
+					position: cardIndex + 1,
+					insertionY: nextInsertionY + topOffset,
+					insertionX: cardsRect.x + CARDS_PADDING,
+				};
 			}
 		}
 		currentInsertionY = nextInsertionY;
@@ -88,14 +90,22 @@ const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
 	return {
 		position: cardsArr.length,
 		insertionY: currentInsertionY + topOffset,
-		insertionX: cardsRect.x + CARDS_PADDING
-	}
+		insertionX: cardsRect.x + CARDS_PADDING,
+	};
 };
 
-export default function List({ children, list, setDropPosition, resetDropPosition }: ListProps) {
-	const draggedCard = useUnit($draggedCard);
+export default function List({
+	children,
+	list,
+	setDropPosition,
+	resetDropPosition
+}: ListProps) {
+	const [draggedCard, setDraggedCard] = useUnit([$draggedCard, cardDragged]);
 	const insertCard = useUnit(cardInserted);
 	const removeCard = useUnit(cardRemoved);
+
+	const setDraggedList = useUnit(listDragged);
+	const draggedList = useUnit($draggedList);
 
 	const unshiftCard = (newCard: KanbanCard) =>
 		insertCard({
@@ -104,39 +114,65 @@ export default function List({ children, list, setDropPosition, resetDropPositio
 			insertionIndex: 0,
 		});
 
+	const dragEventIsAboutCard = draggedCard && !draggedList;
+
 	function dragOverHandler(e: React.DragEvent<HTMLLIElement>) {
 		e.preventDefault();
 
-		if (!draggedCard) {
-			throw new Error("Dragged card is null");
+		if (!dragEventIsAboutCard) {
+			return;
 		}
 
-		const {insertionX: x, insertionY: y} = getCardDropPosition(e);
-		
-		setDropPosition({x, y});
+		const { insertionX: x, insertionY: y } = getCardDropPosition(e);
+
+		setDropPosition({ x, y });
 	}
 
 	function dropHandler(e: React.DragEvent<HTMLLIElement>) {
 		e.preventDefault();
 
-		if (!draggedCard) {
-			throw new Error("Dragged card is null");
-		}
+		if (!dragEventIsAboutCard) {
+			return;
+		} 
 
-		const {position: cardDropPosition} = getCardDropPosition(e);
+		const { position: cardDropPosition } = getCardDropPosition(e);
 
 		insertCard({
-			card: { ...draggedCard, id: getId(), position: cardDropPosition },
+			card: {
+				...draggedCard,
+				id: getId(),
+				position: cardDropPosition,
+			},
 			updatedList: list,
 			insertionIndex: cardDropPosition,
 		});
 
-		removeCard(draggedCard!["id"]);
+		removeCard(draggedCard["id"]);
+		setDraggedCard(null);
 		resetDropPosition();
 	}
 
+	function dragHandler(e: React.DragEvent<HTMLLIElement>) {
+		e.preventDefault();
+		setDraggedList(list);
+	}
+
+	function dragEndHandler(e: React.DragEvent<HTMLLIElement>) {
+		e.preventDefault();
+		setDraggedList(null);
+	}
+
 	return (
-		<li className={styles.list} onDragOver={dragOverHandler} onDrop={dropHandler}>
+		<li
+			className={styles.list}
+
+			onDragOver={dragOverHandler}
+			onDrop={dropHandler}
+
+			draggable
+			onDrag={dragHandler}
+			onDragEnd={dragEndHandler}
+		>
 			<ListHeader list={list} />
 			<ul className={styles.list_cards_wrapper}>{children}</ul>
 			<MakeNewCard unshiftCard={unshiftCard} />

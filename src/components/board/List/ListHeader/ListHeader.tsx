@@ -2,10 +2,11 @@ import { useUnit } from "effector-react";
 import { KanbanList } from "../../../../types";
 import { EditableText } from "../../../utils/EditableText/EditableText";
 import styles from "./ListHeader.module.css";
-import { listNameChanged, listRemoved } from "../model";
+import { listNameChanged } from "../model";
 import { editableTextClicked } from "../../../utils/EditableText/model";
 import { useEffect } from "react";
 import DeleteButton from "../../DeleteButton/DeleteButton";
+import { listRemoved } from "../../Board/model";
 
 const BIG_FONT_SIZE = 20;
 

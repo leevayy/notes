@@ -15,7 +15,7 @@
 }
 
 .list_cards_wrapper {
-	min-height: 132px;
+	min-height: var(--min-list-height);
 	padding: var(--cards-padding);
 
 	display: flex;

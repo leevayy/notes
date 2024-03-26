@@ -1,8 +1,8 @@
 import { createEffect, createEvent, createStore, sample } from "effector";
-import { KanbanBoard, KanbanCard } from "../../types";
-import fetchBoard from "../../api/fetchBoard";
+import { KanbanBoard, KanbanCard, KanbanList } from "../../../types";
+import fetchBoard from "../../../api/fetchBoard";
 import { debounce } from "patronum";
-import updateBoard from "../../api/updateBoard";
+import updateBoard from "../../../api/updateBoard";
 
 const DEBOUNCE_TIMEOUT_IN_MS = 1000;
 
@@ -29,7 +29,7 @@ export const $draggedCard = createStore<KanbanCard | null>(null);
 
 export const cardDragged = createEvent<KanbanCard | null>();
 
-$draggedCard.on(cardDragged, (_, draggedCard) => draggedCard);
+$draggedCard.on(cardDragged, (_, nextDraggedCard) => nextDraggedCard);
 
 export const cardRemoved = createEvent<KanbanCard["id"]>();
 
@@ -65,3 +65,52 @@ sample({
     },
     target: boardUpdated
 })
+
+export const $draggedList = createStore<KanbanList | null>(null);
+
+export const listDragged = createEvent<KanbanList | null>();
+
+$draggedList.on(listDragged, (_, nextDraggedList) => nextDraggedList);
+
+export const listRemoved = createEvent<KanbanList["id"]>();
+
+sample({
+    source: $board,
+    clock: listRemoved,
+    fn: (board, removedListId) => {
+        const removedListIndex = board.lists.findIndex(l => l.id === removedListId);
+
+        if (!~removedListIndex) {
+            throw new Error(`List with id: ${removedListId} was not found`);
+        }
+
+        const nextBoard = {
+            ...board,
+            lists: board.lists.filter(l => l.id !== removedListId)
+        }
+
+        return nextBoard;
+    },
+    target: boardUpdated
+})
+
+export const listInserted = createEvent<{list: KanbanList, insertionIndex: number}>();
+
+sample({
+    source: $board,
+    clock: listInserted,
+    fn: (board, {list, insertionIndex}) => {
+        const nextBoard = {
+			...board, 
+			lists: [
+				...board.lists.slice(0, insertionIndex),
+                list,
+                ...board.lists.slice(insertionIndex)
+			]
+		}
+
+        return nextBoard;
+    },
+    target: boardUpdated
+})
+

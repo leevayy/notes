@@ -11,4 +11,6 @@
 
 	overflow-x: scroll;
 	scrollbar-width: thin;
+
+	position: relative;
 }

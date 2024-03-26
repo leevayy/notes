@@ -3,7 +3,7 @@ import { KanbanCard } from "../../../types";
 import { EditableText } from "../../utils/EditableText/EditableText";
 import styles from "./Card.module.css";
 import { cardUpdated } from "./model";
-import { cardDragged, cardRemoved } from "../model";
+import { cardDragged, cardRemoved } from "../Board/model";
 import DeleteButton from "../DeleteButton/DeleteButton";
 
 type CardProps = {
@@ -28,6 +28,8 @@ export default function Card({ card, onDragEnd }: CardProps) {
 			draggable
 			onDrag={(e) => {
 				e.preventDefault();
+				e.stopPropagation();
+
 				setDraggedCard(card);
 			}}
 			onDragEnd={(e) => {
