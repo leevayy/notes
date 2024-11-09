@@ -23,8 +23,12 @@ export default function ListHeader({ list }: ListHeaderProps) {
   useEffect(() => {
     const shouldFocus = list.name === "";
 
-    shouldFocus && clickEditableText(list.id);
-  }, []);
+    if (!shouldFocus) {
+      return;
+    }
+
+    clickEditableText(list.id);
+  }, [clickEditableText, list.id, list.name]);
 
   const decreasingFontSize = (name: KanbanList["name"]) => {
     const MAXIMUM_OK_HEADER_LENGTH = 8;

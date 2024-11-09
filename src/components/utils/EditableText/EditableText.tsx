@@ -36,13 +36,13 @@ export function EditableText({
       textarea.style.height = "auto";
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
-  }, [value, textareaRef]);
+  }, [value, textareaRef, shouldAutoResize]);
 
   useEffect(() => {
     if (textareaRef !== null) {
       textareaRef.setSelectionRange(value.length, value.length);
     }
-  }, [textareaRef]);
+  }, [textareaRef, value.length]);
 
   const isInEditMode = inEditModeId === id;
 

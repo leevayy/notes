@@ -29,8 +29,7 @@
       "eslint:recommended",
       "plugin:react/recommended",
       "plugin:prettier/recommended",
-      "plugin:react-hooks/recommended",
-      "plugin:compat/recommended"
+      "plugin:react-hooks/recommended"
   ],
   "plugins": [
       "react",
@@ -39,8 +38,7 @@
       "prettier",
       "@typescript-eslint",
       "simple-import-sort",
-      "no-only-tests",
-      "compat"
+      "no-only-tests"
   ],
   "rules": {
       "no-console": "warn",

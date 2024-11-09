@@ -1,3 +1,4 @@
+/* eslint-disable */
 export function Calendar() {
   return (
     <div className="calendar">

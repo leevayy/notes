@@ -11,5 +11,5 @@ export function toSortedByPosition<T extends HasPosition>(iterable: T[]) {
 }
 
 export function getId() {
-  return String(parseInt(String(Math.random() * 10000000)));
+  return String(parseInt(String(Math.random() * 10000000), 10));
 }

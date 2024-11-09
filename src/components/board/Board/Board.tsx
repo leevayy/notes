@@ -9,7 +9,6 @@ import styles from "./Board.module.css";
 import {
   $draggedCard,
   $draggedList,
-  boardUpdated,
   listDragged,
   listInserted,
   listRemoved,
@@ -26,7 +25,6 @@ const getListDropPosition = (dragEvent: React.DragEvent<HTMLUListElement>) => {
 
   const listsRect = lists.getBoundingClientRect();
   const listsArr = Array.from(lists.children);
-  const listsWidth = listsRect.width;
 
   const topOffset = getTopOffset(listsRect);
 
@@ -47,8 +45,6 @@ const getListDropPosition = (dragEvent: React.DragEvent<HTMLUListElement>) => {
     if (droppedBeforeNextOffset) {
       const droppedInFirstHalfOfList =
         dropX < currentInsertionX + gap + list.clientWidth / 2;
-
-      console.log(currentInsertionX + gap + list.clientWidth / 2, dropX);
 
       if (droppedInFirstHalfOfList) {
         return {

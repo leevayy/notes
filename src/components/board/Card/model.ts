@@ -13,7 +13,7 @@ sample({
       const updatedCardIndex = list.cards.findIndex(
         (c) => c.id === updatedCard.id,
       );
-      const listHasCardUpdatedCard = ~updatedCardIndex;
+      const listHasCardUpdatedCard = updatedCardIndex !== -1;
 
       if (!listHasCardUpdatedCard) {
         return list;

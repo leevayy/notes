@@ -1,8 +1,8 @@
+import fetchBoard from "api/fetchBoard";
+import updateBoard from "api/updateBoard";
 import { createEffect, createEvent, createStore, sample } from "effector";
 import { debounce } from "patronum";
 
-import fetchBoard from "../../../api/fetchBoard";
-import updateBoard from "../../../api/updateBoard";
 import { KanbanBoard, KanbanCard, KanbanList } from "../../../types";
 
 const DEBOUNCE_TIMEOUT_IN_MS = 1000;
@@ -45,11 +45,13 @@ sample({
   source: $board,
   clock: cardRemoved,
   fn: (board, removedCardId) => {
+    // Find the index of the list containing the removed card
     const updatedListIndex = board.lists.findIndex(
-      (l) => ~l.cards.findIndex((c) => c.id === removedCardId),
+      (list) =>
+        list.cards.findIndex((card) => card.id === removedCardId) !== -1,
     );
 
-    if (!~updatedListIndex) {
+    if (updatedListIndex === -1) {
       throw new Error(`List with card id: ${removedCardId} was not found`);
     }
 
@@ -92,7 +94,7 @@ sample({
       (l) => l.id === removedListId,
     );
 
-    if (!~removedListIndex) {
+    if (removedListIndex === -1) {
       throw new Error(`List with id: ${removedListId} was not found`);
     }
 
