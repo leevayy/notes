@@ -1,18 +1,14 @@
-# Kanban board with calendar view
+# Notes
+
+Productivity and note-taking web application that operates on Markdown, which can be made into either kanban-style, list-making application, project management tool or personal knowledge base with the power of widgets.
 
 <img width="798" alt="image" src="https://github.com/leevayy/kanban/assets/86363699/9796d4c3-dbaa-400c-b364-e1919ec550cf">
 
-# TODO
-1. Пофиксить перетаскивание карточек между списками
-2. Добавить перетаскивание списков
-3. Разобраться почему react ругается на contentEditable
-4. Отрефакторить неочевидные функции-фабрики  
-
-# Установка
+## Установка
 
 ```
-git clone https://github.com/leevayy/kanban
-cd kanban
+git clone https://github.com/leevayy/notes
+cd notes
 npm install
 npm run dev
 ```
