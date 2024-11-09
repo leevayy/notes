@@ -6,17 +6,18 @@ import { useEffect, useState } from "react";
 import { Board } from "./components/board/Board/Board";
 import { Menu } from "./components/menu/menu";
 
-import { ReactComponent as MenuIcon } from "./icons/menu.svg";
-import { ReactComponent as UserIcon } from "./icons/user-icon.svg";
-import { ReactComponent as CalendarIcon } from "./icons/calendar-icon.svg";
 import MakeNewList from "./components/board/MakeNewList/MakeNewList";
 import DropDummyCard from "./components/board/DropDummy/DropDummyCard";
 import DropDummyList from "./components/board/DropDummy/DropDummyList";
+import { Bars, Calendar } from "@gravity-ui/icons";
+import { User } from "@gravity-ui/uikit";
 
 export type Position = {
 	x: number;
 	y: number;
 };
+
+
 
 export default function App() {
 	const board = useUnit($board);
@@ -52,9 +53,9 @@ export default function App() {
 		<>
 			<Menu
 				items={[
-					{ name: "menu", icon: MenuIcon, align: "left" },
-					{ name: "calendar", icon: CalendarIcon, align: "left" },
-					{ name: "user-icon", icon: UserIcon, align: "right" },
+					{ name: "menu", icon: Bars, align: "left" },
+					{ name: "calendar", icon: Calendar, align: "left" },
+					{ name: "user-icon", icon: () => <User avatar={{'imgUrl': '/user-icon.svg'}} />, align: "right" },
 					{ name: "board-name", text: board.name, align: "center" },
 				]}
 			/>
