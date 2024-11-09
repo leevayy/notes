@@ -1,0 +1,13 @@
+{
+    "plugins": ["stylelint-order", "stylelint-no-unsupported-browser-features"],
+    "extends": ["stylelint-config-recommended"],
+    "rules": {
+        "selector-pseudo-class-no-unknown": [
+            true,
+            { "ignorePseudoClasses": ["global"] }
+        ],
+        "plugin/no-unsupported-browser-features": [true, {
+            "severity": "warning"
+        }]
+    }
+}

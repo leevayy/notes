@@ -1,6 +1,7 @@
 export default async function fetchBoard() {
     await new Promise((res, rej) => setTimeout(res, 2000));
-    return {
+    
+return {
         name: "Some longer header to test this out",
         lists: [
             {

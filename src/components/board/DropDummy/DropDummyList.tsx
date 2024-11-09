@@ -2,18 +2,18 @@ import { Position } from "../../../App";
 import styles from "./DropDummy.module.css";
 
 type DropDummyProps = {
-	dropPosition: Position;
+  dropPosition: Position;
 };
 
 export default function DropDummyList({ dropPosition }: DropDummyProps) {
-	return (
-		<div
-			className={styles.dummy + ' ' + styles.vertical}
-			onDragOver={(e) => e.preventDefault()}
-			style={{
-				top: dropPosition.y + "px",
-				left: dropPosition.x + "px",
-			}}
-		/>
-	);
+  return (
+    <div
+      className={`${styles.dummy} ${styles.vertical}`}
+      onDragOver={(e) => e.preventDefault()}
+      style={{
+        top: `${dropPosition.y}px`,
+        left: `${dropPosition.x}px`,
+      }}
+    />
+  );
 }

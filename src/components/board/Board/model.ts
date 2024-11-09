@@ -1,12 +1,17 @@
 import { createEffect, createEvent, createStore, sample } from "effector";
-import { KanbanBoard, KanbanCard, KanbanList } from "../../../types";
-import fetchBoard from "../../../api/fetchBoard";
 import { debounce } from "patronum";
+
+import fetchBoard from "../../../api/fetchBoard";
 import updateBoard from "../../../api/updateBoard";
+import { KanbanBoard, KanbanCard, KanbanList } from "../../../types";
 
 const DEBOUNCE_TIMEOUT_IN_MS = 1000;
 
-export const $board = createStore<KanbanBoard>({name: 'loading...', lists: [], id: 'loading'});
+export const $board = createStore<KanbanBoard>({
+  name: "loading...",
+  lists: [],
+  id: "loading",
+});
 
 export const fetchBoardFx = createEffect(fetchBoard);
 
@@ -15,15 +20,18 @@ export const boardUpdated = createEvent<KanbanBoard>();
 export const updateBoardFx = createEffect(updateBoard);
 
 $board.on(boardUpdated, (_, newBoard) => {
-    return newBoard;
+  return newBoard;
 });
 
-export const debouncedBoardUpdated = debounce(boardUpdated, DEBOUNCE_TIMEOUT_IN_MS);
+export const debouncedBoardUpdated = debounce(
+  boardUpdated,
+  DEBOUNCE_TIMEOUT_IN_MS,
+);
 
 sample({
-    clock: debouncedBoardUpdated,
-    target: updateBoardFx
-})
+  clock: debouncedBoardUpdated,
+  target: updateBoardFx,
+});
 
 export const $draggedCard = createStore<KanbanCard | null>(null);
 
@@ -34,37 +42,39 @@ $draggedCard.on(cardDragged, (_, nextDraggedCard) => nextDraggedCard);
 export const cardRemoved = createEvent<KanbanCard["id"]>();
 
 sample({
-    source: $board,
-    clock: cardRemoved,
-    fn: (board, removedCardId) => {
-        const updatedListIndex = board.lists.findIndex(l => ~l.cards.findIndex(c => c.id === removedCardId));
+  source: $board,
+  clock: cardRemoved,
+  fn: (board, removedCardId) => {
+    const updatedListIndex = board.lists.findIndex(
+      (l) => ~l.cards.findIndex((c) => c.id === removedCardId),
+    );
 
-        if (!~updatedListIndex) {
-            throw new Error(`List with card id: ${removedCardId} was not found`);
+    if (!~updatedListIndex) {
+      throw new Error(`List with card id: ${removedCardId} was not found`);
+    }
+
+    const updatedList = board.lists[updatedListIndex];
+
+    const nextList = {
+      ...updatedList,
+      cards: updatedList.cards.filter((c) => c.id !== removedCardId),
+    };
+
+    const nextBoard = {
+      ...board,
+      lists: board.lists.map((list) => {
+        if (list.id === updatedList.id) {
+          return nextList;
         }
 
-        const updatedList = board.lists[updatedListIndex];
+        return list;
+      }),
+    };
 
-        const nextList = {
-			...updatedList, 
-			cards: updatedList.cards.filter(c => c.id !== removedCardId)
-		}
-
-        const nextBoard = {
-            ...board,
-            lists: board.lists.map(list => {
-                if (list.id === updatedList.id) {
-                    return nextList;
-                }
-
-                return list;
-            })
-        }
-
-        return nextBoard;
-    },
-    target: boardUpdated
-})
+    return nextBoard;
+  },
+  target: boardUpdated,
+});
 
 export const $draggedList = createStore<KanbanList | null>(null);
 
@@ -75,42 +85,46 @@ $draggedList.on(listDragged, (_, nextDraggedList) => nextDraggedList);
 export const listRemoved = createEvent<KanbanList["id"]>();
 
 sample({
-    source: $board,
-    clock: listRemoved,
-    fn: (board, removedListId) => {
-        const removedListIndex = board.lists.findIndex(l => l.id === removedListId);
+  source: $board,
+  clock: listRemoved,
+  fn: (board, removedListId) => {
+    const removedListIndex = board.lists.findIndex(
+      (l) => l.id === removedListId,
+    );
 
-        if (!~removedListIndex) {
-            throw new Error(`List with id: ${removedListId} was not found`);
-        }
+    if (!~removedListIndex) {
+      throw new Error(`List with id: ${removedListId} was not found`);
+    }
 
-        const nextBoard = {
-            ...board,
-            lists: board.lists.filter(l => l.id !== removedListId)
-        }
+    const nextBoard = {
+      ...board,
+      lists: board.lists.filter((l) => l.id !== removedListId),
+    };
 
-        return nextBoard;
-    },
-    target: boardUpdated
-})
+    return nextBoard;
+  },
+  target: boardUpdated,
+});
 
-export const listInserted = createEvent<{list: KanbanList, insertionIndex: number}>();
+export const listInserted = createEvent<{
+  list: KanbanList;
+  insertionIndex: number;
+}>();
 
 sample({
-    source: $board,
-    clock: listInserted,
-    fn: (board, {list, insertionIndex}) => {
-        const nextBoard = {
-			...board, 
-			lists: [
-				...board.lists.slice(0, insertionIndex),
-                list,
-                ...board.lists.slice(insertionIndex)
-			]
-		}
+  source: $board,
+  clock: listInserted,
+  fn: (board, { list, insertionIndex }) => {
+    const nextBoard = {
+      ...board,
+      lists: [
+        ...board.lists.slice(0, insertionIndex),
+        list,
+        ...board.lists.slice(insertionIndex),
+      ],
+    };
 
-        return nextBoard;
-    },
-    target: boardUpdated
-})
-
+    return nextBoard;
+  },
+  target: boardUpdated,
+});

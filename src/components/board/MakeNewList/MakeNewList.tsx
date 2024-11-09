@@ -1,30 +1,31 @@
 import { useUnit } from "effector-react";
+
 import { KanbanList } from "../../../types";
 import { getId } from "../../../utils/utils";
-import { listCreated } from "./model";
 import styles from "./MakeNewList.module.css";
+import { listCreated } from "./model";
 
 type MakeNewListProps = {
-    position: KanbanList["position"];
-}
+  position: KanbanList["position"];
+};
 
 export default function MakeNewList({ position }: MakeNewListProps) {
-    const createList = useUnit(listCreated);
+  const createList = useUnit(listCreated);
 
-	const emptyList: KanbanList = {
-		name: "",
-		position: position,
-		cards: [],
-		id: getId(),
-	};
+  const emptyList: KanbanList = {
+    name: "",
+    position,
+    cards: [],
+    id: getId(),
+  };
 
-	function handleClick() {
-		createList(emptyList);
-	}
+  function handleClick() {
+    createList(emptyList);
+  }
 
-	return (
-		<button className={styles.make_new_list} onClick={handleClick}>
-			Make New List
-		</button>
-	);
+  return (
+    <button className={styles.make_new_list} onClick={handleClick}>
+      Make New List
+    </button>
+  );
 }

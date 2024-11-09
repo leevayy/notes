@@ -1,17 +1,24 @@
 import { useUnit } from "effector-react";
+
+import { Position } from "../../../App";
 import { KanbanCard, KanbanList } from "../../../types";
+import { getId } from "../../../utils/utils";
+import {
+  $draggedCard,
+  $draggedList,
+  cardDragged,
+  cardRemoved,
+  listDragged,
+} from "../Board/model";
 import styles from "./List.module.css";
+import ListHeader from "./ListHeader/ListHeader";
 import MakeNewCard from "./MakeNewCard/MakeNewCard";
 import { cardInserted } from "./model";
-import { $draggedCard, $draggedList, cardDragged, cardRemoved, listDragged } from "../Board/model";
-import { getId } from "../../../utils/utils";
-import { Position } from "../../../App";
-import ListHeader from "./ListHeader/ListHeader";
 
 type ListProps = React.PropsWithChildren & {
-	list: KanbanList;
-	setDropPosition: React.Dispatch<React.SetStateAction<Position>>;
-	resetDropPosition: () => void;
+  list: KanbanList;
+  setDropPosition: React.Dispatch<React.SetStateAction<Position>>;
+  resetDropPosition: () => void;
 };
 
 // bad code, but i can't figure out how to calculate padding on the fly
@@ -19,163 +26,162 @@ type ListProps = React.PropsWithChildren & {
 const CARDS_PADDING = 10;
 
 export const getTopOffset = (rect: DOMRect) => {
-	const cardsTopScreenOffset = rect.top;
-	const windowScroll = window.scrollY;
-	const topOffset = cardsTopScreenOffset - windowScroll;
+  const cardsTopScreenOffset = rect.top;
+  const windowScroll = window.scrollY;
+  const topOffset = cardsTopScreenOffset - windowScroll;
 
-	return topOffset;
+  return topOffset;
 };
 
 const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
-	const cards = dragEvent.currentTarget.children.item(1);
+  const cards = dragEvent.currentTarget.children.item(1);
 
-	if (!cards) {
-		throw new Error("Droped card to list which has no cards wrapper!");
-	}
+  if (!cards) {
+    throw new Error("Droped card to list which has no cards wrapper!");
+  }
 
-	const cardsArr = Array.from(cards.children);
-	const cardsRect = cards.getBoundingClientRect();
-	const cardsHeight = cardsRect.height;
+  const cardsArr = Array.from(cards.children);
+  const cardsRect = cards.getBoundingClientRect();
+  const cardsHeight = cardsRect.height;
 
-	const topOffset = getTopOffset(cardsRect);
+  const topOffset = getTopOffset(cardsRect);
 
-	const calculateDropYWithoutOffset = (dropY: number, topOffset: number) => {
-		return dropY - topOffset;
-	};
+  const calculateDropYWithoutOffset = (dropY: number, topOffset: number) => {
+    return dropY - topOffset;
+  };
 
-	const dropY = calculateDropYWithoutOffset(dragEvent.clientY, topOffset);
+  const dropY = calculateDropYWithoutOffset(dragEvent.clientY, topOffset);
 
-	const calculateGap = (cardsArr: Element[], cardsHeight: number) => {
-		if (cardsArr.length <= 1) {
-			return 0;
-		}
+  const calculateGap = (cardsArr: Element[], cardsHeight: number) => {
+    if (cardsArr.length <= 1) {
+      return 0;
+    }
 
-		const nonCardSpace = cardsArr.reduce((nonCardSpace, card) => {
-			return nonCardSpace - card.clientHeight;
-		}, cardsHeight);
+    const nonCardSpace = cardsArr.reduce((nonCardSpace, card) => {
+      return nonCardSpace - card.clientHeight;
+    }, cardsHeight);
 
-		return (nonCardSpace - 2 * CARDS_PADDING) / (cardsArr.length - 1);
-	};
+    return (nonCardSpace - 2 * CARDS_PADDING) / (cardsArr.length - 1);
+  };
 
-	const gap = calculateGap(cardsArr, cardsHeight);
+  const gap = calculateGap(cardsArr, cardsHeight);
 
-	let currentInsertionY = CARDS_PADDING;
-	for (const [cardIndex, card] of cardsArr.entries()) {
-		const nextInsertionY =
-			currentInsertionY + card.clientHeight + (cardIndex !== 0 ? gap : 0);
+  let currentInsertionY = CARDS_PADDING;
 
-		const droppedBeforeNextOffset = nextInsertionY > dropY;
+  for (const [cardIndex, card] of cardsArr.entries()) {
+    const nextInsertionY =
+      currentInsertionY + card.clientHeight + (cardIndex !== 0 ? gap : 0);
 
-		if (droppedBeforeNextOffset) {
-			const droppedInFirstHalfOfCard =
-				dropY < currentInsertionY + gap + card.clientHeight / 2;
+    const droppedBeforeNextOffset = nextInsertionY > dropY;
 
-			if (droppedInFirstHalfOfCard) {
-				return {
-					position: cardIndex,
-					insertionY: currentInsertionY + topOffset,
-					insertionX: cardsRect.x + CARDS_PADDING,
-				};
-			} else {
-				return {
-					position: cardIndex + 1,
-					insertionY: nextInsertionY + topOffset,
-					insertionX: cardsRect.x + CARDS_PADDING,
-				};
-			}
-		}
-		currentInsertionY = nextInsertionY;
-	}
+    if (droppedBeforeNextOffset) {
+      const droppedInFirstHalfOfCard =
+        dropY < currentInsertionY + gap + card.clientHeight / 2;
 
-	return {
-		position: cardsArr.length,
-		insertionY: currentInsertionY + topOffset,
-		insertionX: cardsRect.x + CARDS_PADDING,
-	};
+      if (droppedInFirstHalfOfCard) {
+        return {
+          position: cardIndex,
+          insertionY: currentInsertionY + topOffset,
+          insertionX: cardsRect.x + CARDS_PADDING,
+        };
+      } else {
+        return {
+          position: cardIndex + 1,
+          insertionY: nextInsertionY + topOffset,
+          insertionX: cardsRect.x + CARDS_PADDING,
+        };
+      }
+    }
+    currentInsertionY = nextInsertionY;
+  }
+
+  return {
+    position: cardsArr.length,
+    insertionY: currentInsertionY + topOffset,
+    insertionX: cardsRect.x + CARDS_PADDING,
+  };
 };
 
 export default function List({
-	children,
-	list,
-	setDropPosition,
-	resetDropPosition
+  children,
+  list,
+  setDropPosition,
+  resetDropPosition,
 }: ListProps) {
-	const [draggedCard, setDraggedCard] = useUnit([$draggedCard, cardDragged]);
-	const insertCard = useUnit(cardInserted);
-	const removeCard = useUnit(cardRemoved);
+  const [draggedCard, setDraggedCard] = useUnit([$draggedCard, cardDragged]);
+  const insertCard = useUnit(cardInserted);
+  const removeCard = useUnit(cardRemoved);
 
-	const setDraggedList = useUnit(listDragged);
-	const draggedList = useUnit($draggedList);
+  const setDraggedList = useUnit(listDragged);
+  const draggedList = useUnit($draggedList);
 
-	const unshiftCard = (newCard: KanbanCard) =>
-		insertCard({
-			card: newCard,
-			updatedList: list,
-			insertionIndex: 0,
-		});
+  const unshiftCard = (newCard: KanbanCard) =>
+    insertCard({
+      card: newCard,
+      updatedList: list,
+      insertionIndex: 0,
+    });
 
-	const dragEventIsAboutCard = draggedCard && !draggedList;
+  const dragEventIsAboutCard = draggedCard && !draggedList;
 
-	function dragOverHandler(e: React.DragEvent<HTMLLIElement>) {
-		e.preventDefault();
+  function dragOverHandler(e: React.DragEvent<HTMLLIElement>) {
+    e.preventDefault();
 
-		if (!dragEventIsAboutCard) {
-			return;
-		}
+    if (!dragEventIsAboutCard) {
+      return;
+    }
 
-		const { insertionX: x, insertionY: y } = getCardDropPosition(e);
+    const { insertionX: x, insertionY: y } = getCardDropPosition(e);
 
-		setDropPosition({ x, y });
-	}
+    setDropPosition({ x, y });
+  }
 
-	function dropHandler(e: React.DragEvent<HTMLLIElement>) {
-		e.preventDefault();
+  function dropHandler(e: React.DragEvent<HTMLLIElement>) {
+    e.preventDefault();
 
-		if (!dragEventIsAboutCard) {
-			return;
-		} 
+    if (!dragEventIsAboutCard) {
+      return;
+    }
 
-		const { position: cardDropPosition } = getCardDropPosition(e);
+    const { position: cardDropPosition } = getCardDropPosition(e);
 
-		insertCard({
-			card: {
-				...draggedCard,
-				id: getId(),
-				position: cardDropPosition,
-			},
-			updatedList: list,
-			insertionIndex: cardDropPosition,
-		});
+    insertCard({
+      card: {
+        ...draggedCard,
+        id: getId(),
+        position: cardDropPosition,
+      },
+      updatedList: list,
+      insertionIndex: cardDropPosition,
+    });
 
-		removeCard(draggedCard["id"]);
-		setDraggedCard(null);
-		resetDropPosition();
-	}
+    removeCard(draggedCard["id"]);
+    setDraggedCard(null);
+    resetDropPosition();
+  }
 
-	function dragHandler(e: React.DragEvent<HTMLLIElement>) {
-		e.preventDefault();
-		setDraggedList(list);
-	}
+  function dragHandler(e: React.DragEvent<HTMLLIElement>) {
+    e.preventDefault();
+    setDraggedList(list);
+  }
 
-	function dragEndHandler(e: React.DragEvent<HTMLLIElement>) {
-		e.preventDefault();
-		setDraggedList(null);
-	}
+  function dragEndHandler(e: React.DragEvent<HTMLLIElement>) {
+    e.preventDefault();
+    setDraggedList(null);
+  }
 
-	return (
-		<li
-			className={styles.list}
-
-			onDragOver={dragOverHandler}
-			onDrop={dropHandler}
-
-			draggable
-			onDrag={dragHandler}
-			onDragEnd={dragEndHandler}
-		>
-			<ListHeader list={list} />
-			<ul className={styles.list_cards_wrapper}>{children}</ul>
-			<MakeNewCard unshiftCard={unshiftCard} />
-		</li>
-	);
+  return (
+    <li
+      className={styles.list}
+      onDragOver={dragOverHandler}
+      onDrop={dropHandler}
+      draggable={true}
+      onDrag={dragHandler}
+      onDragEnd={dragEndHandler}
+    >
+      <ListHeader list={list} />
+      <ul className={styles.list_cards_wrapper}>{children}</ul>
+      <MakeNewCard unshiftCard={unshiftCard} />
+    </li>
+  );
 }

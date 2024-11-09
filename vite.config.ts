@@ -1,7 +1,25 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
+import eslint from "vite-plugin-eslint";
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-})
+  plugins: [
+    react(),
+    eslint({
+      cache: false,
+      include: ["./src/**/*.ts", "./src/**/*.tsx", "./*.ts"],
+    }),
+  ],
+  assetsInclude: ["dist/*.cjs", "dist/*.css"],
+  css: {
+    modules: {
+      scopeBehaviour: "local",
+      hashPrefix: "notes-",
+      generateScopedName: "[name]_[local]_[hash:base64:5]",
+    },
+  },
+  define: {
+    global: {},
+  },
+});
