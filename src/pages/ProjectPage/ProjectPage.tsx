@@ -2,6 +2,7 @@ import { Bars, Calendar } from "@gravity-ui/icons";
 import { User } from "@gravity-ui/uikit";
 import { useUnit } from "effector-react";
 import { useEffect, useState } from "react";
+import iconUrl from "src/assets/user-icon.svg";
 import { Board } from "src/components/Board/Board/Board";
 import {
   $board,
@@ -54,7 +55,7 @@ export default function ProjectPage() {
           { name: "calendar", icon: Calendar, align: "left" },
           {
             name: "user-icon",
-            icon: () => <User avatar={{ imgUrl: "/user-icon.svg" }} />,
+            icon: () => <User avatar={{ imgUrl: iconUrl }} />,
             align: "right",
           },
           { name: "board-name", text: board.name, align: "center" },
