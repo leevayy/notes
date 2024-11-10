@@ -1,4 +1,5 @@
 import react from "@vitejs/plugin-react";
+import path from "path";
 import { defineConfig } from "vite";
 import eslint from "vite-plugin-eslint";
 
@@ -21,5 +22,17 @@ export default defineConfig({
   },
   define: {
     global: {},
+  },
+  resolve: {
+    alias: [
+      {
+        find: "src",
+        replacement: path.resolve(__dirname, "src"),
+      },
+      {
+        find: "api",
+        replacement: path.resolve(__dirname, "api"),
+      },
+    ],
   },
 });

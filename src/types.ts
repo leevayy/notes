@@ -18,3 +18,8 @@ export type KanbanBoard = {
   lists: KanbanList[];
   id: string;
 };
+
+export type Position = {
+  x: number;
+  y: number;
+};

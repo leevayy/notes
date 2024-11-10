@@ -1,8 +1,7 @@
 import { useUnit } from "effector-react";
 import { PropsWithChildren } from "react";
 
-import { Position } from "../../../App";
-import { KanbanBoard } from "../../../types";
+import { KanbanBoard, Position } from "../../../types";
 import { getId } from "../../../utils/utils";
 import { getTopOffset } from "../List/List";
 import styles from "./Board.module.css";
