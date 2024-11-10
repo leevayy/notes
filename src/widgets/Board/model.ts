@@ -3,7 +3,7 @@ import updateBoard from "api/updateBoard";
 import { createEffect, createEvent, createStore, sample } from "effector";
 import { debounce } from "patronum";
 
-import { KanbanBoard, KanbanCard, KanbanList } from "../../../types";
+import { KanbanBoard, KanbanCard, KanbanList } from "../../types";
 
 const DEBOUNCE_TIMEOUT_IN_MS = 1000;
 

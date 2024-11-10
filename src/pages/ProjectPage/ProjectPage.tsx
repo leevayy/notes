@@ -4,19 +4,15 @@ import { useUnit } from "effector-react";
 import { t } from "i18next";
 import { useEffect, useState } from "react";
 import iconUrl from "src/assets/user-icon.svg";
-import { Board } from "src/components/Board/Board/Board";
-import {
-  $board,
-  boardUpdated,
-  fetchBoardFx,
-} from "src/components/Board/Board/model";
-import Card from "src/components/Board/Card/Card";
-import DropDummyCard from "src/components/Board/DropDummy/DropDummyCard";
-import DropDummyList from "src/components/Board/DropDummy/DropDummyList";
-import List from "src/components/Board/List/List";
-import MakeNewList from "src/components/Board/MakeNewList/MakeNewList";
-import { Menu } from "src/components/Menu/Menu";
+import Card from "src/entities/Card/Card";
+import DropDummyCard from "src/entities/DropDummy/DropDummyCard";
+import DropDummyList from "src/entities/DropDummy/DropDummyList";
+import MakeNewList from "src/entities/MakeNewList/MakeNewList";
+import List from "src/features/List/List";
+import { Header } from "src/shared/Header/Header";
 import { Position } from "src/types";
+import { Board } from "src/widgets/Board/Board";
+import { $board, boardUpdated, fetchBoardFx } from "src/widgets/Board/model";
 
 export default function ProjectPage() {
   const board = useUnit($board);
@@ -50,7 +46,7 @@ export default function ProjectPage() {
 
   return (
     <>
-      <Menu
+      <Header
         items={[
           { name: "menu", icon: Bars, align: "left" },
           { name: "calendar", icon: Calendar, align: "left" },

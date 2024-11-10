@@ -1,10 +1,10 @@
 import { useUnit } from "effector-react";
+import { cardDragged, cardRemoved } from "src/widgets/Board/model";
 
-import { KanbanCard } from "../../../types";
-import { EditableText } from "../../utils/EditableText/EditableText";
-import { cardDragged, cardRemoved } from "../Board/model";
-import DeleteButton from "../DeleteButton/DeleteButton";
+import { EditableText } from "../../shared/EditableText/EditableText";
+import { KanbanCard } from "../../types";
 import styles from "./Card.module.css";
+import DeleteButton from "./DeleteButton/DeleteButton";
 import { cardUpdated } from "./model";
 
 type CardProps = {

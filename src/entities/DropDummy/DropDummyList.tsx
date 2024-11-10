@@ -1,17 +1,18 @@
-import { Position } from "../../../App";
+import { Position } from "src/types";
+
 import styles from "./DropDummy.module.css";
 
 type DropDummyProps = {
   dropPosition: Position;
 };
 
-export default function DropDummyCard({ dropPosition }: DropDummyProps) {
+export default function DropDummyList({ dropPosition }: DropDummyProps) {
   return (
     <div
-      className={styles.dummy}
+      className={`${styles.dummy} ${styles.vertical}`}
       onDragOver={(e) => e.preventDefault()}
       style={{
-        top: `${dropPosition.y + 5}px`,
+        top: `${dropPosition.y}px`,
         left: `${dropPosition.x}px`,
       }}
     />

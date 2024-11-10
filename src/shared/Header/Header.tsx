@@ -1,14 +1,14 @@
-type MenuItemProps = {
+type HeaderItemProps = {
   name: string;
   icon?: React.FunctionComponent;
   text?: string;
   align?: "left" | "right" | "center";
 };
 
-export function MenuItem(props: MenuItemProps) {
+export function HeaderItem(props: HeaderItemProps) {
   function itemContent(
-    icon: MenuItemProps["icon"],
-    text: MenuItemProps["text"],
+    icon: HeaderItemProps["icon"],
+    text: HeaderItemProps["text"],
   ) {
     if (icon) {
       const IconComponent = icon;
@@ -30,11 +30,11 @@ export function MenuItem(props: MenuItemProps) {
   );
 }
 
-type MenuProps = React.ComponentPropsWithoutRef<"ul"> & {
-  items: MenuItemProps[];
+type HeaderProps = React.ComponentPropsWithoutRef<"ul"> & {
+  items: HeaderItemProps[];
 };
 
-export function Menu(props: MenuProps) {
+export function Header(props: HeaderProps) {
   const sortedProps = {
     left: props.items.filter((el) => el.align === "left" || !el.align),
     center: props.items.filter((el) => el.align === "center"),
@@ -46,21 +46,21 @@ export function Menu(props: MenuProps) {
       {sortedProps.left.length !== 0 && (
         <li className="left menu-item">
           {sortedProps.left.map((props, i) => (
-            <MenuItem key={props.name + i} {...props}></MenuItem>
+            <HeaderItem key={props.name + i} {...props}></HeaderItem>
           ))}
         </li>
       )}
       {sortedProps.center.length !== 0 && (
         <li className="center menu-item">
           {sortedProps.center.map((props, i) => (
-            <MenuItem key={props.name + i} {...props}></MenuItem>
+            <HeaderItem key={props.name + i} {...props}></HeaderItem>
           ))}
         </li>
       )}
       {sortedProps.right.length !== 0 && (
         <li className="right menu-item">
           {sortedProps.right.map((props, i) => (
-            <MenuItem key={props.name + i} {...props}></MenuItem>
+            <HeaderItem key={props.name + i} {...props}></HeaderItem>
           ))}
         </li>
       )}

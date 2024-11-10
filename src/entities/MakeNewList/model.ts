@@ -1,7 +1,7 @@
 import { createEvent } from "effector";
+import { $board } from "src/widgets/Board/model";
 
-import { KanbanList } from "../../../types";
-import { $board } from "../Board/model";
+import { KanbanList } from "../../types";
 
 export const listCreated = createEvent<KanbanList>();
 

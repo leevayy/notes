@@ -1,18 +1,17 @@
 import { useUnit } from "effector-react";
 
-import { Position } from "../../../App";
-import { KanbanCard, KanbanList } from "../../../types";
-import { getId } from "../../../utils/utils";
+import ListHeader from "../../entities/ListHeader/ListHeader";
+import MakeNewCard from "../../entities/MakeNewCard/MakeNewCard";
+import { KanbanCard, KanbanList, Position } from "../../types";
+import { getId } from "../../utils/utils";
 import {
   $draggedCard,
   $draggedList,
   cardDragged,
   cardRemoved,
   listDragged,
-} from "../Board/model";
+} from "../../widgets/Board/model";
 import styles from "./List.module.css";
-import ListHeader from "./ListHeader/ListHeader";
-import MakeNewCard from "./MakeNewCard/MakeNewCard";
 import { cardInserted } from "./model";
 
 type ListProps = React.PropsWithChildren & {

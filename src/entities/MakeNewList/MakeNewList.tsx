@@ -1,7 +1,7 @@
 import { useUnit } from "effector-react";
 
-import { KanbanList } from "../../../types";
-import { getId } from "../../../utils/utils";
+import { KanbanList } from "../../types";
+import { getId } from "../../utils/utils";
 import styles from "./MakeNewList.module.css";
 import { listCreated } from "./model";
 

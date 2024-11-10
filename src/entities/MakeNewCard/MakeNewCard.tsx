@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 
-import { KanbanCard } from "../../../../types";
-import { getId } from "../../../../utils/utils";
+import { KanbanCard } from "../../types";
+import { getId } from "../../utils/utils";
 import styles from "./MakeNewCard.module.css";
 
 type MakeNewCardProps = {

@@ -1,9 +1,9 @@
 import { useUnit } from "effector-react";
 import { PropsWithChildren } from "react";
 
-import { KanbanBoard, Position } from "../../../types";
-import { getId } from "../../../utils/utils";
-import { getTopOffset } from "../List/List";
+import { getTopOffset } from "../../features/List/List";
+import { KanbanBoard, Position } from "../../types";
+import { getId } from "../../utils/utils";
 import styles from "./Board.module.css";
 import {
   $draggedCard,

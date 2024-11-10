@@ -1,12 +1,12 @@
 import { useUnit } from "effector-react";
 import { useEffect } from "react";
+import { listNameChanged } from "src/features/List/model";
+import { EditableText } from "src/shared/EditableText/EditableText";
+import { editableTextClicked } from "src/shared/EditableText/model";
+import { listRemoved } from "src/widgets/Board/model";
 
-import { KanbanList } from "../../../../types";
-import { EditableText } from "../../../utils/EditableText/EditableText";
-import { editableTextClicked } from "../../../utils/EditableText/model";
-import { listRemoved } from "../../Board/model";
-import DeleteButton from "../../DeleteButton/DeleteButton";
-import { listNameChanged } from "../model";
+import { KanbanList } from "../../types";
+import DeleteButton from "../Card/DeleteButton/DeleteButton";
 import styles from "./ListHeader.module.css";
 
 const BIG_FONT_SIZE = 20;
