@@ -1,6 +1,7 @@
 import { Bars, Calendar } from "@gravity-ui/icons";
 import { User } from "@gravity-ui/uikit";
 import { useUnit } from "effector-react";
+import { t } from "i18next";
 import { useEffect, useState } from "react";
 import iconUrl from "src/assets/user-icon.svg";
 import { Board } from "src/components/Board/Board/Board";
@@ -66,7 +67,7 @@ export default function ProjectPage() {
         <DropDummyList dropPosition={listDropPosition} />
       )}
       {isPending ? (
-        "fetching"
+        t("born_icy_grizzly_pout")
       ) : (
         <Board
           board={board}
