@@ -1,0 +1,40 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "./generated/client"
+  previewFeatures = ["deno"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Card {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  position    Int    @unique
+  List        List[] @relation("CardToList")
+}
+
+model List {
+  id       Int     @id @default(autoincrement())
+  name     String
+  position Int     @unique
+  Board    Board[] @relation("BoardToList")
+  cards    Card[]  @relation("CardToList")
+}
+
+model Board {
+  id     Int    @id @default(autoincrement())
+  name   String
+  Userid Int
+  User   User   @relation(fields: [Userid], references: [id])
+  lists  List[] @relation("BoardToList")
+}
+
+model User {
+  id     Int     @id @default(autoincrement())
+  name   String
+  boards Board[]
+}
