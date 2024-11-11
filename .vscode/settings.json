@@ -1,0 +1,7 @@
+{
+    "eslint.workingDirectories": [
+        "./frontend",
+        "./notes-backend"
+    ],
+    "deno.enable": true,
+}
