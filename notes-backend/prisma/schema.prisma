@@ -12,7 +12,7 @@ datasource db {
 model Card {
   id          Int    @id @default(autoincrement())
   name        String
-  description String
+  description String?
   position    Int    @unique
   List        List[] @relation("CardToList")
 }

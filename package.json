@@ -1,0 +1,9 @@
+{
+  "name": "notes",
+  "scripts": {
+    "demo": "bash scripts/demo.sh",
+    "kill-demo": "npm run stop-frontend && npm run stop-backend",
+    "stop-frontend": "if [ -f frontend.pid ]; then kill -9 $(cat frontend.pid) && rm frontend.pid; else echo 'Frontend not running'; fi",
+    "stop-backend": "if [ -f backend.pid ]; then kill -9 $(cat backend.pid) && rm backend.pid; else echo 'Backend not running'; fi"
+  }
+}
