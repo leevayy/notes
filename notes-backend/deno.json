@@ -13,5 +13,19 @@
     "@std/path": "jsr:@std/path@^1.0.6",
     "prisma": "npm:prisma@^5.20.0"
   },
-  "nodeModulesDir": "auto"
-}
+  "nodeModulesDir": "auto",
+  "lint": {
+    "include": ["src/"],
+    "exclude": ["prisma/generated"],
+    "rules": {
+      "tags": ["recommended"]
+    }
+  },
+  "fmt": {
+    "lineWidth": 80,
+    "indentWidth": 4,
+    "semiColons": true,
+    "singleQuote": true,
+    "include": ["src/"]
+  }
+} 
