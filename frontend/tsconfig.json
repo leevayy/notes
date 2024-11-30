@@ -46,13 +46,15 @@
     },
     "exclude": [
         "node_modules",
-        "dist"
+        "dist",
+        "**/*.jd"
     ],
     "include": [
         "src",
         "./typings/*.d.ts",
         "*.ts",
         "dist",
-        "api/**/*.ts"
+        "api/**/*.ts", 
+        "scripts/**/*.ts"
     ]
 }

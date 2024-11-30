@@ -24,8 +24,9 @@
     "include": ["src/"],
     "exclude": ["prisma/generated"],
     "rules": {
-      "tags": ["recommended"],
-      "exclude": ["no-explicit-any"]
+      "tags": ["recommended", "react", "jsx"],
+      "exclude": ["no-explicit-any"],
+      "include": ["no-sloppy-imports"]
     }
   },
   "fmt": {

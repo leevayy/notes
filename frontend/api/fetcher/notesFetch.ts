@@ -7,31 +7,37 @@ export type ErrorWrapper<TError> =
 export type NotesFetcherOptions<
     TQueryParams,
     TPathParams,
+    TBody,
 > = {
     url: string;
     method: string;
     queryParams?: TQueryParams;
     pathParams?: TPathParams;
+    body?: TBody;
 };
 
 export async function notesFetch<
     TData,
     TQueryParams extends {},
     TPathParams extends {},
+    TBody extends {},
 >({
     url,
     method,
     pathParams,
     queryParams,
+    body,
 }: NotesFetcherOptions<
     TQueryParams,
-    TPathParams
+    TPathParams,
+    TBody
 >): Promise<TData> {
     try {
         const response = await window.fetch(
             `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
             {
                 method: method.toUpperCase(),
+                body: body ? JSON.stringify(body) : undefined,
             },
         );
 

@@ -48,12 +48,6 @@ export type DeleteCardRequestDto = {
     pathParams: {
         id: string;
     }
-    body: {
-        listId?: number;
-        text?: string;
-        description?: string;
-        position?: number;
-    }
 };
 
 export type DeleteCardResponseDto = {
@@ -65,6 +59,53 @@ export type ListDto = {
     position: number;
     cards: CardDto[];
     name?: string | null;
+};
+
+export type CreateListRequestDto = {
+    body: {
+        boardId: number;
+        position?: number;
+        name?: string;
+    }
+};
+
+export type CreateListResponseDto = {
+    list: ListDto;
+};
+
+export type GetListRequestDto = {
+    pathParams: {
+        id: string;
+    }
+};
+
+export type GetListResponseDto = {
+    list: ListDto;
+};
+
+export type UpdateListRequestDto = {
+    pathParams: {
+        id: string;
+    },
+    body: {
+        boardId?: number;
+        name?: string;
+        position?: number;
+    }
+};
+
+export type UpdateListResponseDto = {
+    list: ListDto;
+};
+
+export type DeleteListRequestDto = {
+    pathParams: {
+        id: string;
+    }
+};
+
+export type DeleteListResponseDto = {
+    success: boolean;
 };
 
 export type BoardDto = {

@@ -1,22 +1,32 @@
 import { Router } from 'jsr:@oak/oak';
 import { routes } from './routes.ts';
-import {
-    getBoardController,
-    updateBoardController,
-} from '../controllers/boardControllers/index.ts';
 import { validateRequestData } from '../middleware/validation/validateRequestData.ts';
 import {
     createCardRequestDtoSchema,
+    createListRequestDtoSchema,
     deleteCardRequestDtoSchema,
+    deleteListRequestDtoSchema,
     getBoardRequestDtoSchema,
     getCardRequestDtoSchema,
     updateBoardRequestDtoSchema,
     updateCardRequestDtoSchema,
+    updateListRequestDtoSchema,
 } from '../../zod/interfaces.ts';
-import { createCardController } from '../controllers/cardControllers/createCardController.ts';
-import { getCardController } from '../controllers/cardControllers/getCardController.ts';
-import { updateCardController } from '../controllers/cardControllers/updateCardController.ts';
-import { deleteCardController } from '../controllers/cardControllers/deleteCardController.ts';
+import {
+    getBoardController,
+    updateBoardController,
+} from '../controllers/boardControllers/index.ts';
+import {
+    createListController,
+    deleteListController,
+    updateListController,
+} from '../controllers/listControllers/index.ts';
+import {
+    createCardController,
+    deleteCardController,
+    getCardController,
+    updateCardController,
+} from '../controllers/cardControllers/index.ts';
 
 export const router = new Router();
 
@@ -64,5 +74,20 @@ router.delete(
 );
 
 // LIST
-// TODO
-// ...
+router.post(
+    routes.createList,
+    validateRequestData<typeof routes.createList>(createListRequestDtoSchema),
+    createListController,
+);
+
+router.post(
+    routes.updateList,
+    validateRequestData<typeof routes.updateList>(updateListRequestDtoSchema),
+    updateListController,
+);
+
+router.delete(
+    routes.deleteList,
+    validateRequestData<typeof routes.deleteList>(deleteListRequestDtoSchema),
+    deleteListController,
+);

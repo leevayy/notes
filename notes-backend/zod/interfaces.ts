@@ -51,12 +51,6 @@ export const deleteCardRequestDtoSchema = z.object({
   pathParams: z.object({
     id: z.string(),
   }),
-  body: z.object({
-    listId: z.number().optional(),
-    text: z.string().optional(),
-    description: z.string().optional(),
-    position: z.number().optional(),
-  }),
 });
 
 export const deleteCardResponseDtoSchema = z.object({
@@ -68,6 +62,53 @@ export const listDtoSchema = z.object({
   position: z.number(),
   cards: z.array(cardDtoSchema),
   name: z.string().optional().nullable(),
+});
+
+export const createListRequestDtoSchema = z.object({
+  body: z.object({
+    boardId: z.number(),
+    position: z.number().optional(),
+    name: z.string().optional(),
+  }),
+});
+
+export const createListResponseDtoSchema = z.object({
+  list: listDtoSchema,
+});
+
+export const getListRequestDtoSchema = z.object({
+  pathParams: z.object({
+    id: z.string(),
+  }),
+});
+
+export const getListResponseDtoSchema = z.object({
+  list: listDtoSchema,
+});
+
+export const updateListRequestDtoSchema = z.object({
+  pathParams: z.object({
+    id: z.string(),
+  }),
+  body: z.object({
+    boardId: z.number().optional(),
+    name: z.string().optional(),
+    position: z.number().optional(),
+  }),
+});
+
+export const updateListResponseDtoSchema = z.object({
+  list: listDtoSchema,
+});
+
+export const deleteListRequestDtoSchema = z.object({
+  pathParams: z.object({
+    id: z.string(),
+  }),
+});
+
+export const deleteListResponseDtoSchema = z.object({
+  success: z.boolean(),
 });
 
 export const boardDtoSchema = z.object({
