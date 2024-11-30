@@ -1,8 +1,9 @@
+import { BoardDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
 import { PropsWithChildren } from "react";
 
 import { getTopOffset } from "../../features/List/List";
-import { KanbanBoard, Position } from "../../types";
+import { Position } from "../../types";
 import { getId } from "../../utils/utils";
 import styles from "./Board.module.css";
 import {
@@ -70,7 +71,7 @@ const getListDropPosition = (dragEvent: React.DragEvent<HTMLUListElement>) => {
 };
 
 type BoardProps = PropsWithChildren & {
-  board: KanbanBoard;
+  board: BoardDto;
   setListDropPosition: React.Dispatch<React.SetStateAction<Position>>;
   resetListDropPosition: () => void;
 };

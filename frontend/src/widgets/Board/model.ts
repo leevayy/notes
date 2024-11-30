@@ -1,21 +1,21 @@
+import { BoardDto, CardDto, ListDto } from "@dto/interfaces";
 import fetchBoard from "api/fetchBoard";
 import updateBoard from "api/updateBoard";
 import { createEffect, createEvent, createStore, sample } from "effector";
 import { debounce } from "patronum";
 
-import { KanbanBoard, KanbanCard, KanbanList } from "../../types";
-
 const DEBOUNCE_TIMEOUT_IN_MS = 1000;
 
-export const $board = createStore<KanbanBoard>({
+export const $board = createStore<BoardDto>({
   name: "loading...",
   lists: [],
-  id: "loading",
+  // TODO: Remove this hardcoded id
+  id: 999,
 });
 
 export const fetchBoardFx = createEffect(fetchBoard);
 
-export const boardUpdated = createEvent<KanbanBoard>();
+export const boardUpdated = createEvent<BoardDto>();
 
 export const updateBoardFx = createEffect(updateBoard);
 
@@ -33,13 +33,13 @@ sample({
   target: updateBoardFx,
 });
 
-export const $draggedCard = createStore<KanbanCard | null>(null);
+export const $draggedCard = createStore<CardDto | null>(null);
 
-export const cardDragged = createEvent<KanbanCard | null>();
+export const cardDragged = createEvent<CardDto | null>();
 
 $draggedCard.on(cardDragged, (_, nextDraggedCard) => nextDraggedCard);
 
-export const cardRemoved = createEvent<KanbanCard["id"]>();
+export const cardRemoved = createEvent<CardDto["id"]>();
 
 sample({
   source: $board,
@@ -78,13 +78,13 @@ sample({
   target: boardUpdated,
 });
 
-export const $draggedList = createStore<KanbanList | null>(null);
+export const $draggedList = createStore<ListDto | null>(null);
 
-export const listDragged = createEvent<KanbanList | null>();
+export const listDragged = createEvent<ListDto | null>();
 
 $draggedList.on(listDragged, (_, nextDraggedList) => nextDraggedList);
 
-export const listRemoved = createEvent<KanbanList["id"]>();
+export const listRemoved = createEvent<ListDto["id"]>();
 
 sample({
   source: $board,
@@ -109,7 +109,7 @@ sample({
 });
 
 export const listInserted = createEvent<{
-  list: KanbanList;
+  list: ListDto;
   insertionIndex: number;
 }>();
 

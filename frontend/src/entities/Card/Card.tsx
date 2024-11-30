@@ -1,14 +1,14 @@
+import { CardDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
 import { cardDragged, cardRemoved } from "src/widgets/Board/model";
 
 import { EditableText } from "../../shared/EditableText/EditableText";
-import { KanbanCard } from "../../types";
 import styles from "./Card.module.css";
 import DeleteButton from "./DeleteButton/DeleteButton";
 import { cardUpdated } from "./model";
 
 type CardProps = {
-  card: KanbanCard;
+  card: CardDto;
   onDragEnd: () => void;
 };
 
@@ -17,7 +17,7 @@ export default function Card({ card, onDragEnd }: CardProps) {
   const setDraggedCard = useUnit(cardDragged);
   const removeCard = useUnit(cardRemoved);
 
-  function handleChange(newText: KanbanCard["text"]) {
+  function handleChange(newText: CardDto["text"]) {
     updateCard({
       ...card,
       text: newText,
@@ -43,8 +43,8 @@ export default function Card({ card, onDragEnd }: CardProps) {
       <DeleteButton onClick={() => removeCard(card.id)} />
       <EditableText
         shouldAutoResize={true}
-        value={card.text}
-        id={card.id}
+        value={card.text ?? ""}
+        id={String(card.id)}
         onChange={(e) => handleChange(e.target.value)}
       />
     </li>

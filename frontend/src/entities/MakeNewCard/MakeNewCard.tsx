@@ -1,11 +1,11 @@
+import { CardDto } from "@dto/interfaces";
 import { useRef, useState } from "react";
 
-import { KanbanCard } from "../../types";
 import { getId } from "../../utils/utils";
 import styles from "./MakeNewCard.module.css";
 
 type MakeNewCardProps = {
-  unshiftCard: (card: KanbanCard) => void;
+  unshiftCard: (card: CardDto) => void;
 };
 
 export default function MakeNewCard({ unshiftCard }: MakeNewCardProps) {

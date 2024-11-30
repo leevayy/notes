@@ -1,24 +1,31 @@
 {
   "tasks": {
-    "dev": "deno run --allow-env --allow-net --allow-read --allow-ffi --watch --env-file main.ts",
-    "prisma": "deno run -A --unstable npm:prisma",
+    "dev": "deno run --allow-env --allow-net --allow-read --allow-ffi --watch --env-file src/main.ts",
+    "prisma": "deno run -A npm:prisma",
     "prisma:generate": "deno task prisma generate --schema ./prisma/schema.prisma && deno task prisma:patch",
     "prisma:patch": "deno run -A prisma/patch.ts",
-    "test": "deno test -A"
+    "zod:generate": "bash scripts/dto-interfaces-to-zod.sh"
   },
   "imports": {
-    "@prisma/client": "npm:@prisma/client@^5.20.0",
+    "prisma": "npm:prisma@6.0.0",
+    "@prisma/client": "npm:@prisma/client@6.0.0",
     "@std/assert": "jsr:@std/assert@1",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.2",
     "@std/path": "jsr:@std/path@^1.0.6",
-    "prisma": "npm:prisma@^5.20.0"
+    "zod": "https://deno.land/x/zod/mod.ts",
+    "@dto": "../dto/index.ts"
+  },
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true
   },
   "nodeModulesDir": "auto",
   "lint": {
     "include": ["src/"],
     "exclude": ["prisma/generated"],
     "rules": {
-      "tags": ["recommended"]
+      "tags": ["recommended"],
+      "exclude": ["no-explicit-any"]
     }
   },
   "fmt": {
@@ -28,4 +35,4 @@
     "singleQuote": true,
     "include": ["src/"]
   }
-} 
+}

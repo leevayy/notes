@@ -1,8 +1,9 @@
+import { CardDto, ListDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
 
 import ListHeader from "../../entities/ListHeader/ListHeader";
 import MakeNewCard from "../../entities/MakeNewCard/MakeNewCard";
-import { KanbanCard, KanbanList, Position } from "../../types";
+import { Position } from "../../types";
 import { getId } from "../../utils/utils";
 import {
   $draggedCard,
@@ -15,7 +16,7 @@ import styles from "./List.module.css";
 import { cardInserted } from "./model";
 
 type ListProps = React.PropsWithChildren & {
-  list: KanbanList;
+  list: ListDto;
   setDropPosition: React.Dispatch<React.SetStateAction<Position>>;
   resetDropPosition: () => void;
 };
@@ -114,7 +115,7 @@ export default function List({
   const setDraggedList = useUnit(listDragged);
   const draggedList = useUnit($draggedList);
 
-  const unshiftCard = (newCard: KanbanCard) =>
+  const unshiftCard = (newCard: CardDto) =>
     insertCard({
       card: newCard,
       updatedList: list,

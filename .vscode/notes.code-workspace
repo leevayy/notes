@@ -1,0 +1,18 @@
+{
+    "folders": [
+        {
+            "path": "/Users/sgoraichuk/projects/notes/"
+        },
+        {
+            "path": "/Users/sgoraichuk/projects/notes/frontend"
+        },
+        {
+            "path": "/Users/sgoraichuk/projects/notes/notes-backend"
+        }
+    ],
+    "settings": {"files.exclude": {
+        "frontend": true,
+        "notes-backend": true
+    }}
+}
+  

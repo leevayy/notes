@@ -1,6 +1,6 @@
-import { HasPosition } from "../types";
-
-export function toSortedByPosition<T extends HasPosition>(iterable: T[]) {
+export function toSortedByPosition<T extends { position: number }>(
+  iterable: T[],
+) {
   if (iterable.length === 0) {
     return [];
   }
@@ -11,5 +11,5 @@ export function toSortedByPosition<T extends HasPosition>(iterable: T[]) {
 }
 
 export function getId() {
-  return String(parseInt(String(Math.random() * 10000000), 10));
+  return parseInt(String(Math.random() * 10000000), 10);
 }

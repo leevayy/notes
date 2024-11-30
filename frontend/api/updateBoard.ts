@@ -1,8 +1,8 @@
-import { KanbanBoard } from "src/types";
+import { BoardDto } from "@dto/interfaces";
 
-export default async function updateBoard(board: KanbanBoard) {
-    await new Promise((res) => setTimeout(res, 1500));
-    // TODO remove this mock
-    // eslint-disable-next-line no-console
-    console.log('Board was updated!', board);
+export default async function updateBoard(board: BoardDto) {
+    await fetch('/api/board/update', {
+        method: 'POST',
+        body: JSON.stringify(board),
+    });
 }

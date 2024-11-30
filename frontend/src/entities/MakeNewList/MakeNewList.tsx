@@ -1,18 +1,18 @@
+import { ListDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
 
-import { KanbanList } from "../../types";
 import { getId } from "../../utils/utils";
 import styles from "./MakeNewList.module.css";
 import { listCreated } from "./model";
 
 type MakeNewListProps = {
-  position: KanbanList["position"];
+  position: ListDto["position"];
 };
 
 export default function MakeNewList({ position }: MakeNewListProps) {
   const createList = useUnit(listCreated);
 
-  const emptyList: KanbanList = {
+  const emptyList: ListDto = {
     name: "",
     position,
     cards: [],

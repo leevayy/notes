@@ -30,7 +30,9 @@ export default function ProjectPage() {
 
   useEffect(() => {
     async function fetchData() {
-      boardUpdated(await fetchBoardFx());
+      const { board } = await fetchBoardFx({ pathParams: { id: "1" } });
+
+      boardUpdated(board);
     }
 
     fetchData();

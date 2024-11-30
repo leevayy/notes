@@ -1,9 +1,9 @@
+import { CardDto, ListDto } from "@dto/interfaces";
 import { createEvent, sample } from "effector";
 
-import { KanbanCard, KanbanList } from "../../types";
 import { $board, boardUpdated } from "../../widgets/Board/model";
 
-export const listUpdated = createEvent<KanbanList>();
+export const listUpdated = createEvent<ListDto>();
 
 sample({
   source: $board,
@@ -26,8 +26,8 @@ sample({
 });
 
 export const cardInserted = createEvent<{
-  card: KanbanCard;
-  updatedList: KanbanList;
+  card: CardDto;
+  updatedList: ListDto;
   insertionIndex: number;
 }>();
 
@@ -50,8 +50,8 @@ sample({
 });
 
 export const listNameChanged = createEvent<{
-  nextName: KanbanList["name"];
-  updatedList: KanbanList;
+  nextName: ListDto["name"];
+  updatedList: ListDto;
 }>();
 
 sample({

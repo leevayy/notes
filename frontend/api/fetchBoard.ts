@@ -1,7 +1,9 @@
-export default async function fetchBoard() {
-    const res = await fetch('http://localhost:8000/board');
+import { GetBoardRequestDto, GetBoardResponseDto } from "@dto/interfaces";
 
-    const board = await res.json();
-    
+import { notesFetch } from "./notesFetch";
+
+export default async function fetchBoard(params: GetBoardRequestDto) {
+    const board: GetBoardResponseDto = await notesFetch({url: "/board/{id}", method: 'GET', pathParams: params.pathParams});
+ 
     return board;
 }
