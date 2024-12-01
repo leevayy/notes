@@ -1,4 +1,4 @@
-import { CardDto, ListDto } from "@dto/interfaces";
+import { CardDto, EntityId, ListDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
 import { cardApi } from "src/entities/Card/model";
 
@@ -6,12 +6,6 @@ import { Position } from "../../types";
 import styles from "./List.module.css";
 import ListHeader from "./ListHeader/ListHeader";
 import MakeNewCard, { MakeNewCardProps } from "./MakeNewCard/MakeNewCard";
-
-type ListProps = React.PropsWithChildren & {
-  list: ListDto;
-  setDropPosition: React.Dispatch<React.SetStateAction<Position>>;
-  resetDropPosition: () => void;
-};
 
 // bad code, but i can't figure out how to calculate padding on the fly
 // needs to be readjasted with each design change
@@ -94,11 +88,19 @@ const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
   };
 };
 
+type ListProps = React.PropsWithChildren & {
+  list: ListDto;
+  setDropPosition: React.Dispatch<React.SetStateAction<Position>>;
+  resetDropPosition: () => void;
+  setDraggedListId: React.Dispatch<React.SetStateAction<EntityId | null>>;
+};
+
 export default function List({
   children,
   list,
   setDropPosition,
   resetDropPosition,
+  setDraggedListId,
 }: ListProps) {
   const { addCard } = useUnit(cardApi);
 
@@ -153,24 +155,24 @@ export default function List({
   //   resetDropPosition();
   // }
 
-  // function dragHandler(e: React.DragEvent<HTMLLIElement>) {
-  //   e.preventDefault();
-  //   setDraggedList(list);
-  // }
+  function dragHandler(e: React.DragEvent<HTMLLIElement>) {
+    e.preventDefault();
+    setDraggedListId(list.id);
+  }
 
-  // function dragEndHandler(e: React.DragEvent<HTMLLIElement>) {
-  //   e.preventDefault();
-  //   setDraggedList(null);
-  // }
+  function dragEndHandler(e: React.DragEvent<HTMLLIElement>) {
+    e.preventDefault();
+    setDraggedListId(null);
+  }
 
   return (
     <li
       className={styles.list}
       // onDragOver={dragOverHandler}
       // onDrop={dropHandler}
-      // draggable={true}
-      // onDrag={dragHandler}
-      // onDragEnd={dragEndHandler}
+      draggable={true}
+      onDrag={dragHandler}
+      onDragEnd={dragEndHandler}
     >
       <ListHeader list={list} />
       <ul className={styles.list_cards_wrapper}>{children}</ul>

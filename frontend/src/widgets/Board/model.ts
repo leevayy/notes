@@ -1,4 +1,4 @@
-import { BoardDto, CardDto, EntityId } from "@dto/interfaces";
+import { BoardDto, EntityId } from "@dto/interfaces";
 import { getBoard } from "api/generatedApi";
 import {
   combine,
@@ -6,11 +6,10 @@ import {
   createEvent,
   createStore,
   sample,
-  Store,
 } from "effector";
 import { groupBy } from "lodash";
 import { $cards } from "src/entities/Card/model";
-import { $lists, createListFx } from "src/features/List/model";
+import { $lists } from "src/features/List/model";
 
 const fetchBoard = createEvent<{ boardId: EntityId }>();
 
@@ -35,8 +34,6 @@ export const $boards = combine(
           name: board && boardId === String(board.id) ? board.name : "",
           id: Number(boardId),
           lists: boardLists.map((list) => {
-            console.log(list, lists);
-
             return {
               ...list,
               cards: cardsByListId[list.id] ?? [],
@@ -50,8 +47,6 @@ export const $boards = combine(
       Object.keys(listsByBoardId).map(getDerivedBoards),
     );
 
-    console.log(derivedBoards);
-
     return derivedBoards;
   },
 );
@@ -61,25 +56,6 @@ sample({
   fn: ({ boardId }) => ({ pathParams: { id: String(boardId) } }),
   target: getBoardFx,
 });
-
-// export const $boards = createStore<Record<EntityId, BoardDto>>({});
-
-// $boards.on(getBoardFx.doneData, (state, { board }) => ({
-//   ...state,
-//   [board.id]: board,
-// }));
-
-// $boards.on(createListFx.doneData, (state, { list }) => {
-//   const board = state[list.boardId];
-
-//   return {
-//     ...state,
-//     [board.id]: {
-//       ...board,
-//       lists: [...board.lists, list],
-//     },
-//   };
-// });
 
 sample({
   clock: getBoardFx.doneData,
@@ -102,8 +78,6 @@ sample({
     ),
   target: $cards,
 });
-
-$boards.watch(console.log);
 
 export const boardApi = {
   fetchBoard,

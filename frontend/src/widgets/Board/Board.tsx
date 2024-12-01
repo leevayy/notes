@@ -1,20 +1,58 @@
-import { BoardDto } from "@dto/interfaces";
+import { EntityId } from "@dto/interfaces";
 import { useUnit } from "effector-react";
-import { PropsWithChildren, useState } from "react";
+import { useState } from "react";
+import { createPortal } from "react-dom";
 import Card from "src/entities/Card/Card";
+import DropDummyCard from "src/entities/DropDummy/DropDummyCard";
+import DropDummyList from "src/entities/DropDummy/DropDummyList";
 import MakeNewList from "src/entities/MakeNewList/MakeNewList";
+import { listApi } from "src/features/List/model";
 import { BOARD_ID } from "src/pages/ProjectPage/ProjectPage";
 
 import List, { getTopOffset } from "../../features/List/List";
 import { Position } from "../../types";
 import styles from "./Board.module.css";
-import { $boards, boardApi } from "./model";
+import { $boards } from "./model";
 
 // code, as bad as in handling card drop on the lise
 // i still cannot figure out how to calculate padding on the fly
 // needs to be readjasted with each design change
 const BOARD_PADDING = 30;
 const LISTS_GAP = 36;
+
+const DEFAULT_DROP_POSITION = { x: 0, y: 0 };
+
+const Dummies = ({
+  dropPosition,
+  listDropPosition,
+}: {
+  dropPosition: Position;
+  listDropPosition: Position;
+}) => {
+  const dropPositionIsDefault =
+    dropPosition.x === DEFAULT_DROP_POSITION.x &&
+    dropPosition.y === DEFAULT_DROP_POSITION.y;
+
+  const listDropPositionIsDefault =
+    listDropPosition.x === DEFAULT_DROP_POSITION.x &&
+    listDropPosition.y === DEFAULT_DROP_POSITION.y;
+
+  return (
+    <>
+      {createPortal(
+        <>
+          {!dropPositionIsDefault && (
+            <DropDummyCard dropPosition={dropPosition} />
+          )}
+          {!listDropPositionIsDefault && (
+            <DropDummyList dropPosition={listDropPosition} />
+          )}
+        </>,
+        document.body,
+      )}
+    </>
+  );
+};
 
 const getListDropPosition = (dragEvent: React.DragEvent<HTMLUListElement>) => {
   const lists = dragEvent.currentTarget;
@@ -66,109 +104,75 @@ const getListDropPosition = (dragEvent: React.DragEvent<HTMLUListElement>) => {
   };
 };
 
-type BoardProps = PropsWithChildren & {
-  board?: BoardDto;
-  setListDropPosition?: React.Dispatch<React.SetStateAction<Position>>;
-  resetListDropPosition?: () => void;
-};
+type BoardProps = {};
 
-export function Board({
-  children,
-  setListDropPosition,
-  resetListDropPosition,
-}: BoardProps) {
-  const defaultDropPosition = { x: 0, y: 0 };
+export const Board: React.FC<BoardProps> = () => {
+  const [dropPosition, setDropPosition] = useState<Position>(
+    DEFAULT_DROP_POSITION,
+  );
+  const resetDropPosition = () => setDropPosition(DEFAULT_DROP_POSITION);
 
-  const [_dropPosition, setDropPosition] =
-    useState<Position>(defaultDropPosition);
-  const resetDropPosition = () => setDropPosition(defaultDropPosition);
+  const [listDropPosition, setListDropPosition] = useState<Position>(
+    DEFAULT_DROP_POSITION,
+  );
+  const resetListDropPosition = () =>
+    setListDropPosition(DEFAULT_DROP_POSITION);
+
+  const { changeList } = useUnit(listApi);
 
   const boards = useUnit($boards);
   const board = boards[BOARD_ID];
 
-  if (!board) {
-    return;
+  const [draggedListId, setDraggedListId] = useState<EntityId | null>(null);
+  const [draggedCardId, setDraggedCardId] = useState<EntityId | null>(null);
+
+  const dragEventIsAboutList = draggedListId && !draggedCardId;
+
+  function dragOverHandler(e: React.DragEvent<HTMLUListElement>) {
+    e.preventDefault();
+
+    if (!dragEventIsAboutList) {
+      return;
+    }
+
+    const { insertionX: x, insertionY: y } = getListDropPosition(e);
+
+    setListDropPosition({ x, y });
   }
 
-  // const [draggedList, setDraggedList] = useUnit([$draggedList, listDragged]);
-  // const draggedCard = useUnit($draggedCard);
+  function dropHandler(e: React.DragEvent<HTMLUListElement>) {
+    e.preventDefault();
 
-  // const insertList = useUnit(listInserted);
-  // const removeList = useUnit(listRemoved);
+    if (!dragEventIsAboutList) {
+      return;
+    }
 
-  // const dragEventIsAboutList = draggedList && !draggedCard;
+    const { position: listDropPosition } = getListDropPosition(e);
 
-  // function dragOverHandler(e: React.DragEvent<HTMLUListElement>) {
-  //   e.preventDefault();
+    changeList({
+      listId: draggedListId,
+      changes: { position: listDropPosition },
+    });
 
-  //   if (!dragEventIsAboutList) {
-  //     return;
-  //   }
-
-  //   const { insertionX: x, insertionY: y } = getListDropPosition(e);
-
-  //   setListDropPosition({ x, y });
-  // }
-
-  // function dropHandler(e: React.DragEvent<HTMLUListElement>) {
-  //   e.preventDefault();
-
-  //   if (!dragEventIsAboutList) {
-  //     return;
-  //   }
-
-  //   const { position: listDropPosition } = getListDropPosition(e);
-
-  //   insertList({
-  //     list: {
-  //       ...draggedList,
-  //       id: getId(),
-  //       position: listDropPosition,
-  //     },
-  //     insertionIndex: listDropPosition,
-  //   });
-
-  //   removeList(draggedList["id"]);
-  //   resetListDropPosition();
-  //   setDraggedList(null);
-  // }
-
-  // const [listDropPosition, setListDropPosition] =
-  //   useState<Position>(defaultDropPosition);
-  // const resetListDropPosition = () => setListDropPosition(defaultDropPosition);
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const { board } = await fetchBoardFx({ pathParams: { id: "1" } });
-
-  //     boardUpdated(board);
-  //   }
-
-  //   fetchData();
-  // }, []);
-
-  // const dropPositionIsDefault =
-  //   dropPosition.x === defaultDropPosition.x &&
-  //   dropPosition.y === defaultDropPosition.y;
-
-  // const listDropPositionIsDefault =
-  //   listDropPosition.x === defaultDropPosition.x &&
-  //   listDropPosition.y === defaultDropPosition.y;
+    resetListDropPosition();
+    setDraggedListId(null);
+  }
 
   return (
     <>
       <ul
         className={styles.board}
-        // onDragOver={dragOverHandler}
-        // onDrop={dropHandler}
+        onDragOver={dragOverHandler}
+        onDrop={dropHandler}
       >
-        {board.lists.map((list) => {
+        {board?.lists.map((list) => {
           return (
             <List
               key={`${board.id}-${list.id}`}
               list={list}
               setDropPosition={setDropPosition}
               resetDropPosition={resetDropPosition}
+              setDraggedListId={setDraggedListId}
             >
               {list.cards.map((card) => {
                 return (
@@ -184,6 +188,10 @@ export function Board({
         })}
         <MakeNewList position={board?.lists.length} boardId={board?.id} />
       </ul>
+      <Dummies
+        dropPosition={dropPosition}
+        listDropPosition={listDropPosition}
+      />
     </>
   );
-}
+};

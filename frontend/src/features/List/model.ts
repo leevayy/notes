@@ -13,12 +13,6 @@ const changeList = createEvent<{
   changes: UpdateListRequestDto["body"];
 }>();
 const removeList = createEvent<EntityId>();
-// TODO
-// const moveCard = createEvent<{
-//   cardId: CardDto["id"];
-//   fromListId: ListDto["id"];
-//   toListId: ListDto["id"];
-// }>();
 
 export const createListFx = createEffect(createList);
 const updateListFx = createEffect(updateList);
