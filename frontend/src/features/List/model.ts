@@ -49,7 +49,7 @@ sample({
   target: deleteListFx,
 });
 
-export const $lists = createStore<Record<EntityId, ListDto>>({});
+export const $lists = createStore<Record<EntityId, Omit<ListDto, "cards">>>({});
 
 $lists.on(createListFx.doneData, (state, { list }) => ({
   ...state,
@@ -61,9 +61,14 @@ $lists.on(updateListFx.doneData, (state, { list }) => ({
   [list.id]: list,
 }));
 
-$lists.on(deleteListFx.done, (state, { params }) => ({
-  ...state,
-  [params.pathParams.id]: undefined,
-}));
+$lists.on(deleteListFx.done, (state, { params }) => {
+  const { id } = params.pathParams;
+
+  const newState = { ...state };
+
+  delete newState[Number(id)];
+
+  return newState;
+});
 
 export const listApi = { addList, changeList, removeList };

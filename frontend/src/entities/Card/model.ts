@@ -57,6 +57,41 @@ sample({
 
 export const $cards = createStore<Record<EntityId, CardDto>>({});
 
+// export const $cards = $boards.map((boards) =>
+//   Object.fromEntries(
+//     Object.values(boards)
+//       .flatMap((board) => board.lists)
+//       .flatMap((list) => list.cards)
+//       .map((card) => [card.id, card]),
+//   ),
+// );
+
+// sample({
+//   clock: createCardFx.doneData,
+//   source: $boards,
+//   fn: (boards, { card }) => {
+//     const board = boards[card.boardId];
+
+//     return {
+//       ...boards,
+//       [board.id]: {
+//         ...board,
+//         lists: board.lists.map((list) => {
+//           if (list.id !== card.listId) {
+//             return list;
+//           }
+
+//           return {
+//             ...list,
+//             cards: [...list.cards, card],
+//           };
+//         }),
+//       },
+//     };
+//   },
+//   target: $boards,
+// });
+
 $cards.on(createCardFx.doneData, (state, { card }) => ({
   ...state,
   [card.id]: card,
@@ -67,9 +102,14 @@ $cards.on(updateCardFx.doneData, (state, { card }) => ({
   [card.id]: card,
 }));
 
-$cards.on(deleteCardFx.done, (state, { params }) => ({
-  ...state,
-  [params.pathParams.id]: undefined,
-}));
+$cards.on(deleteCardFx.done, (state, { params }) => {
+  const { id } = params.pathParams;
+
+  const newState = { ...state };
+
+  delete newState[Number(id)];
+
+  return newState;
+});
 
 export const cardApi = { addCard, changeCard, removeCard };

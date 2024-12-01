@@ -1,11 +1,10 @@
 import { CardDto } from "@dto/interfaces";
 import { useRef, useState } from "react";
 
-import { getId } from "../../utils/utils";
 import styles from "./MakeNewCard.module.css";
 
-type MakeNewCardProps = {
-  unshiftCard: (card: CardDto) => void;
+export type MakeNewCardProps = {
+  unshiftCard: (card: Pick<CardDto, "text">) => void;
 };
 
 export default function MakeNewCard({ unshiftCard }: MakeNewCardProps) {
@@ -23,8 +22,6 @@ export default function MakeNewCard({ unshiftCard }: MakeNewCardProps) {
 
     unshiftCard({
       text: newCardText,
-      id: getId(),
-      position: 0,
     });
     setNewCardText("");
   }

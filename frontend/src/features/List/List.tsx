@@ -2,10 +2,10 @@ import { CardDto, ListDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
 import { cardApi } from "src/entities/Card/model";
 
-import MakeNewCard from "../../entities/MakeNewCard/MakeNewCard";
 import { Position } from "../../types";
 import styles from "./List.module.css";
 import ListHeader from "./ListHeader/ListHeader";
+import MakeNewCard, { MakeNewCardProps } from "./MakeNewCard/MakeNewCard";
 
 type ListProps = React.PropsWithChildren & {
   list: ListDto;
@@ -109,9 +109,8 @@ export default function List({
   // const setDraggedList = useUnit(listDragged);
   // const draggedList = useUnit($draggedList);
 
-  const unshiftCard = (newCard: Omit<CardDto, "id">) =>
+  const unshiftCard: MakeNewCardProps["unshiftCard"] = (newCard) =>
     addCard({
-      description: newCard.description ?? "",
       text: newCard.text ?? "",
       listId: list.id,
     });

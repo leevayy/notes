@@ -1,10 +1,9 @@
 import { interfaces } from '@dto';
 import { RouterContext } from 'jsr:@oak/oak';
 import { routes } from '../../routes/routes.ts';
-import { boardSelect } from '../../db/board/boardSelect.ts';
+import { boardSelect, getBoardDto } from '../../db/board/boardSelect.ts';
 import { Status } from 'jsr:@oak/commons@1/status';
 import { prisma } from '../../../prisma/client.ts';
-import { getListDto } from '../../db/list/listSelect.ts';
 
 export const getBoardController = async (
     ctx: RouterContext<(typeof routes)['getBoard']>,
@@ -24,10 +23,7 @@ export const getBoardController = async (
     }
 
     const responseBody: interfaces.GetBoardResponseDto = {
-        board: {
-            ...board,
-            lists: board.lists.map(getListDto),
-        },
+        board: getBoardDto(board),
     };
 
     ctx.response.status = Status.OK;

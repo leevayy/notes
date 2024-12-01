@@ -1,12 +1,60 @@
-import { BoardDto, EntityId } from "@dto/interfaces";
+import { BoardDto, CardDto, EntityId } from "@dto/interfaces";
 import { getBoard } from "api/generatedApi";
-import { createEffect, createEvent, createStore, sample } from "effector";
+import {
+  combine,
+  createEffect,
+  createEvent,
+  createStore,
+  sample,
+  Store,
+} from "effector";
+import { groupBy } from "lodash";
 import { $cards } from "src/entities/Card/model";
-import { $lists, createListFx, listApi } from "src/features/List/model";
+import { $lists, createListFx } from "src/features/List/model";
 
 const fetchBoard = createEvent<{ boardId: EntityId }>();
 
 export const getBoardFx = createEffect(getBoard);
+
+const $board = createStore<BoardDto | null>(null);
+
+export const $boards = combine(
+  $cards,
+  $lists,
+  $board,
+  (cards, lists, board) => {
+    const cardsByListId = groupBy(Object.values(cards), "listId");
+    const listsByBoardId = groupBy(Object.values(lists), "boardId");
+
+    const getDerivedBoards = (boardId: string): [EntityId, BoardDto] => {
+      const boardLists = listsByBoardId[boardId];
+
+      return [
+        Number(boardId),
+        {
+          name: board && boardId === String(board.id) ? board.name : "",
+          id: Number(boardId),
+          lists: boardLists.map((list) => {
+            console.log(list, lists);
+
+            return {
+              ...list,
+              cards: cardsByListId[list.id] ?? [],
+            };
+          }),
+        },
+      ];
+    };
+
+    const derivedBoards = Object.fromEntries(
+      Object.keys(listsByBoardId).map(getDerivedBoards),
+    );
+
+    console.log(derivedBoards);
+
+    return derivedBoards;
+  },
+);
 
 sample({
   clock: fetchBoard,
@@ -14,23 +62,29 @@ sample({
   target: getBoardFx,
 });
 
-export const $boards = createStore<Record<EntityId, BoardDto>>({});
+// export const $boards = createStore<Record<EntityId, BoardDto>>({});
 
-$boards.on(getBoardFx.doneData, (state, { board }) => ({
-  ...state,
-  [board.id]: board,
-}));
+// $boards.on(getBoardFx.doneData, (state, { board }) => ({
+//   ...state,
+//   [board.id]: board,
+// }));
 
-$boards.on(createListFx.doneData, (state, { list }) => {
-  const board = state[list.boardId];
+// $boards.on(createListFx.doneData, (state, { list }) => {
+//   const board = state[list.boardId];
 
-  return {
-    ...state,
-    [board.id]: {
-      ...board,
-      lists: [...board.lists, list],
-    },
-  };
+//   return {
+//     ...state,
+//     [board.id]: {
+//       ...board,
+//       lists: [...board.lists, list],
+//     },
+//   };
+// });
+
+sample({
+  clock: getBoardFx.doneData,
+  fn: ({ board }) => board,
+  target: $board,
 });
 
 sample({
@@ -48,6 +102,8 @@ sample({
     ),
   target: $cards,
 });
+
+$boards.watch(console.log);
 
 export const boardApi = {
   fetchBoard,

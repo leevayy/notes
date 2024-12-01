@@ -2,7 +2,7 @@ import { ListDto } from '../../../../dto/interfaces.ts';
 import { Prisma } from '../../../prisma/client.ts';
 import { cardSelect, getCardDto } from '../card/cardSelect.ts';
 
-export const listSelect: Prisma.ListSelect = {
+export const listSelect = {
     id: true,
     name: true,
     position: true,
@@ -10,20 +10,16 @@ export const listSelect: Prisma.ListSelect = {
         select: cardSelect,
     },
     BoardId: true,
-};
+} satisfies Prisma.ListSelect;
 
-export const getListDto = (
-    list: Prisma.ListGetPayload<{ select: typeof listSelect }>,
+export const getListDto = <
+    T extends Prisma.ListGetPayload<{ select: typeof listSelect }>,
+>(
+    list: T,
 ): ListDto => ({
     id: list.id,
     name: list.name,
     position: list.position,
-    cards: list.cards.map((card) =>
-        getCardDto(
-            // type assertion because type inferring doesn't work for some reason
-            card as Prisma.CardGetPayload<{ select: typeof cardSelect }>,
-            list.BoardId,
-        )
-    ),
+    cards: list.cards.map(getCardDto),
     boardId: list.BoardId,
 });

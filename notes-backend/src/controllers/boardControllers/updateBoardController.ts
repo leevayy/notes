@@ -5,7 +5,7 @@ import {
     UpdateBoardRequestDto,
     UpdateBoardResponseDto,
 } from '../../../../dto/interfaces.ts';
-import { boardSelect } from '../../db/board/boardSelect.ts';
+import { boardSelect, getBoardDto } from '../../db/board/boardSelect.ts';
 import { Status } from 'jsr:@oak/commons@1/status';
 
 export const updateBoardController = async (
@@ -24,7 +24,7 @@ export const updateBoardController = async (
     });
 
     const response: UpdateBoardResponseDto = {
-        board,
+        board: getBoardDto(board),
     };
 
     ctx.response.status = Status.OK;

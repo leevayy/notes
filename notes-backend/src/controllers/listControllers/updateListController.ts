@@ -3,7 +3,7 @@ import { prisma } from '../../../prisma/client.ts';
 import { RouterContext } from 'jsr:@oak/oak';
 import { routes } from '../../routes/routes.ts';
 import { Status } from 'jsr:@oak/commons@1/status';
-import { listSelect } from '../../db/list/listSelect.ts';
+import { getListDto, listSelect } from '../../db/list/listSelect.ts';
 
 export const updateListController = async (
     ctx: RouterContext<(typeof routes)['updateList']>,
@@ -24,13 +24,7 @@ export const updateListController = async (
     });
 
     const responseBody: interfaces.UpdateListResponseDto = {
-        list: {
-            boardId: list.BoardId,
-            id: list.id,
-            name: list.name,
-            cards: list.cards,
-            position: list.position,
-        },
+        list: getListDto(list),
     };
 
     ctx.response.status = Status.OK;

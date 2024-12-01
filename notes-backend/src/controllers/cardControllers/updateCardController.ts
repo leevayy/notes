@@ -3,6 +3,7 @@ import { prisma } from '../../../prisma/client.ts';
 import { RouterContext } from 'jsr:@oak/oak';
 import { routes } from '../../routes/routes.ts';
 import { Status } from 'jsr:@oak/commons@1/status';
+import { cardSelect, getCardDto } from '../../db/card/cardSelect.ts';
 
 export const updateCardController = async (
     ctx: RouterContext<(typeof routes)['updateCard']>,
@@ -20,9 +21,12 @@ export const updateCardController = async (
             description: body.description,
             position: body.position,
         },
+        select: cardSelect,
     });
 
-    const responseBody: interfaces.UpdateCardResponseDto = { card };
+    const responseBody: interfaces.UpdateCardResponseDto = {
+        card: getCardDto(card),
+    };
 
     ctx.response.status = Status.OK;
     ctx.response.body = responseBody;

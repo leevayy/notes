@@ -11,29 +11,22 @@ export const createCardController = async (
     const body = await ctx.request.body
         .json() as interfaces.CreateCardRequestDto['body'];
 
-    const list = await prisma.list.findUnique({
-        where: { id: body.listId },
-        select: { BoardId: true, cards: true },
+    const cardCount = await prisma.card.count({
+        where: { ListId: body.listId },
     });
-
-    if (!list) {
-        ctx.response.status = Status.NotFound;
-        ctx.response.body = { message: 'List not found' };
-        return;
-    }
 
     const card = await prisma.card.create({
         data: {
             ListId: body.listId,
             text: body.text ?? '',
             description: body.description,
-            position: list.cards.length ?? 0,
+            position: cardCount,
         },
         select: cardSelect,
     });
 
     const responseBody: interfaces.CreateCardResponseDto = {
-        card: getCardDto(card, list.BoardId),
+        card: getCardDto(card),
     };
 
     ctx.response.status = Status.OK;

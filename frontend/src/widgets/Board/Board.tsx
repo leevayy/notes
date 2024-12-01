@@ -77,7 +77,18 @@ export function Board({
   setListDropPosition,
   resetListDropPosition,
 }: BoardProps) {
-  const board = useUnit($boards)[BOARD_ID];
+  const defaultDropPosition = { x: 0, y: 0 };
+
+  const [_dropPosition, setDropPosition] =
+    useState<Position>(defaultDropPosition);
+  const resetDropPosition = () => setDropPosition(defaultDropPosition);
+
+  const boards = useUnit($boards);
+  const board = boards[BOARD_ID];
+
+  if (!board) {
+    return;
+  }
 
   // const [draggedList, setDraggedList] = useUnit([$draggedList, listDragged]);
   // const draggedCard = useUnit($draggedCard);
@@ -122,12 +133,6 @@ export function Board({
   //   setDraggedList(null);
   // }
 
-  const defaultDropPosition = { x: 0, y: 0 };
-
-  const [_dropPosition, setDropPosition] =
-    useState<Position>(defaultDropPosition);
-  const resetDropPosition = () => setDropPosition(defaultDropPosition);
-
   // const [listDropPosition, setListDropPosition] =
   //   useState<Position>(defaultDropPosition);
   // const resetListDropPosition = () => setListDropPosition(defaultDropPosition);
@@ -157,7 +162,7 @@ export function Board({
         // onDragOver={dragOverHandler}
         // onDrop={dropHandler}
       >
-        {board?.lists.map((list) => {
+        {board.lists.map((list) => {
           return (
             <List
               key={`${board.id}-${list.id}`}
