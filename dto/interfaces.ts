@@ -1,5 +1,9 @@
+export type EntityId = number;
+
 export interface CardDto {
-    id: number;
+    boardId: number;
+    listId: number;
+    id: EntityId;
     position: number;
     description?: string | null;
     text?: string | null;
@@ -7,7 +11,7 @@ export interface CardDto {
 
 export type CreateCardRequestDto = {
     body: {
-        listId: number;
+        listId: EntityId;
         text?: string;
         description?: string;
         position?: number;
@@ -55,7 +59,8 @@ export type DeleteCardResponseDto = {
 };
 
 export type ListDto = {
-    id: number;
+    boardId: number;
+    id: EntityId;
     position: number;
     cards: CardDto[];
     name?: string | null;
@@ -63,7 +68,7 @@ export type ListDto = {
 
 export type CreateListRequestDto = {
     body: {
-        boardId: number;
+        boardId: EntityId;
         position?: number;
         name?: string;
     }
@@ -109,7 +114,7 @@ export type DeleteListResponseDto = {
 };
 
 export type BoardDto = {
-    id: number;
+    id: EntityId;
     name: string;
     lists: ListDto[];
 };

@@ -1,50 +1,29 @@
 import { Bars, Calendar } from "@gravity-ui/icons";
-import { User } from "@gravity-ui/uikit";
+import { Button, User } from "@gravity-ui/uikit";
 import { useUnit } from "effector-react";
 import { t } from "i18next";
 import { useEffect, useState } from "react";
 import iconUrl from "src/assets/user-icon.svg";
-import Card from "src/entities/Card/Card";
 import DropDummyCard from "src/entities/DropDummy/DropDummyCard";
 import DropDummyList from "src/entities/DropDummy/DropDummyList";
-import MakeNewList from "src/entities/MakeNewList/MakeNewList";
-import List from "src/features/List/List";
 import { Header } from "src/shared/Header/Header";
 import { Position } from "src/types";
+// import { boardUpdated, fetchBoardFx } from "src/widgets/Board/_model";
 import { Board } from "src/widgets/Board/Board";
-import { $board, boardUpdated, fetchBoardFx } from "src/widgets/Board/model";
+import { $boards, boardApi, getBoardFx } from "src/widgets/Board/model";
+
+export const BOARD_ID = 1;
 
 export default function ProjectPage() {
-  const board = useUnit($board);
-  const isPending = useUnit(fetchBoardFx.pending);
-
-  const defaultDropPosition = { x: 0, y: 0 };
-
-  const [dropPosition, setDropPosition] =
-    useState<Position>(defaultDropPosition);
-  const resetDropPosition = () => setDropPosition(defaultDropPosition);
-
-  const [listDropPosition, setListDropPosition] =
-    useState<Position>(defaultDropPosition);
-  const resetListDropPosition = () => setListDropPosition(defaultDropPosition);
+  const { fetchBoard } = useUnit(boardApi);
 
   useEffect(() => {
-    async function fetchData() {
-      const { board } = await fetchBoardFx({ pathParams: { id: "1" } });
+    fetchBoard({ boardId: BOARD_ID });
+  }, [fetchBoard]);
 
-      boardUpdated(board);
-    }
-
-    fetchData();
-  }, []);
-
-  const dropPositionIsDefault =
-    dropPosition.x === defaultDropPosition.x &&
-    dropPosition.y === defaultDropPosition.y;
-
-  const listDropPositionIsDefault =
-    listDropPosition.x === defaultDropPosition.x &&
-    listDropPosition.y === defaultDropPosition.y;
+  const boards = useUnit($boards);
+  const board = boards[BOARD_ID];
+  const isPending = useUnit(getBoardFx.pending);
 
   return (
     <>
@@ -57,44 +36,18 @@ export default function ProjectPage() {
             icon: () => <User avatar={{ imgUrl: iconUrl }} />,
             align: "right",
           },
-          { name: "board-name", text: board.name, align: "center" },
+          {
+            name: "board-name",
+            text: isPending ? t("born_icy_grizzly_pout") : board?.name,
+            align: "center",
+          },
         ]}
       />
-      {!dropPositionIsDefault && <DropDummyCard dropPosition={dropPosition} />}
+      {/* {!dropPositionIsDefault && <DropDummyCard dropPosition={dropPosition} />}
       {!listDropPositionIsDefault && (
         <DropDummyList dropPosition={listDropPosition} />
-      )}
-      {isPending ? (
-        t("born_icy_grizzly_pout")
-      ) : (
-        <Board
-          board={board}
-          setListDropPosition={setListDropPosition}
-          resetListDropPosition={resetListDropPosition}
-        >
-          {board.lists.map((list) => {
-            return (
-              <List
-                key={`${board.id}-${list.id}`}
-                list={list}
-                setDropPosition={setDropPosition}
-                resetDropPosition={resetDropPosition}
-              >
-                {list.cards.map((card) => {
-                  return (
-                    <Card
-                      key={`${list.id}-${card.id}`}
-                      card={card}
-                      onDragEnd={resetDropPosition}
-                    />
-                  );
-                })}
-              </List>
-            );
-          })}
-          <MakeNewList position={board.lists.length} />
-        </Board>
-      )}
+      )} */}
+      {isPending ? t("born_icy_grizzly_pout") : <Board />}
     </>
   );
 }

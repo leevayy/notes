@@ -22,68 +22,68 @@ export async function notesFetch<
     TPathParams extends {},
     TBody extends {},
 >({
-    url,
-    method,
-    pathParams,
-    queryParams,
-    body,
+  url,
+  method,
+  pathParams,
+  queryParams,
+  body,
 }: NotesFetcherOptions<
     TQueryParams,
     TPathParams,
     TBody
 >): Promise<TData> {
-    try {
-        const response = await window.fetch(
-            `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
-            {
-                method: method.toUpperCase(),
-                body: body ? JSON.stringify(body) : undefined,
-            },
-        );
+  try {
+    const response = await window.fetch(
+      `${baseUrl}${resolveUrl(url, queryParams, pathParams)}`,
+      {
+        method: method.toUpperCase(),
+        body: body ? JSON.stringify(body) : undefined,
+      },
+    );
 
-        if (!response.ok) {
-            let error: ErrorWrapper<{}>;
+    if (!response.ok) {
+      let error: ErrorWrapper<{}>;
 
-            try {
-                error = await response.json();
-            } catch (e) {
-                error = {
-                    status: 'unknown' as const,
-                    payload:
+      try {
+        error = await response.json();
+      } catch (e) {
+        error = {
+          status: 'unknown' as const,
+          payload:
                         e instanceof Error
-                            ? `Unexpected error (${e.message})`
-                            : 'Unexpected error',
-                };
-            }
-
-            throw error;
-        }
-
-        return await response.json();
-    } catch (e) {
-        const errorObject: Error = {
-            name: 'unknown' as const,
-            message:
-                e instanceof Error
-                    ? `Network error (${e.message})`
-                    : 'Network error',
-            stack: e as string,
+                          ? `Unexpected error (${e.message})`
+                          : 'Unexpected error',
         };
+      }
 
-        throw errorObject;
+      throw error;
     }
+
+    return await response.json();
+  } catch (e) {
+    const errorObject: Error = {
+      name: 'unknown' as const,
+      message:
+                e instanceof Error
+                  ? `Network error (${e.message})`
+                  : 'Network error',
+      stack: e as string,
+    };
+
+    throw errorObject;
+  }
 }
 
 const resolveUrl = (
-    url: string,
-    queryParams: Record<string, string> = {},
-    pathParams: Record<string, string> = {},
+  url: string,
+  queryParams: Record<string, string> = {},
+  pathParams: Record<string, string> = {},
 ) => {
-    let query = new URLSearchParams(queryParams).toString();
+  let query = new URLSearchParams(queryParams).toString();
 
-    if (query) query = `?${query}`;
+  if (query) query = `?${query}`;
 
-    return (
-        url.replace(/\{\w*\}/g, (key) => pathParams[key.slice(1, -1)]) + query
-    );
+  return (
+    url.replace(/\{\w*\}/g, (key) => pathParams[key.slice(1, -1)]) + query
+  );
 };

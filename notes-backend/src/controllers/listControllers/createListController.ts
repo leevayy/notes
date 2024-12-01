@@ -8,24 +8,28 @@ import { listSelect } from '../../db/list/listSelect.ts';
 export const createListController = async (
     ctx: RouterContext<(typeof routes)['createList']>,
 ) => {
-    const body = await ctx.request.body
-        .json() as interfaces.CreateListRequestDto['body'];
+    try {
+        const body = await ctx.request.body
+            .json() as interfaces.CreateListRequestDto['body'];
 
-    const listInBoard = await prisma.list.count({
-        where: { Board: { some: { id: body.boardId } } },
-    });
+        const listsInBoard = await prisma.list.count({
+            where: { BoardId: body.boardId },
+        });
 
-    const list = await prisma.list.create({
-        data: {
-            Board: { connect: { id: body.boardId } },
-            name: body.name ?? '',
-            position: listInBoard,
-        },
-        select: listSelect,
-    });
+        const list = await prisma.list.create({
+            data: {
+                BoardId: body.boardId,
+                name: body.name ?? '',
+                position: listsInBoard,
+            },
+            select: listSelect,
+        });
 
-    const responseBody: interfaces.CreateListResponseDto = { list };
+        const responseBody: interfaces.CreateListResponseDto = { list };
 
-    ctx.response.status = Status.OK;
-    ctx.response.body = responseBody;
+        ctx.response.status = Status.OK;
+        ctx.response.body = responseBody;
+    } catch (error) {
+        console.log(error);
+    }
 };

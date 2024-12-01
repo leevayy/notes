@@ -11,12 +11,12 @@ export const createCardController = async (
         .json() as interfaces.CreateCardRequestDto['body'];
 
     const cardsInList = await prisma.card.count({
-        where: { List: { some: { id: body.listId } } },
+        where: { ListId: body.listId },
     });
 
     const card = await prisma.card.create({
         data: {
-            List: body.listId ? { connect: { id: body.listId } } : undefined,
+            ListId: body.listId,
             text: body.text ?? '',
             description: body.description,
             position: cardsInList,

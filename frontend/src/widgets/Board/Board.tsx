@@ -1,18 +1,14 @@
 import { BoardDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
+import Card from "src/entities/Card/Card";
+import MakeNewList from "src/entities/MakeNewList/MakeNewList";
+import { BOARD_ID } from "src/pages/ProjectPage/ProjectPage";
 
-import { getTopOffset } from "../../features/List/List";
+import List, { getTopOffset } from "../../features/List/List";
 import { Position } from "../../types";
-import { getId } from "../../utils/utils";
 import styles from "./Board.module.css";
-import {
-  $draggedCard,
-  $draggedList,
-  listDragged,
-  listInserted,
-  listRemoved,
-} from "./model";
+import { $boards, boardApi } from "./model";
 
 // code, as bad as in handling card drop on the lise
 // i still cannot figure out how to calculate padding on the fly
@@ -71,9 +67,9 @@ const getListDropPosition = (dragEvent: React.DragEvent<HTMLUListElement>) => {
 };
 
 type BoardProps = PropsWithChildren & {
-  board: BoardDto;
-  setListDropPosition: React.Dispatch<React.SetStateAction<Position>>;
-  resetListDropPosition: () => void;
+  board?: BoardDto;
+  setListDropPosition?: React.Dispatch<React.SetStateAction<Position>>;
+  resetListDropPosition?: () => void;
 };
 
 export function Board({
@@ -81,57 +77,107 @@ export function Board({
   setListDropPosition,
   resetListDropPosition,
 }: BoardProps) {
-  const [draggedList, setDraggedList] = useUnit([$draggedList, listDragged]);
-  const draggedCard = useUnit($draggedCard);
+  const board = useUnit($boards)[BOARD_ID];
 
-  const insertList = useUnit(listInserted);
-  const removeList = useUnit(listRemoved);
+  // const [draggedList, setDraggedList] = useUnit([$draggedList, listDragged]);
+  // const draggedCard = useUnit($draggedCard);
 
-  const dragEventIsAboutList = draggedList && !draggedCard;
+  // const insertList = useUnit(listInserted);
+  // const removeList = useUnit(listRemoved);
 
-  function dragOverHandler(e: React.DragEvent<HTMLUListElement>) {
-    e.preventDefault();
+  // const dragEventIsAboutList = draggedList && !draggedCard;
 
-    if (!dragEventIsAboutList) {
-      return;
-    }
+  // function dragOverHandler(e: React.DragEvent<HTMLUListElement>) {
+  //   e.preventDefault();
 
-    const { insertionX: x, insertionY: y } = getListDropPosition(e);
+  //   if (!dragEventIsAboutList) {
+  //     return;
+  //   }
 
-    setListDropPosition({ x, y });
-  }
+  //   const { insertionX: x, insertionY: y } = getListDropPosition(e);
 
-  function dropHandler(e: React.DragEvent<HTMLUListElement>) {
-    e.preventDefault();
+  //   setListDropPosition({ x, y });
+  // }
 
-    if (!dragEventIsAboutList) {
-      return;
-    }
+  // function dropHandler(e: React.DragEvent<HTMLUListElement>) {
+  //   e.preventDefault();
 
-    const { position: listDropPosition } = getListDropPosition(e);
+  //   if (!dragEventIsAboutList) {
+  //     return;
+  //   }
 
-    insertList({
-      list: {
-        ...draggedList,
-        id: getId(),
-        position: listDropPosition,
-      },
-      insertionIndex: listDropPosition,
-    });
+  //   const { position: listDropPosition } = getListDropPosition(e);
 
-    removeList(draggedList["id"]);
-    resetListDropPosition();
-    setDraggedList(null);
-  }
+  //   insertList({
+  //     list: {
+  //       ...draggedList,
+  //       id: getId(),
+  //       position: listDropPosition,
+  //     },
+  //     insertionIndex: listDropPosition,
+  //   });
+
+  //   removeList(draggedList["id"]);
+  //   resetListDropPosition();
+  //   setDraggedList(null);
+  // }
+
+  const defaultDropPosition = { x: 0, y: 0 };
+
+  const [_dropPosition, setDropPosition] =
+    useState<Position>(defaultDropPosition);
+  const resetDropPosition = () => setDropPosition(defaultDropPosition);
+
+  // const [listDropPosition, setListDropPosition] =
+  //   useState<Position>(defaultDropPosition);
+  // const resetListDropPosition = () => setListDropPosition(defaultDropPosition);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const { board } = await fetchBoardFx({ pathParams: { id: "1" } });
+
+  //     boardUpdated(board);
+  //   }
+
+  //   fetchData();
+  // }, []);
+
+  // const dropPositionIsDefault =
+  //   dropPosition.x === defaultDropPosition.x &&
+  //   dropPosition.y === defaultDropPosition.y;
+
+  // const listDropPositionIsDefault =
+  //   listDropPosition.x === defaultDropPosition.x &&
+  //   listDropPosition.y === defaultDropPosition.y;
 
   return (
     <>
       <ul
         className={styles.board}
-        onDragOver={dragOverHandler}
-        onDrop={dropHandler}
+        // onDragOver={dragOverHandler}
+        // onDrop={dropHandler}
       >
-        {children}
+        {board?.lists.map((list) => {
+          return (
+            <List
+              key={`${board.id}-${list.id}`}
+              list={list}
+              setDropPosition={setDropPosition}
+              resetDropPosition={resetDropPosition}
+            >
+              {list.cards.map((card) => {
+                return (
+                  <Card
+                    key={`${list.id}-${card.id}`}
+                    card={card}
+                    onDragEnd={resetDropPosition}
+                  />
+                );
+              })}
+            </List>
+          );
+        })}
+        <MakeNewList position={board?.lists.length} boardId={board?.id} />
       </ul>
     </>
   );

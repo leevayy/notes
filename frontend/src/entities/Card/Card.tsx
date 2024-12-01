@@ -1,11 +1,10 @@
 import { CardDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
-import { cardDragged, cardRemoved } from "src/widgets/Board/model";
 
 import { EditableText } from "../../shared/EditableText/EditableText";
 import styles from "./Card.module.css";
 import DeleteButton from "./DeleteButton/DeleteButton";
-import { cardUpdated } from "./model";
+import { cardApi } from "./model";
 
 type CardProps = {
   card: CardDto;
@@ -13,32 +12,27 @@ type CardProps = {
 };
 
 export default function Card({ card, onDragEnd }: CardProps) {
-  const updateCard = useUnit(cardUpdated);
-  const setDraggedCard = useUnit(cardDragged);
-  const removeCard = useUnit(cardRemoved);
+  const { changeCard, removeCard } = useUnit(cardApi);
 
   function handleChange(newText: CardDto["text"]) {
-    updateCard({
-      ...card,
-      text: newText,
-    });
+    changeCard({ cardId: card.id, changes: { text: newText ?? "" } });
   }
 
   return (
     <li
       className={styles.card}
-      draggable={true}
-      onDrag={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
+      // draggable={true}
+      // onDrag={(e) => {
+      //   e.preventDefault();
+      //   e.stopPropagation();
 
-        setDraggedCard(card);
-      }}
-      onDragEnd={(e) => {
-        e.preventDefault();
-        setDraggedCard(null);
-        onDragEnd();
-      }}
+      // setDraggedCard(card);
+      // }}
+      // onDragEnd={(e) => {
+      //   e.preventDefault();
+      // setDraggedCard(null);
+      //   onDragEnd();
+      // }}
     >
       <DeleteButton onClick={() => removeCard(card.id)} />
       <EditableText

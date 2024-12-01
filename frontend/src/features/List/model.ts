@@ -1,69 +1,69 @@
-import { CardDto, ListDto } from "@dto/interfaces";
-import { createEvent, sample } from "effector";
+import {
+  CreateListRequestDto,
+  EntityId,
+  ListDto,
+  UpdateListRequestDto,
+} from "@dto/interfaces";
+import { createList, deleteList, updateList } from "api/generatedApi";
+import { createEffect, createEvent, createStore, sample } from "effector";
 
-import { $board, boardUpdated } from "../../widgets/Board/model";
-
-export const listUpdated = createEvent<ListDto>();
-
-sample({
-  source: $board,
-  clock: listUpdated,
-  fn: (board, updatedList) => {
-    const nextBoard = {
-      ...board,
-      lists: board.lists.map((list) => {
-        if (list.id === updatedList.id) {
-          return updatedList;
-        }
-
-        return list;
-      }),
-    };
-
-    return nextBoard;
-  },
-  target: boardUpdated,
-});
-
-export const cardInserted = createEvent<{
-  card: CardDto;
-  updatedList: ListDto;
-  insertionIndex: number;
+const addList = createEvent<CreateListRequestDto["body"]>();
+const changeList = createEvent<{
+  listId: EntityId;
+  changes: UpdateListRequestDto["body"];
 }>();
+const removeList = createEvent<EntityId>();
+// TODO
+// const moveCard = createEvent<{
+//   cardId: CardDto["id"];
+//   fromListId: ListDto["id"];
+//   toListId: ListDto["id"];
+// }>();
+
+export const createListFx = createEffect(createList);
+const updateListFx = createEffect(updateList);
+const deleteListFx = createEffect(deleteList);
 
 sample({
-  source: $board,
-  clock: cardInserted,
-  fn: (_, { card, updatedList, insertionIndex }) => {
-    const nextList = {
-      ...updatedList,
-      cards: [
-        ...updatedList.cards.slice(0, insertionIndex),
-        card,
-        ...updatedList.cards.slice(insertionIndex),
-      ],
-    };
-
-    return nextList;
-  },
-  target: listUpdated,
+  clock: addList,
+  fn: (list) => ({
+    body: list,
+  }),
+  target: createListFx,
 });
-
-export const listNameChanged = createEvent<{
-  nextName: ListDto["name"];
-  updatedList: ListDto;
-}>();
 
 sample({
-  source: $board,
-  clock: listNameChanged,
-  fn: (_, { nextName, updatedList }) => {
-    const nextList = {
-      ...updatedList,
-      name: nextName,
-    };
-
-    return nextList;
-  },
-  target: listUpdated,
+  clock: changeList,
+  fn: (changeListData) => ({
+    pathParams: {
+      id: String(changeListData.listId),
+    },
+    body: changeListData.changes,
+  }),
+  target: updateListFx,
 });
+
+sample({
+  clock: removeList,
+  fn: (listId) => ({ pathParams: { id: String(listId) } }),
+  target: deleteListFx,
+});
+
+export const $lists = createStore<Record<EntityId, ListDto>>({});
+
+$lists.on(createListFx.doneData, (state, { list }) => ({
+  ...state,
+  [list.id]: list,
+}));
+
+$lists.on(updateListFx.doneData, (state, { list }) => ({
+  ...state,
+  [list.id]: list,
+}));
+
+$lists.on(deleteListFx.done, (state, { params }) => ({
+  ...state,
+  [params.pathParams.id]: undefined,
+}));
+
+export const listApi = { addList, changeList, removeList };

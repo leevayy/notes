@@ -10,19 +10,21 @@ datasource db {
 }
 
 model Card {
-  id          Int    @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   text        String
   description String?
-  position    Int    @unique
-  List        List[] @relation("CardToList")
+  position    Int     @unique
+  ListId      Int
+  List        List    @relation("ListToCards", fields: [ListId], references: [id])
 }
 
 model List {
-  id       Int     @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   name     String
-  position Int     @unique
-  Board    Board[] @relation("BoardToList")
-  cards    Card[]  @relation("CardToList")
+  position Int    @unique
+  BoardId  Int
+  Board    Board  @relation("BoardToLists", fields: [BoardId], references: [id])
+  cards    Card[] @relation("ListToCards")
 }
 
 model Board {
@@ -30,7 +32,7 @@ model Board {
   name   String
   Userid Int
   User   User   @relation(fields: [Userid], references: [id])
-  lists  List[] @relation("BoardToList")
+  lists  List[] @relation("BoardToLists")
 }
 
 model User {

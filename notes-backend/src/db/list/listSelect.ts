@@ -1,13 +1,12 @@
-export const listSelect = {
+import { Prisma } from '../../../prisma/client.ts';
+import { cardSelect } from '../card/cardSelect.ts';
+
+export const listSelect: Prisma.ListSelect = {
     id: true,
     name: true,
     position: true,
     cards: {
-        select: {
-            id: true,
-            text: true,
-            description: true,
-            position: true,
-        },
+        select: cardSelect,
     },
+    Board: { select: { id: true } },
 };

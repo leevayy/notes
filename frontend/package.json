@@ -15,10 +15,13 @@
   "dependencies": {
     "@gravity-ui/icons": "^2.11.0",
     "@gravity-ui/uikit": "^6.34.0",
+    "@types/lodash": "^4.17.13",
     "@types/node": "^22.9.0",
     "@typescript-eslint/eslint-plugin": "6.21",
+    "effector": "^23.2.3",
     "effector-react": "^23.2.1",
     "i18next": "^23.16.5",
+    "lodash": "^4.17.21",
     "patronum": "^2.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

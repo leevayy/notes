@@ -1,132 +1,54 @@
-import { BoardDto, CardDto, ListDto } from "@dto/interfaces";
-import fetchBoard from "api/fetchBoard";
-import updateBoard from "api/updateBoard";
+import { BoardDto, EntityId } from "@dto/interfaces";
+import { getBoard } from "api/generatedApi";
 import { createEffect, createEvent, createStore, sample } from "effector";
-import { debounce } from "patronum";
+import { $cards } from "src/entities/Card/model";
+import { $lists, createListFx, listApi } from "src/features/List/model";
 
-const DEBOUNCE_TIMEOUT_IN_MS = 1000;
+const fetchBoard = createEvent<{ boardId: EntityId }>();
 
-export const $board = createStore<BoardDto>({
-  name: "loading...",
-  lists: [],
-  // TODO: Remove this hardcoded id
-  id: 999,
-});
-
-export const fetchBoardFx = createEffect(fetchBoard);
-
-export const boardUpdated = createEvent<BoardDto>();
-
-export const updateBoardFx = createEffect(updateBoard);
-
-$board.on(boardUpdated, (_, newBoard) => {
-  return newBoard;
-});
-
-export const debouncedBoardUpdated = debounce(
-  boardUpdated,
-  DEBOUNCE_TIMEOUT_IN_MS,
-);
+export const getBoardFx = createEffect(getBoard);
 
 sample({
-  clock: debouncedBoardUpdated,
-  target: updateBoardFx,
+  clock: fetchBoard,
+  fn: ({ boardId }) => ({ pathParams: { id: String(boardId) } }),
+  target: getBoardFx,
 });
 
-export const $draggedCard = createStore<CardDto | null>(null);
+export const $boards = createStore<Record<EntityId, BoardDto>>({});
 
-export const cardDragged = createEvent<CardDto | null>();
+$boards.on(getBoardFx.doneData, (state, { board }) => ({
+  ...state,
+  [board.id]: board,
+}));
 
-$draggedCard.on(cardDragged, (_, nextDraggedCard) => nextDraggedCard);
+$boards.on(createListFx.doneData, (state, { list }) => {
+  const board = state[list.boardId];
 
-export const cardRemoved = createEvent<CardDto["id"]>();
-
-sample({
-  source: $board,
-  clock: cardRemoved,
-  fn: (board, removedCardId) => {
-    // Find the index of the list containing the removed card
-    const updatedListIndex = board.lists.findIndex(
-      (list) =>
-        list.cards.findIndex((card) => card.id === removedCardId) !== -1,
-    );
-
-    if (updatedListIndex === -1) {
-      throw new Error(`List with card id: ${removedCardId} was not found`);
-    }
-
-    const updatedList = board.lists[updatedListIndex];
-
-    const nextList = {
-      ...updatedList,
-      cards: updatedList.cards.filter((c) => c.id !== removedCardId),
-    };
-
-    const nextBoard = {
+  return {
+    ...state,
+    [board.id]: {
       ...board,
-      lists: board.lists.map((list) => {
-        if (list.id === updatedList.id) {
-          return nextList;
-        }
-
-        return list;
-      }),
-    };
-
-    return nextBoard;
-  },
-  target: boardUpdated,
+      lists: [...board.lists, list],
+    },
+  };
 });
-
-export const $draggedList = createStore<ListDto | null>(null);
-
-export const listDragged = createEvent<ListDto | null>();
-
-$draggedList.on(listDragged, (_, nextDraggedList) => nextDraggedList);
-
-export const listRemoved = createEvent<ListDto["id"]>();
 
 sample({
-  source: $board,
-  clock: listRemoved,
-  fn: (board, removedListId) => {
-    const removedListIndex = board.lists.findIndex(
-      (l) => l.id === removedListId,
-    );
-
-    if (removedListIndex === -1) {
-      throw new Error(`List with id: ${removedListId} was not found`);
-    }
-
-    const nextBoard = {
-      ...board,
-      lists: board.lists.filter((l) => l.id !== removedListId),
-    };
-
-    return nextBoard;
-  },
-  target: boardUpdated,
+  clock: getBoardFx.doneData,
+  fn: ({ board }) =>
+    Object.fromEntries(board.lists.map((list) => [list.id, list])),
+  target: $lists,
 });
-
-export const listInserted = createEvent<{
-  list: ListDto;
-  insertionIndex: number;
-}>();
 
 sample({
-  source: $board,
-  clock: listInserted,
-  fn: (board, { list, insertionIndex }) => {
-    const nextBoard = {
-      ...board,
-      lists: [
-        ...board.lists.slice(0, insertionIndex),
-        list,
-        ...board.lists.slice(insertionIndex),
-      ],
-    };
-
-    return nextBoard;
-  },
-  target: boardUpdated,
+  clock: getBoardFx.doneData,
+  fn: ({ board }) =>
+    Object.fromEntries(
+      board.lists.flatMap((list) => list.cards.map((card) => [card.id, card])),
+    ),
+  target: $cards,
 });
+
+export const boardApi = {
+  fetchBoard,
+};

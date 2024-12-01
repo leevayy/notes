@@ -1,26 +1,25 @@
-import { ListDto } from "@dto/interfaces";
+import { EntityId, ListDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
+import { listApi } from "src/features/List/model";
 
-import { getId } from "../../utils/utils";
 import styles from "./MakeNewList.module.css";
-import { listCreated } from "./model";
 
 type MakeNewListProps = {
   position: ListDto["position"];
+  boardId: EntityId;
 };
 
-export default function MakeNewList({ position }: MakeNewListProps) {
-  const createList = useUnit(listCreated);
+export default function MakeNewList({ position, boardId }: MakeNewListProps) {
+  const { addList } = useUnit(listApi);
 
-  const emptyList: ListDto = {
+  const emptyList: Parameters<typeof addList>[0] = {
     name: "",
     position,
-    cards: [],
-    id: getId(),
+    boardId,
   };
 
   function handleClick() {
-    createList(emptyList);
+    addList(emptyList);
   }
 
   return (

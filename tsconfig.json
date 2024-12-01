@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "module": "esnext",
+      "target": "es2020",
+      "allowImportingTsExtensions": true,
+      "outDir": "./dist",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "resolveJsonModule": true
+    }
+}

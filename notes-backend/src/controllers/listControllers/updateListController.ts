@@ -23,7 +23,15 @@ export const updateListController = async (
         select: listSelect,
     });
 
-    const responseBody: interfaces.UpdateListResponseDto = { list };
+    const responseBody: interfaces.UpdateListResponseDto = {
+        list: {
+            boardId: list.BoardId,
+            id: list.id,
+            name: list.name,
+            cards: list.cards,
+            position: list.position,
+        },
+    };
 
     ctx.response.status = Status.OK;
     ctx.response.body = responseBody;

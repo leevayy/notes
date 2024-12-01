@@ -21,7 +21,7 @@ async function generateFetchFunctions() {
         method = "POST";
       }
       if (routeName.startsWith("update")) {
-        method = "PUT";
+        method = "POST";
       }
       if (routeName.startsWith("delete")) {
         method = "DELETE";
@@ -47,7 +47,7 @@ export async function ${routeName}(params: interfaces.${requestDto}): Promise<in
         url: "${route}", 
         method: "${method}",
         ${route !== String(routePath) ? "pathParams: params.pathParams," : ""}
-        ${["POST", "PUT"].includes(method) ? "body: params.body," : ""}
+        ${method === "POST" ? "body: params.body," : ""}
     });
  
     return response;

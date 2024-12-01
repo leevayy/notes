@@ -41,6 +41,7 @@
       "no-only-tests"
   ],
   "rules": {
+      "indent": ["error", 2],
       "no-console": "warn",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",

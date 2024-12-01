@@ -1,19 +1,11 @@
 import { CardDto, ListDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
+import { cardApi } from "src/entities/Card/model";
 
-import ListHeader from "../../entities/ListHeader/ListHeader";
 import MakeNewCard from "../../entities/MakeNewCard/MakeNewCard";
 import { Position } from "../../types";
-import { getId } from "../../utils/utils";
-import {
-  $draggedCard,
-  $draggedList,
-  cardDragged,
-  cardRemoved,
-  listDragged,
-} from "../../widgets/Board/model";
 import styles from "./List.module.css";
-import { cardInserted } from "./model";
+import ListHeader from "./ListHeader/ListHeader";
 
 type ListProps = React.PropsWithChildren & {
   list: ListDto;
@@ -108,76 +100,78 @@ export default function List({
   setDropPosition,
   resetDropPosition,
 }: ListProps) {
-  const [draggedCard, setDraggedCard] = useUnit([$draggedCard, cardDragged]);
-  const insertCard = useUnit(cardInserted);
-  const removeCard = useUnit(cardRemoved);
+  const { addCard } = useUnit(cardApi);
 
-  const setDraggedList = useUnit(listDragged);
-  const draggedList = useUnit($draggedList);
+  // const [draggedCard, setDraggedCard] = useUnit([$draggedCard, cardDragged]);
+  // const insertCard = useUnit(cardInserted);
+  // const removeCard = useUnit(cardRemoved);
 
-  const unshiftCard = (newCard: CardDto) =>
-    insertCard({
-      card: newCard,
-      updatedList: list,
-      insertionIndex: 0,
+  // const setDraggedList = useUnit(listDragged);
+  // const draggedList = useUnit($draggedList);
+
+  const unshiftCard = (newCard: Omit<CardDto, "id">) =>
+    addCard({
+      description: newCard.description ?? "",
+      text: newCard.text ?? "",
+      listId: list.id,
     });
 
-  const dragEventIsAboutCard = draggedCard && !draggedList;
+  // const dragEventIsAboutCard = draggedCard && !draggedList;
 
-  function dragOverHandler(e: React.DragEvent<HTMLLIElement>) {
-    e.preventDefault();
+  // function dragOverHandler(e: React.DragEvent<HTMLLIElement>) {
+  //   e.preventDefault();
 
-    if (!dragEventIsAboutCard) {
-      return;
-    }
+  //   if (!dragEventIsAboutCard) {
+  //     return;
+  //   }
 
-    const { insertionX: x, insertionY: y } = getCardDropPosition(e);
+  //   const { insertionX: x, insertionY: y } = getCardDropPosition(e);
 
-    setDropPosition({ x, y });
-  }
+  //   setDropPosition({ x, y });
+  // }
 
-  function dropHandler(e: React.DragEvent<HTMLLIElement>) {
-    e.preventDefault();
+  // function dropHandler(e: React.DragEvent<HTMLLIElement>) {
+  //   e.preventDefault();
 
-    if (!dragEventIsAboutCard) {
-      return;
-    }
+  //   if (!dragEventIsAboutCard) {
+  //     return;
+  //   }
 
-    const { position: cardDropPosition } = getCardDropPosition(e);
+  //   const { position: cardDropPosition } = getCardDropPosition(e);
 
-    insertCard({
-      card: {
-        ...draggedCard,
-        id: getId(),
-        position: cardDropPosition,
-      },
-      updatedList: list,
-      insertionIndex: cardDropPosition,
-    });
+  //   insertCard({
+  //     card: {
+  //       ...draggedCard,
+  //       id: getId(),
+  //       position: cardDropPosition,
+  //     },
+  //     updatedList: list,
+  //     insertionIndex: cardDropPosition,
+  //   });
 
-    removeCard(draggedCard["id"]);
-    setDraggedCard(null);
-    resetDropPosition();
-  }
+  //   removeCard(draggedCard["id"]);
+  //   setDraggedCard(null);
+  //   resetDropPosition();
+  // }
 
-  function dragHandler(e: React.DragEvent<HTMLLIElement>) {
-    e.preventDefault();
-    setDraggedList(list);
-  }
+  // function dragHandler(e: React.DragEvent<HTMLLIElement>) {
+  //   e.preventDefault();
+  //   setDraggedList(list);
+  // }
 
-  function dragEndHandler(e: React.DragEvent<HTMLLIElement>) {
-    e.preventDefault();
-    setDraggedList(null);
-  }
+  // function dragEndHandler(e: React.DragEvent<HTMLLIElement>) {
+  //   e.preventDefault();
+  //   setDraggedList(null);
+  // }
 
   return (
     <li
       className={styles.list}
-      onDragOver={dragOverHandler}
-      onDrop={dropHandler}
-      draggable={true}
-      onDrag={dragHandler}
-      onDragEnd={dragEndHandler}
+      // onDragOver={dragOverHandler}
+      // onDrop={dropHandler}
+      // draggable={true}
+      // onDrag={dragHandler}
+      // onDragEnd={dragEndHandler}
     >
       <ListHeader list={list} />
       <ul className={styles.list_cards_wrapper}>{children}</ul>
