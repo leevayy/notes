@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "@prisma/client": "^6.0.0",
-    "prisma": "^6.0.0",
     "ts-to-zod": "^3.15.0",
     "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "prisma": "^6.0.0"
   }
 }

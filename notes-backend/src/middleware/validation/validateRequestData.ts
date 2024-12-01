@@ -49,6 +49,8 @@ export function validateRequestData<
             } else {
                 ctx.response.status = Status.InternalServerError;
                 ctx.response.body = { message: 'Internal Server Error' };
+                console.error('Error caught in middleware:');
+                console.error(error);
             }
         }
     };

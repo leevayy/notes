@@ -13,25 +13,29 @@ model Card {
   id          Int     @id @default(autoincrement())
   text        String
   description String?
-  position    Int     @unique
+  position    Int
   ListId      Int
-  List        List    @relation("ListToCards", fields: [ListId], references: [id])
+  List        List    @relation("ListToCards", fields: [ListId], references: [id], onDelete: Cascade)
+
+  @@unique([ListId, position])
 }
 
 model List {
   id       Int    @id @default(autoincrement())
   name     String
-  position Int    @unique
+  position Int
   BoardId  Int
-  Board    Board  @relation("BoardToLists", fields: [BoardId], references: [id])
   cards    Card[] @relation("ListToCards")
+  Board    Board  @relation("BoardToLists", fields: [BoardId], references: [id], onDelete: Cascade)
+
+  @@unique([BoardId, position])
 }
 
 model Board {
   id     Int    @id @default(autoincrement())
   name   String
   Userid Int
-  User   User   @relation(fields: [Userid], references: [id])
+  User   User   @relation(fields: [Userid], references: [id], onDelete: Cascade)
   lists  List[] @relation("BoardToLists")
 }
 

@@ -2,8 +2,11 @@
   "tasks": {
     "dev": "deno run --allow-env --allow-net --allow-read --allow-ffi --watch --env-file src/main.ts",
     "prisma": "deno run -A npm:prisma",
+    "prisma:sync": "deno task prisma:generate && deno task prisma:push",
     "prisma:generate": "deno task prisma generate --schema ./prisma/schema.prisma && deno task prisma:patch",
     "prisma:patch": "deno run -A prisma/patch.ts",
+    "prisma:pull": "npx prisma db pull",
+    "prisma:push": "npx prisma db push",
     "zod:generate": "bash scripts/dto-interfaces-to-zod.sh"
   },
   "imports": {
