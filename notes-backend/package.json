@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@prisma/client": "^6.0.0",
+    "@types/lodash": "^4.17.13",
     "ts-to-zod": "^3.15.0",
     "typescript": "^5.7.2"
   },

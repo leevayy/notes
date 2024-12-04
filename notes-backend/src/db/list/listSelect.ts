@@ -8,6 +8,9 @@ export const listSelect = {
     position: true,
     cards: {
         select: cardSelect,
+        orderBy: {
+            position: 'asc',
+        },
     },
     BoardId: true,
 } satisfies Prisma.ListSelect;
@@ -19,7 +22,7 @@ export const getListDto = <
 ): ListDto => ({
     id: list.id,
     name: list.name,
-    position: list.position,
+    // position: list.position,
     cards: list.cards.map(getCardDto),
     boardId: list.BoardId,
 });

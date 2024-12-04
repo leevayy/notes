@@ -18,7 +18,7 @@ export const getCardDto = <
     id: card.id,
     text: card.text,
     description: card.description,
-    position: card.position,
+    // position: card.position,
     listId: card.ListId,
     boardId: card.List.BoardId,
 });

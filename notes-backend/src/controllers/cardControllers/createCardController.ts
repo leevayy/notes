@@ -11,18 +11,22 @@ export const createCardController = async (
     const body = await ctx.request.body
         .json() as interfaces.CreateCardRequestDto['body'];
 
-    const cardCount = await prisma.card.count({
-        where: { ListId: body.listId },
-    });
+    const card = await prisma.$transaction(async (tx) => {
+        const cardCount = await tx.card.count({
+            where: { ListId: body.listId },
+        });
 
-    const card = await prisma.card.create({
-        data: {
-            ListId: body.listId,
-            text: body.text ?? '',
-            description: body.description,
-            position: cardCount,
-        },
-        select: cardSelect,
+        const card = await tx.card.create({
+            data: {
+                ListId: body.listId,
+                text: body.text ?? '',
+                description: body.description,
+                position: cardCount,
+            },
+            select: cardSelect,
+        });
+
+        return card;
     });
 
     const responseBody: interfaces.CreateCardResponseDto = {

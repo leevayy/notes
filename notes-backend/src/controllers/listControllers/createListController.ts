@@ -12,17 +12,21 @@ export const createListController = async (
         const body = await ctx.request.body
             .json() as interfaces.CreateListRequestDto['body'];
 
-        const listsInBoard = await prisma.list.count({
-            where: { BoardId: body.boardId },
-        });
+        const list = await prisma.$transaction(async (tx) => {
+            const listsCount = await tx.list.count({
+                where: { BoardId: body.boardId },
+            });
 
-        const list = await prisma.list.create({
-            data: {
-                BoardId: body.boardId,
-                name: body.name ?? '',
-                position: listsInBoard,
-            },
-            select: listSelect,
+            const list = await tx.list.create({
+                data: {
+                    BoardId: body.boardId,
+                    name: body.name ?? '',
+                    position: listsCount,
+                },
+                select: listSelect,
+            });
+
+            return list;
         });
 
         const responseBody: interfaces.CreateListResponseDto = {

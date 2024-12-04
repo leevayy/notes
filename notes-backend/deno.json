@@ -10,6 +10,7 @@
     "zod:generate": "bash scripts/dto-interfaces-to-zod.sh"
   },
   "imports": {
+    "@std/collections": "jsr:@std/collections@^1.0.9",
     "prisma": "npm:prisma@6.0.0",
     "@prisma/client": "npm:@prisma/client@6.0.0",
     "@std/assert": "jsr:@std/assert@1",

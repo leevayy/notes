@@ -13,7 +13,7 @@ model Card {
   id          Int     @id @default(autoincrement())
   text        String
   description String?
-  position    Int
+  position    Float
   ListId      Int
   List        List    @relation("ListToCards", fields: [ListId], references: [id], onDelete: Cascade)
 
@@ -23,7 +23,7 @@ model Card {
 model List {
   id       Int    @id @default(autoincrement())
   name     String
-  position Int
+  position Float
   BoardId  Int
   cards    Card[] @relation("ListToCards")
   Board    Board  @relation("BoardToLists", fields: [BoardId], references: [id], onDelete: Cascade)

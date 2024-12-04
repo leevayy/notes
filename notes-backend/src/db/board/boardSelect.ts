@@ -7,6 +7,9 @@ export const boardSelect = {
     name: true,
     lists: {
         select: listSelect,
+        orderBy: {
+            position: 'asc',
+        },
     },
 } satisfies Prisma.BoardSelect;
 
