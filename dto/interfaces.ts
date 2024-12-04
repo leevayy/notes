@@ -4,7 +4,7 @@ export interface CardDto {
     boardId: number;
     listId: number;
     id: EntityId;
-    position: number;
+    // position: number;
     description?: string | null;
     text?: string | null;
 }
@@ -14,7 +14,7 @@ export type CreateCardRequestDto = {
         listId: EntityId;
         text?: string;
         description?: string;
-        position?: number;
+        // position?: number;
     }
 };
 
@@ -40,7 +40,7 @@ export type UpdateCardRequestDto = {
         listId?: number;
         text?: string;
         description?: string;
-        position?: number;
+        // position?: number;
     }
 };
 
@@ -61,7 +61,7 @@ export type DeleteCardResponseDto = {
 export type ListDto = {
     boardId: number;
     id: EntityId;
-    position: number;
+    // position: number;
     cards: CardDto[];
     name?: string | null;
 };
@@ -69,7 +69,7 @@ export type ListDto = {
 export type CreateListRequestDto = {
     body: {
         boardId: EntityId;
-        position?: number;
+        // position?: number;
         name?: string;
     }
 };
@@ -95,7 +95,8 @@ export type UpdateListRequestDto = {
     body: {
         boardId?: number;
         name?: string;
-        position?: number;
+        // position?: number;
+        cardsOrder: EntityId[];
     }
 };
 
@@ -135,6 +136,7 @@ export type UpdateBoardRequestDto = {
     },
     body: {
         name?: string;
+        listsOrder: EntityId[];
     }
 };
 
