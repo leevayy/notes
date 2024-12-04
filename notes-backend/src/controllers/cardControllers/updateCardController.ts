@@ -19,7 +19,6 @@ export const updateCardController = async (
             List: body.listId ? { connect: { id: body.listId } } : undefined,
             text: body.text,
             description: body.description,
-            position: body.position,
         },
         select: cardSelect,
     });

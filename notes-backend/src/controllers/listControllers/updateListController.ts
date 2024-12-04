@@ -26,12 +26,12 @@ export const updateListController = async (
 
             for (const batch of chunks) {
                 await Promise.all(
-                    batch.map(({ id, position }) =>
+                    batch.map(({ id, position }) => {
                         tx.card.update({
                             where: { id },
                             data: { position },
-                        })
-                    ),
+                        });
+                    }),
                 );
             }
         }
