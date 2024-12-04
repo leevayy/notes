@@ -6,13 +6,12 @@ import Card from "src/entities/Card/Card";
 import DropDummyCard from "src/entities/DropDummy/DropDummyCard";
 import DropDummyList from "src/entities/DropDummy/DropDummyList";
 import MakeNewList from "src/entities/MakeNewList/MakeNewList";
-import { listApi } from "src/features/List/model";
 import { BOARD_ID } from "src/pages/ProjectPage/ProjectPage";
 
 import List, { getTopOffset } from "../../features/List/List";
 import { Position } from "../../types";
 import styles from "./Board.module.css";
-import { $boards } from "./model";
+import { $boards, boardApi } from "./model";
 
 // code, as bad as in handling card drop on the lise
 // i still cannot figure out how to calculate padding on the fly
@@ -118,7 +117,7 @@ export const Board: React.FC<BoardProps> = () => {
   const resetListDropPosition = () =>
     setListDropPosition(DEFAULT_DROP_POSITION);
 
-  const { changeList } = useUnit(listApi);
+  const { changeBoard } = useUnit(boardApi);
 
   const boards = useUnit($boards);
   const board = boards[BOARD_ID];
@@ -149,9 +148,14 @@ export const Board: React.FC<BoardProps> = () => {
 
     const { position: listDropPosition } = getListDropPosition(e);
 
-    changeList({
-      listId: draggedListId,
-      changes: { position: listDropPosition },
+    const newOrder = board.lists
+      .map((list) => list.id)
+      .filter((id) => id !== draggedListId)
+      .toSpliced(listDropPosition, 0, draggedListId);
+
+    changeBoard({
+      boardId: board.id,
+      changes: { listsOrder: newOrder },
     });
 
     resetListDropPosition();
@@ -186,7 +190,7 @@ export const Board: React.FC<BoardProps> = () => {
             </List>
           );
         })}
-        <MakeNewList position={board?.lists.length} boardId={board?.id} />
+        <MakeNewList boardId={board?.id} />
       </ul>
       <Dummies
         dropPosition={dropPosition}

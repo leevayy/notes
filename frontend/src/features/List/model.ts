@@ -43,16 +43,25 @@ sample({
   target: deleteListFx,
 });
 
-export const $lists = createStore<Record<EntityId, Omit<ListDto, "cards">>>({});
+type ListModel = Omit<ListDto, "cards"> & {
+  cardsOrder: EntityId[];
+};
+
+export const getListModelFromDto = (list: ListDto): ListModel => ({
+  ...list,
+  cardsOrder: list.cards.map((card) => card.id),
+});
+
+export const $lists = createStore<Record<EntityId, ListModel>>({});
 
 $lists.on(createListFx.doneData, (state, { list }) => ({
   ...state,
-  [list.id]: list,
+  [list.id]: getListModelFromDto(list),
 }));
 
 $lists.on(updateListFx.doneData, (state, { list }) => ({
   ...state,
-  [list.id]: list,
+  [list.id]: getListModelFromDto(list),
 }));
 
 $lists.on(deleteListFx.done, (state, { params }) => {

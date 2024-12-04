@@ -16,6 +16,14 @@ export const updateListController = async (
 
     const list = await prisma.$transaction(async (tx) => {
         if (body.cardsOrder) {
+            // TODO remove type assertion
+            // TODO figure out less crappy way to update position
+            const randomPosition = (await tx.card.findFirst({
+                where: { id: body.cardsOrder[0] },
+            }))!.position;
+            const isPositionRound =
+                Math.trunc(randomPosition) === randomPosition;
+
             const updates = body.cardsOrder.map((id, index) => ({
                 id: id,
                 position: index,
@@ -29,10 +37,21 @@ export const updateListController = async (
                     batch.map(({ id, position }) => {
                         tx.card.update({
                             where: { id },
-                            data: { position },
+                            data: {
+                                position: isPositionRound
+                                    ? position + 0.5
+                                    : position,
+                            },
                         });
                     }),
                 );
+            }
+
+            for (const update of updates) {
+                await tx.card.update({
+                    where: { id: update.id },
+                    data: { position: update.position },
+                });
             }
         }
 

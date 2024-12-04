@@ -32,7 +32,7 @@ sample({
       listId: card.listId,
       text: card.text,
       description: card.description,
-      position: card.position,
+      // position: card.position,
     },
   }),
   target: createCardFx,

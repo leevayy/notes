@@ -16,16 +16,16 @@ export const updateBoardController = async (
 
     const body = await ctx.request.body.json() as UpdateBoardRequestDto['body'];
 
-    // const board = await prisma.board.update({
-    //     where: { id: boardId },
-    //     select: boardSelect,
-    //     data: {
-    //         name: body.name,
-    //     },
-    // });
-
     const board = await prisma.$transaction(async (tx) => {
         if (body.listsOrder) {
+            // TODO remove type assertion
+            // TODO figure out less crappy way to update position
+            const randomPosition = (await tx.list.findFirst({
+                where: { id: body.listsOrder[0] },
+            }))!.position;
+            const isPositionRound =
+                Math.trunc(randomPosition) === randomPosition;
+
             const updates = body.listsOrder.map((id, index) => ({
                 id: id,
                 position: index,
@@ -39,10 +39,21 @@ export const updateBoardController = async (
                     batch.map(({ id, position }) =>
                         tx.list.update({
                             where: { id },
-                            data: { position },
+                            data: {
+                                position: isPositionRound
+                                    ? position + 0.5
+                                    : position,
+                            },
                         })
                     ),
                 );
+            }
+
+            for (const update of updates) {
+                await tx.list.update({
+                    where: { id: update.id },
+                    data: { position: update.position },
+                });
             }
         }
 

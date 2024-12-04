@@ -96,7 +96,7 @@ export type UpdateListRequestDto = {
         boardId?: number;
         name?: string;
         // position?: number;
-        cardsOrder: EntityId[];
+        cardsOrder?: EntityId[];
     }
 };
 
@@ -136,7 +136,7 @@ export type UpdateBoardRequestDto = {
     },
     body: {
         name?: string;
-        listsOrder: EntityId[];
+        listsOrder?: EntityId[];
     }
 };
 
