@@ -1,6 +1,6 @@
 import { EntityId, ListDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
-import { debounce } from "lodash";
+import { debounce } from "moderndash";
 import { useCallback, useEffect, useState } from "react";
 import { EditableText } from "src/shared/EditableText/EditableText";
 import { editableTextClicked } from "src/shared/EditableText/model";

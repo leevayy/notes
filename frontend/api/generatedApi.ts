@@ -1,24 +1,8 @@
 // Auto-generated fetch functions
-// Generated on 2024-12-04T09:01:44.561Z
+// Generated on 2024-12-08T18:06:01.130Z
 import { interfaces } from "@dto/index";
 
 import { notesFetch } from "./fetcher/notesFetch";
-
-
-/**
- * Auto-generated function for ping
- */
-// export async function ping(params: interfaces.PingRequestDto): Promise<interfaces.PingResponseDto> {
-//     const response: interfaces.PingResponseDto = await notesFetch({
-//         url: "/ping", 
-//         method: "GET",
-        
-        
-//     });
- 
-//     return response;
-// }
-
 
 
 /**
@@ -172,6 +156,86 @@ export async function deleteCard(params: interfaces.DeleteCardRequestDto): Promi
   const response: interfaces.DeleteCardResponseDto = await notesFetch({
     url: "/card/delete/{id}", 
     method: "DELETE",
+    pathParams: params.pathParams,
+        
+  });
+ 
+  return response;
+}
+
+
+
+/**
+ * Auto-generated function for authRegister
+ */
+export async function authRegister(params: interfaces.AuthRegisterRequestDto): Promise<interfaces.AuthRegisterResponseDto> {
+  const response: interfaces.AuthRegisterResponseDto = await notesFetch({
+    url: "/auth/register", 
+    method: "POST",
+        
+    body: params.body,
+  });
+ 
+  return response;
+}
+
+
+
+/**
+ * Auto-generated function for authLogin
+ */
+export async function authLogin(params: interfaces.AuthLoginRequestDto): Promise<interfaces.AuthLoginResponseDto> {
+  const response: interfaces.AuthLoginResponseDto = await notesFetch({
+    url: "/auth/login", 
+    method: "POST",
+        
+    body: params.body,
+  });
+ 
+  return response;
+}
+
+
+
+/**
+ * Auto-generated function for authLogout
+ */
+export async function authLogout(params: interfaces.AuthLogoutRequestDto): Promise<interfaces.AuthLogoutResponseDto> {
+  const response: interfaces.AuthLogoutResponseDto = await notesFetch({
+    url: "/auth/logout", 
+    method: "POST",
+        
+    body: params.body
+  });
+ 
+  return response;
+}
+
+
+
+/**
+ * Auto-generated function for getMyself
+ */
+export async function getMyself(params: interfaces.GetMyselfRequestDto): Promise<interfaces.GetMyselfResponseDto> {
+  const response: interfaces.GetMyselfResponseDto = await notesFetch({
+    url: "/users/self", 
+    method: "GET",
+        
+        
+  });
+ 
+  return response;
+}
+
+
+
+/**
+ * Auto-generated function for getUser
+ */
+export async function getUser(params: interfaces.GetUserRequestDto): Promise<interfaces.GetUserResponseDto> {
+  const response: interfaces.GetUserResponseDto = await notesFetch({
+    url: "/users/{id}", 
+    method: "GET",
     pathParams: params.pathParams,
         
   });

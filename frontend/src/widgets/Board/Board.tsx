@@ -1,19 +1,20 @@
-import { EntityId } from "@dto/interfaces";
+import { EntityId, ListDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
+import { isEqual } from "moderndash";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import Card from "src/entities/Card/Card";
 import DropDummyCard from "src/entities/DropDummy/DropDummyCard";
 import DropDummyList from "src/entities/DropDummy/DropDummyList";
 import MakeNewList from "src/entities/MakeNewList/MakeNewList";
-import { BOARD_ID } from "src/pages/ProjectPage/ProjectPage";
+import { userApi } from "src/entities/User/model";
 
 import List, { getTopOffset } from "../../features/List/List";
 import { Position } from "../../types";
 import styles from "./Board.module.css";
 import { $boards, boardApi } from "./model";
 
-// code, as bad as in handling card drop on the lise
+// code, as bad as in handling card drop on the list
 // i still cannot figure out how to calculate padding on the fly
 // needs to be readjasted with each design change
 const BOARD_PADDING = 30;
@@ -22,10 +23,10 @@ const LISTS_GAP = 36;
 const DEFAULT_DROP_POSITION = { x: 0, y: 0 };
 
 const Dummies = ({
-  dropPosition,
+  cardDropPosition: dropPosition,
   listDropPosition,
 }: {
-  dropPosition: Position;
+  cardDropPosition: Position;
   listDropPosition: Position;
 }) => {
   const dropPositionIsDefault =
@@ -53,23 +54,20 @@ const Dummies = ({
   );
 };
 
-const getListDropPosition = (dragEvent: React.DragEvent<HTMLUListElement>) => {
-  const lists = dragEvent.currentTarget;
+const getListDropCoordinates = (
+  dragEvent: React.DragEvent<HTMLUListElement>,
+) => {
+  const listsElement = dragEvent.currentTarget;
+  const listElements = Array.from(listsElement.children);
+  const listsElementRect = listsElement.getBoundingClientRect();
 
-  const listsRect = lists.getBoundingClientRect();
-  const listsArr = Array.from(lists.children);
-
-  const topOffset = getTopOffset(listsRect);
-
+  const topOffset = getTopOffset(listsElementRect);
   const gap = LISTS_GAP;
-
   const dropX = dragEvent.clientX;
 
   let currentInsertionX = BOARD_PADDING;
 
-  for (const [listIndex, list] of listsArr
-    .slice(0, listsArr.length - 1)
-    .entries()) {
+  for (const [listIndex, list] of listElements.entries()) {
     const nextInsertionX =
       currentInsertionX + list.clientWidth + (listIndex !== 0 ? gap : 0);
 
@@ -79,51 +77,77 @@ const getListDropPosition = (dragEvent: React.DragEvent<HTMLUListElement>) => {
       const droppedInFirstHalfOfList =
         dropX < currentInsertionX + gap + list.clientWidth / 2;
 
-      if (droppedInFirstHalfOfList) {
-        return {
-          position: listIndex,
-          insertionX: currentInsertionX + gap / 2 - 6,
-          insertionY: BOARD_PADDING + topOffset,
-        };
-      } else {
-        return {
-          position: listIndex + 1,
-          insertionX: nextInsertionX + gap / 2 - 6,
-          insertionY: BOARD_PADDING + topOffset,
-        };
-      }
+      return {
+        x: droppedInFirstHalfOfList
+          ? currentInsertionX + gap / 2 - 6
+          : nextInsertionX + gap / 2 - 6,
+        y: BOARD_PADDING + topOffset,
+      };
     }
     currentInsertionX = nextInsertionX;
   }
 
   return {
-    position: listsArr.length,
-    insertionX: currentInsertionX + gap / 2 - 6,
-    insertionY: BOARD_PADDING + topOffset,
+    x: currentInsertionX + gap / 2 - 6,
+    y: BOARD_PADDING + topOffset,
   };
+};
+
+const getListsNewOrder = (
+  draggedList: ListDto,
+  event: React.DragEvent<HTMLUListElement>,
+  lists: ListDto[],
+) => {
+  const listsMiddlePositions = Array.from(event.currentTarget.children)
+    .slice(0, -1)
+    .map((element) => {
+      const { x, y, width } = element.getBoundingClientRect();
+
+      return {
+        x: x + width / 2,
+        y,
+      };
+    });
+
+  const listElements = lists.map((list, index) => ({
+    id: list.id,
+    position:
+      list.id === draggedList.id
+        ? getListDropCoordinates(event)
+        : listsMiddlePositions[index],
+  }));
+
+  return listElements
+    .toSorted((a, b) => a.position.x - b.position.x)
+    .map((list) => list.id);
 };
 
 type BoardProps = {};
 
 export const Board: React.FC<BoardProps> = () => {
-  const [dropPosition, setDropPosition] = useState<Position>(
+  const [cardDropPosition, setCardDropPosition] = useState<Position>(
     DEFAULT_DROP_POSITION,
   );
-  const resetDropPosition = () => setDropPosition(DEFAULT_DROP_POSITION);
+  const resetCardDropPosition = () =>
+    setCardDropPosition(DEFAULT_DROP_POSITION);
+  const [draggedCardId, setDraggedCardId] = useState<EntityId | null>(null);
 
   const [listDropPosition, setListDropPosition] = useState<Position>(
     DEFAULT_DROP_POSITION,
   );
   const resetListDropPosition = () =>
     setListDropPosition(DEFAULT_DROP_POSITION);
+  const [draggedListId, setDraggedListId] = useState<EntityId | null>(null);
 
   const { changeBoard } = useUnit(boardApi);
+  const { user } = useUnit(userApi);
 
   const boards = useUnit($boards);
-  const board = boards[BOARD_ID];
+  const board = boards[user.boards[0]?.id];
 
-  const [draggedListId, setDraggedListId] = useState<EntityId | null>(null);
-  const [draggedCardId, setDraggedCardId] = useState<EntityId | null>(null);
+  if (!board) {
+    return null;
+  }
 
   const dragEventIsAboutList = draggedListId && !draggedCardId;
 
@@ -134,9 +158,9 @@ export const Board: React.FC<BoardProps> = () => {
       return;
     }
 
-    const { insertionX: x, insertionY: y } = getListDropPosition(e);
+    const coordinates = getListDropCoordinates(e);
 
-    setListDropPosition({ x, y });
+    setListDropPosition(coordinates);
   }
 
   function dropHandler(e: React.DragEvent<HTMLUListElement>) {
@@ -146,17 +170,22 @@ export const Board: React.FC<BoardProps> = () => {
       return;
     }
 
-    const { position: listDropPosition } = getListDropPosition(e);
+    const draggedList = board.lists.find((list) => list.id === draggedListId);
 
-    const newOrder = board.lists
-      .map((list) => list.id)
-      .filter((id) => id !== draggedListId)
-      .toSpliced(listDropPosition, 0, draggedListId);
+    if (!draggedList) {
+      return;
+    }
 
-    changeBoard({
-      boardId: board.id,
-      changes: { listsOrder: newOrder },
-    });
+    const newOrder = getListsNewOrder(draggedList, e, board.lists);
+
+    const oldOrder = board.lists.map((list) => list.id);
+
+    if (!isEqual(oldOrder, newOrder)) {
+      changeBoard({
+        boardId: board.id,
+        changes: { listsOrder: newOrder },
+      });
+    }
 
     resetListDropPosition();
     setDraggedListId(null);
@@ -174,16 +203,17 @@ export const Board: React.FC<BoardProps> = () => {
             <List
               key={`${board.id}-${list.id}`}
               list={list}
-              setDropPosition={setDropPosition}
-              resetDropPosition={resetDropPosition}
+              setDropPosition={setCardDropPosition}
+              resetDropPosition={resetCardDropPosition}
               setDraggedListId={setDraggedListId}
+              setDraggedCardId={setDraggedCardId}
             >
               {list.cards.map((card) => {
                 return (
                   <Card
                     key={`${list.id}-${card.id}`}
                     card={card}
-                    onDragEnd={resetDropPosition}
+                    onDragEnd={resetCardDropPosition}
                   />
                 );
               })}
@@ -193,7 +223,7 @@ export const Board: React.FC<BoardProps> = () => {
         <MakeNewList boardId={board?.id} />
       </ul>
       <Dummies
-        dropPosition={dropPosition}
+        cardDropPosition={cardDropPosition}
         listDropPosition={listDropPosition}
       />
     </>

@@ -3,16 +3,21 @@ import { prisma } from '../../../prisma/client.ts';
 import { RouterContext } from 'jsr:@oak/oak';
 import { routes } from '../../routes/routes.ts';
 import { Status } from 'jsr:@oak/commons@1/status';
-import { listSelect } from '../../db/list/listSelect.ts';
 
 export const deleteListController = async (
     ctx: RouterContext<(typeof routes)['deleteList']>,
 ) => {
     const listId = Number(ctx.params.id);
 
-    await prisma.list.delete({
-        where: { id: listId },
-        select: listSelect,
+    await prisma.$transaction(async (tx) => {
+        const list = await tx.list.delete({
+            where: { id: listId },
+        });
+
+        tx.list.updateMany({
+            where: { position: { gt: list.position }, BoardId: list.BoardId },
+            data: { position: { decrement: 1 } },
+        });
     });
 
     const responseBody: interfaces.DeleteListResponseDto = { success: true };

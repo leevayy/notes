@@ -1,33 +1,11 @@
 type HeaderItemProps = {
   name: string;
-  icon?: React.FunctionComponent;
-  text?: string;
+  content?: React.ReactNode;
   align?: "left" | "right" | "center";
 };
 
 export function HeaderItem(props: HeaderItemProps) {
-  function itemContent(
-    icon: HeaderItemProps["icon"],
-    text: HeaderItemProps["text"],
-  ) {
-    if (icon) {
-      const IconComponent = icon;
-
-      return <IconComponent />;
-    }
-
-    if (text) {
-      return <h1 className="board-name">{text}</h1>;
-    }
-
-    return;
-  }
-
-  return (
-    <button className="menu-item-content">
-      {itemContent(props.icon, props.text)}
-    </button>
-  );
+  return <div className="menu-item-content">{props.content}</div>;
 }
 
 type HeaderProps = React.ComponentPropsWithoutRef<"ul"> & {

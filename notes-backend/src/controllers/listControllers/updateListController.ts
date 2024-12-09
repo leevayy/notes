@@ -15,47 +15,36 @@ export const updateListController = async (
         .json() as interfaces.UpdateListRequestDto['body'];
 
     const list = await prisma.$transaction(async (tx) => {
-        if (body.cardsOrder) {
-            // TODO remove type assertion
-            // TODO figure out less crappy way to update position
-            const randomPosition = (await tx.card.findFirst({
-                where: { id: body.cardsOrder[0] },
-            }))!.position;
-            const isPositionRound =
-                Math.trunc(randomPosition) === randomPosition;
+        const cardsOrder = body.cardsOrder;
 
-            const updates = body.cardsOrder.map((id, index) => ({
-                id: id,
+        if (cardsOrder) {
+            const updates = cardsOrder.map((id, index) => ({
+                id,
                 position: index,
             }));
 
-            const BATCH_SIZE = 50;
-            const chunks = chunk(updates, BATCH_SIZE);
+            const OFFSET = 1_000_000;
 
-            for (const batch of chunks) {
+            const chunks = chunk(updates, 50);
+
+            for (const chunk of chunks) {
                 await Promise.all(
-                    batch.map(({ id, position }) => {
+                    chunk.map((update) =>
                         tx.card.update({
-                            where: { id },
-                            data: {
-                                position: isPositionRound
-                                    ? position + 0.5
-                                    : position,
-                            },
-                        });
-                    }),
+                            where: { id: update.id },
+                            data: { position: update.position + OFFSET },
+                        })
+                    ),
                 );
             }
 
-            for (const update of updates) {
-                await tx.card.update({
-                    where: { id: update.id },
-                    data: { position: update.position },
-                });
-            }
+            await tx.card.updateMany({
+                where: { ListId: listId, position: { gte: OFFSET } },
+                data: { position: { decrement: OFFSET } },
+            });
         }
 
-        const list = await prisma.list.update({
+        const list = await tx.list.update({
             where: { id: listId },
             data: {
                 Board: body.boardId

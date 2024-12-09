@@ -40,7 +40,10 @@ model Board {
 }
 
 model User {
-  id     Int     @id @default(autoincrement())
-  name   String
-  boards Board[]
+  id                  Int     @id @default(autoincrement())
+  name                String
+  login               String  @unique
+  password            String
+  refreshTokenVersion Int
+  boards              Board[]
 }

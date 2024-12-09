@@ -7,9 +7,15 @@ import {
   createStore,
   sample,
 } from "effector";
-import { groupBy } from "lodash";
+import { unique } from "moderndash";
 import { $cards } from "src/entities/Card/model";
-import { $lists, getListModelFromDto } from "src/features/List/model";
+import {
+  $lists,
+  createListFx,
+  deleteListFx,
+  getListModelFromDto,
+  ListModel,
+} from "src/features/List/model";
 
 const fetchBoard = createEvent<{ boardId: EntityId }>();
 
@@ -22,7 +28,7 @@ export const getBoardFx = createEffect(getBoard);
 
 const updateBoardFx = createEffect(updateBoard);
 
-type BoardModel = Omit<BoardDto, "cards"> & {
+export type BoardModel = Omit<BoardDto, "lists"> & {
   listsOrder: EntityId[];
 };
 
@@ -38,21 +44,46 @@ export const $boards = combine(
   $lists,
   $board,
   (cards, lists, board) => {
-    const listsByBoardId = groupBy(Object.values(lists), "boardId");
+    const listsByBoardId = Object.groupBy(
+      Object.values(lists),
+      (list) => list.boardId,
+    );
+    const cardsByListId = Object.groupBy(
+      Object.values(cards),
+      (card) => card.listId,
+    );
 
-    const getDerivedBoards = (boardId: string): [EntityId, BoardDto] => {
-      if (board && boardId === String(board.id)) {
+    const boardIds = unique(
+      [
+        ...Object.keys(listsByBoardId).map((id) => Number(id)),
+        board?.id,
+      ].filter((id) => id !== undefined),
+    );
+
+    const getDerivedBoards = (boardId: EntityId): [EntityId, BoardDto] => {
+      const isFetchedBoard = board && boardId === board.id;
+
+      if (isFetchedBoard) {
+        const updatedListsIds = board.listsOrder;
+
+        const listsOrder = updatedListsIds;
+
         return [
           Number(boardId),
           {
-            name: board && boardId === String(board.id) ? board.name : "",
+            name: board.name,
             id: Number(boardId),
-            lists: board.listsOrder.map((listId) => {
-              const list = lists[listId];
+            lists: listsOrder.map((listId) => {
+              const list: ListModel | undefined = lists[listId];
+
+              const updatedCardsIds =
+                cardsByListId[listId]?.map((card) => card.id) ?? [];
+
+              const cardsOrder = updatedCardsIds;
 
               return {
                 ...list,
-                cards: list.cardsOrder.map((cardId) => cards[cardId]),
+                cards: cardsOrder.map((cardId) => cards[cardId]),
               };
             }),
           },
@@ -66,19 +97,18 @@ export const $boards = combine(
         {
           name: "",
           id: Number(boardId),
-          lists: boardLists.map((list) => {
-            return {
-              ...list,
-              cards: list.cardsOrder.map((cardId) => cards[cardId]),
-            };
-          }),
+          lists:
+            boardLists?.map((list) => {
+              return {
+                ...list,
+                cards: list?.cardsOrder.map((cardId) => cards[cardId]) ?? [],
+              };
+            }) ?? [],
         },
       ];
     };
 
-    const derivedBoards = Object.fromEntries(
-      Object.keys(listsByBoardId).map(getDerivedBoards),
-    );
+    const derivedBoards = Object.fromEntries(boardIds.map(getDerivedBoards));
 
     return derivedBoards;
   },
@@ -126,6 +156,41 @@ sample({
 sample({
   clock: updateBoardFx.doneData,
   fn: ({ board }) => getBoardModelFromDto(board),
+  target: $board,
+});
+
+sample({
+  clock: createListFx.doneData,
+  source: $board,
+  fn: (board, { list }) =>
+    board
+      ? {
+          ...board,
+          listsOrder: [...board.listsOrder, list.id],
+        }
+      : null,
+  target: $board,
+});
+
+sample({
+  clock: deleteListFx.done,
+  source: $board,
+  fn: (
+    board,
+    {
+      params: {
+        pathParams: { id },
+      },
+    },
+  ) =>
+    board
+      ? {
+          ...board,
+          listsOrder: board.listsOrder.filter(
+            (listId) => listId !== Number(id),
+          ),
+        }
+      : null,
   target: $board,
 });
 

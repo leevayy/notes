@@ -1,10 +1,13 @@
 export type EntityId = number;
 
+export type PingRequestDto = {};
+
+export type PingResponseDto = {};
+
 export interface CardDto {
     boardId: number;
     listId: number;
     id: EntityId;
-    // position: number;
     description?: string | null;
     text?: string | null;
 }
@@ -14,7 +17,6 @@ export type CreateCardRequestDto = {
         listId: EntityId;
         text?: string;
         description?: string;
-        // position?: number;
     }
 };
 
@@ -40,7 +42,6 @@ export type UpdateCardRequestDto = {
         listId?: number;
         text?: string;
         description?: string;
-        // position?: number;
     }
 };
 
@@ -61,7 +62,6 @@ export type DeleteCardResponseDto = {
 export type ListDto = {
     boardId: number;
     id: EntityId;
-    // position: number;
     cards: CardDto[];
     name?: string | null;
 };
@@ -69,7 +69,6 @@ export type ListDto = {
 export type CreateListRequestDto = {
     body: {
         boardId: EntityId;
-        // position?: number;
         name?: string;
     }
 };
@@ -95,7 +94,6 @@ export type UpdateListRequestDto = {
     body: {
         boardId?: number;
         name?: string;
-        // position?: number;
         cardsOrder?: EntityId[];
     }
 };
@@ -143,3 +141,66 @@ export type UpdateBoardRequestDto = {
 export type UpdateBoardResponseDto = {
     board: BoardDto;
 };
+
+export type SimpleBoardsDto = {
+    id: EntityId;
+    name: string;
+}
+
+export type UserDto = {
+    id: number;
+    name: string;
+    boards: SimpleBoardsDto[];
+};
+
+export type AuthRegisterRequestDto = {
+    body: {
+        name: string;
+        login: string;
+        password: string;
+    }
+};
+
+export type AuthRegisterResponseDto = {
+    user: UserDto;
+};
+
+export type AuthLoginRequestDto = {
+    body: {
+        login: string;
+        password: string;
+    }
+};
+
+export type AuthLoginResponseDto = {
+    user: UserDto;
+};
+
+export type AuthLogoutRequestDto = {
+    body: {},
+};
+
+export type AuthLogoutResponseDto = {
+    user: UserDto;
+};
+
+export type AuthRefreshTokenRequestDto = {};
+
+export type AuthRefreshTokenResponseDto = {};
+
+export type GetMyselfRequestDto = {};
+
+export type GetMyselfResponseDto = {
+    user: UserDto;
+};
+
+export type GetUserRequestDto = {
+    pathParams: {
+        id: EntityId
+    }
+};
+
+export type GetUserResponseDto = {
+    user: UserDto;
+};
+

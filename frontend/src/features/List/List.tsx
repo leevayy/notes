@@ -1,4 +1,4 @@
-import { CardDto, EntityId, ListDto } from "@dto/interfaces";
+import { EntityId, ListDto } from "@dto/interfaces";
 import { useUnit } from "effector-react";
 import { cardApi } from "src/entities/Card/model";
 
@@ -19,80 +19,81 @@ export const getTopOffset = (rect: DOMRect) => {
   return topOffset;
 };
 
-const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
-  const cards = dragEvent.currentTarget.children.item(1);
+// const getCardDropPosition = (dragEvent: React.DragEvent<HTMLLIElement>) => {
+//   const cards = dragEvent.currentTarget.children.item(1);
 
-  if (!cards) {
-    throw new Error("Droped card to list which has no cards wrapper!");
-  }
+//   if (!cards) {
+//     throw new Error("Droped card to list which has no cards wrapper!");
+//   }
 
-  const cardsArr = Array.from(cards.children);
-  const cardsRect = cards.getBoundingClientRect();
-  const cardsHeight = cardsRect.height;
+//   const cardsArr = Array.from(cards.children);
+//   const cardsRect = cards.getBoundingClientRect();
+//   const cardsHeight = cardsRect.height;
 
-  const topOffset = getTopOffset(cardsRect);
+//   const topOffset = getTopOffset(cardsRect);
 
-  const calculateDropYWithoutOffset = (dropY: number, topOffset: number) => {
-    return dropY - topOffset;
-  };
+//   const calculateDropYWithoutOffset = (dropY: number, topOffset: number) => {
+//     return dropY - topOffset;
+//   };
 
-  const dropY = calculateDropYWithoutOffset(dragEvent.clientY, topOffset);
+//   const dropY = calculateDropYWithoutOffset(dragEvent.clientY, topOffset);
 
-  const calculateGap = (cardsArr: Element[], cardsHeight: number) => {
-    if (cardsArr.length <= 1) {
-      return 0;
-    }
+//   const calculateGap = (cardsArr: Element[], cardsHeight: number) => {
+//     if (cardsArr.length <= 1) {
+//       return 0;
+//     }
 
-    const nonCardSpace = cardsArr.reduce((nonCardSpace, card) => {
-      return nonCardSpace - card.clientHeight;
-    }, cardsHeight);
+//     const nonCardSpace = cardsArr.reduce((nonCardSpace, card) => {
+//       return nonCardSpace - card.clientHeight;
+//     }, cardsHeight);
 
-    return (nonCardSpace - 2 * CARDS_PADDING) / (cardsArr.length - 1);
-  };
+//     return (nonCardSpace - 2 * CARDS_PADDING) / (cardsArr.length - 1);
+//   };
 
-  const gap = calculateGap(cardsArr, cardsHeight);
+//   const gap = calculateGap(cardsArr, cardsHeight);
 
-  let currentInsertionY = CARDS_PADDING;
+//   let currentInsertionY = CARDS_PADDING;
 
-  for (const [cardIndex, card] of cardsArr.entries()) {
-    const nextInsertionY =
-      currentInsertionY + card.clientHeight + (cardIndex !== 0 ? gap : 0);
+//   for (const [cardIndex, card] of cardsArr.entries()) {
+//     const nextInsertionY =
+//       currentInsertionY + card.clientHeight + (cardIndex !== 0 ? gap : 0);
 
-    const droppedBeforeNextOffset = nextInsertionY > dropY;
+//     const droppedBeforeNextOffset = nextInsertionY > dropY;
 
-    if (droppedBeforeNextOffset) {
-      const droppedInFirstHalfOfCard =
-        dropY < currentInsertionY + gap + card.clientHeight / 2;
+//     if (droppedBeforeNextOffset) {
+//       const droppedInFirstHalfOfCard =
+//         dropY < currentInsertionY + gap + card.clientHeight / 2;
 
-      if (droppedInFirstHalfOfCard) {
-        return {
-          position: cardIndex,
-          insertionY: currentInsertionY + topOffset,
-          insertionX: cardsRect.x + CARDS_PADDING,
-        };
-      } else {
-        return {
-          position: cardIndex + 1,
-          insertionY: nextInsertionY + topOffset,
-          insertionX: cardsRect.x + CARDS_PADDING,
-        };
-      }
-    }
-    currentInsertionY = nextInsertionY;
-  }
+//       if (droppedInFirstHalfOfCard) {
+//         return {
+//           position: cardIndex,
+//           insertionY: currentInsertionY + topOffset,
+//           insertionX: cardsRect.x + CARDS_PADDING,
+//         };
+//       } else {
+//         return {
+//           position: cardIndex + 1,
+//           insertionY: nextInsertionY + topOffset,
+//           insertionX: cardsRect.x + CARDS_PADDING,
+//         };
+//       }
+//     }
+//     currentInsertionY = nextInsertionY;
+//   }
 
-  return {
-    position: cardsArr.length,
-    insertionY: currentInsertionY + topOffset,
-    insertionX: cardsRect.x + CARDS_PADDING,
-  };
-};
+//   return {
+//     position: cardsArr.length,
+//     insertionY: currentInsertionY + topOffset,
+//     insertionX: cardsRect.x + CARDS_PADDING,
+//   };
+// };
 
 type ListProps = React.PropsWithChildren & {
   list: ListDto;
   setDropPosition: React.Dispatch<React.SetStateAction<Position>>;
   resetDropPosition: () => void;
   setDraggedListId: React.Dispatch<React.SetStateAction<EntityId | null>>;
+  setDraggedCardId: React.Dispatch<React.SetStateAction<EntityId | null>>;
 };
 
 export default function List({
@@ -101,6 +102,7 @@ export default function List({
   setDropPosition,
   resetDropPosition,
   setDraggedListId,
+  setDraggedCardId,
 }: ListProps) {
   const { addCard } = useUnit(cardApi);
 

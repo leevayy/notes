@@ -38,6 +38,10 @@ export async function notesFetch<
       {
         method: method.toUpperCase(),
         body: body ? JSON.stringify(body) : undefined,
+        credentials: "include",
+        headers: method === "POST" ?  {
+          'Content-Type': 'application/json',
+        } : undefined
       },
     );
 
@@ -55,6 +59,7 @@ export async function notesFetch<
                           : 'Unexpected error',
         };
       }
+
 
       throw error;
     }

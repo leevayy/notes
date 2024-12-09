@@ -1,32 +1,12 @@
 import { Router } from 'jsr:@oak/oak';
 import { routes } from './routes.ts';
 import { validateRequestData } from '../middleware/validation/validateRequestData.ts';
-import {
-    createCardRequestDtoSchema,
-    createListRequestDtoSchema,
-    deleteCardRequestDtoSchema,
-    deleteListRequestDtoSchema,
-    getBoardRequestDtoSchema,
-    getCardRequestDtoSchema,
-    updateBoardRequestDtoSchema,
-    updateCardRequestDtoSchema,
-    updateListRequestDtoSchema,
-} from '../../zod/interfaces.ts';
-import {
-    getBoardController,
-    updateBoardController,
-} from '../controllers/boardControllers/index.ts';
-import {
-    createListController,
-    deleteListController,
-    updateListController,
-} from '../controllers/listControllers/index.ts';
-import {
-    createCardController,
-    deleteCardController,
-    getCardController,
-    updateCardController,
-} from '../controllers/cardControllers/index.ts';
+import { zodDtoInterfaces } from '../../zod/index.ts';
+import { boardControllers } from '../controllers/boardControllers/index.ts';
+import { listControllers } from '../controllers/listControllers/index.ts';
+import { cardControllers } from '../controllers/cardControllers/index.ts';
+import { authControllers } from '../controllers/authControllers/index.ts';
+import { userControllers } from '../controllers/userControllers/index.ts';
 
 export const router = new Router();
 
@@ -35,59 +15,119 @@ router.get(routes.ping, (ctx) => {
     ctx.response.body = 'pong';
 });
 
-// BOARD
-router.get(
-    routes.getBoard,
-    validateRequestData<typeof routes.getBoard>(getBoardRequestDtoSchema),
-    getBoardController,
-);
-
-router.post(
-    routes.updateBoard,
-    validateRequestData<typeof routes.updateBoard>(updateBoardRequestDtoSchema),
-    updateBoardController,
-);
-
 // CARD
 router.post(
     routes.createCard,
-    validateRequestData<typeof routes.createCard>(createCardRequestDtoSchema),
-    createCardController,
+    validateRequestData<typeof routes.createCard>(
+        zodDtoInterfaces.createCardRequestDtoSchema,
+    ),
+    cardControllers.createCardController,
 );
 
 router.get(
     routes.getCard,
-    validateRequestData<typeof routes.getCard>(getCardRequestDtoSchema),
-    getCardController,
+    validateRequestData<typeof routes.getCard>(
+        zodDtoInterfaces.getCardRequestDtoSchema,
+    ),
+    cardControllers.getCardController,
 );
 
 router.post(
     routes.updateCard,
-    validateRequestData<typeof routes.updateCard>(updateCardRequestDtoSchema),
-    updateCardController,
+    validateRequestData<typeof routes.updateCard>(
+        zodDtoInterfaces.updateCardRequestDtoSchema,
+    ),
+    cardControllers.updateCardController,
 );
 
 router.delete(
     routes.deleteCard,
-    validateRequestData<typeof routes.deleteCard>(deleteCardRequestDtoSchema),
-    deleteCardController,
+    validateRequestData<typeof routes.deleteCard>(
+        zodDtoInterfaces.deleteCardRequestDtoSchema,
+    ),
+    cardControllers.deleteCardController,
 );
 
 // LIST
 router.post(
     routes.createList,
-    validateRequestData<typeof routes.createList>(createListRequestDtoSchema),
-    createListController,
+    validateRequestData<typeof routes.createList>(
+        zodDtoInterfaces.createListRequestDtoSchema,
+    ),
+    listControllers.createListController,
 );
 
 router.post(
     routes.updateList,
-    validateRequestData<typeof routes.updateList>(updateListRequestDtoSchema),
-    updateListController,
+    validateRequestData<typeof routes.updateList>(
+        zodDtoInterfaces.updateListRequestDtoSchema,
+    ),
+    listControllers.updateListController,
 );
 
 router.delete(
     routes.deleteList,
-    validateRequestData<typeof routes.deleteList>(deleteListRequestDtoSchema),
-    deleteListController,
+    validateRequestData<typeof routes.deleteList>(
+        zodDtoInterfaces.deleteListRequestDtoSchema,
+    ),
+    listControllers.deleteListController,
+);
+
+// BOARD
+router.get(
+    routes.getBoard,
+    validateRequestData<typeof routes.getBoard>(
+        zodDtoInterfaces.getBoardRequestDtoSchema,
+    ),
+    boardControllers.getBoardController,
+);
+
+router.post(
+    routes.updateBoard,
+    validateRequestData<typeof routes.updateBoard>(
+        zodDtoInterfaces.updateBoardRequestDtoSchema,
+    ),
+    boardControllers.updateBoardController,
+);
+
+// AUTH
+router.post(
+    routes.authRegister,
+    validateRequestData<typeof routes.authRegister>(
+        zodDtoInterfaces.authRegisterRequestDtoSchema,
+    ),
+    authControllers.authRegisterController,
+);
+
+router.post(
+    routes.authLogin,
+    validateRequestData<typeof routes.authLogin>(
+        zodDtoInterfaces.authLoginRequestDtoSchema,
+    ),
+    authControllers.authLoginController,
+);
+
+router.post(
+    routes.authLogout,
+    validateRequestData<typeof routes.authLogout>(
+        zodDtoInterfaces.authLogoutRequestDtoSchema,
+    ),
+    authControllers.authLogoutController,
+);
+
+// USER
+router.get(
+    routes.getMyself,
+    validateRequestData<typeof routes.getMyself>(
+        zodDtoInterfaces.getMyselfRequestDtoSchema,
+    ),
+    userControllers.getMyselfController,
+);
+
+router.get(
+    routes.getUser,
+    validateRequestData<typeof routes.getUser>(
+        zodDtoInterfaces.getUserRequestDtoSchema,
+    ),
+    userControllers.getUserController,
 );

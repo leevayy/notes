@@ -9,7 +9,16 @@ export const deleteCardController = async (
 ) => {
     const cardId = Number(ctx.params.id);
 
-    await prisma.card.delete({ where: { id: cardId } });
+    await prisma.$transaction(async (tx) => {
+        const card = await tx.card.delete({
+            where: { id: cardId },
+        });
+
+        tx.card.updateMany({
+            where: { position: { gt: card.position }, ListId: card.ListId },
+            data: { position: { decrement: 1 } },
+        });
+    });
 
     const responseBody: interfaces.DeleteCardResponseDto = { success: true };
 

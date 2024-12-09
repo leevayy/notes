@@ -1,6 +1,7 @@
 import { Application } from 'jsr:@oak/oak';
 import { oakCors } from 'https://deno.land/x/cors/mod.ts';
 import { router } from './routes/index.ts';
+import { authMiddleware } from './middleware/auth/authMiddleware.ts';
 
 export const app = new Application();
 
@@ -17,6 +18,7 @@ app.use(async (ctx, next) => {
     ctx.response.headers.set('X-Response-Time', `${ms}ms`);
 });
 
-app.use(oakCors({ origin: ['http://localhost:5173'] }));
+app.use(oakCors({ origin: ['http://localhost:5173'], credentials: true }));
+app.use(authMiddleware());
 app.use(router.routes());
 app.use(router.allowedMethods());

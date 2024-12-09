@@ -18,6 +18,7 @@
     "@std/dotenv": "jsr:@std/dotenv@^0.225.2",
     "@std/path": "jsr:@std/path@^1.0.6",
     "zod": "https://deno.land/x/zod/mod.ts",
+    "djwt": "https://deno.land/x/djwt@v3.0.2/mod.ts",
     "@dto": "../dto/index.ts"
   },
   "compilerOptions": {
@@ -26,7 +27,7 @@
   },
   "nodeModulesDir": "auto",
   "lint": {
-    "include": ["src/"],
+    "include": ["src", "zod"],
     "exclude": ["prisma/generated"],
     "rules": {
       "tags": ["recommended", "react", "jsx"],
@@ -39,6 +40,6 @@
     "indentWidth": 4,
     "semiColons": true,
     "singleQuote": true,
-    "include": ["src/"]
+    "include": ["src", "zod"]
   }
 }

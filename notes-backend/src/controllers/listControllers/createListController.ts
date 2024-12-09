@@ -8,34 +8,30 @@ import { getListDto, listSelect } from '../../db/list/listSelect.ts';
 export const createListController = async (
     ctx: RouterContext<(typeof routes)['createList']>,
 ) => {
-    try {
-        const body = await ctx.request.body
-            .json() as interfaces.CreateListRequestDto['body'];
+    const body = await ctx.request.body
+        .json() as interfaces.CreateListRequestDto['body'];
 
-        const list = await prisma.$transaction(async (tx) => {
-            const listsCount = await tx.list.count({
-                where: { BoardId: body.boardId },
-            });
-
-            const list = await tx.list.create({
-                data: {
-                    BoardId: body.boardId,
-                    name: body.name ?? '',
-                    position: listsCount,
-                },
-                select: listSelect,
-            });
-
-            return list;
+    const list = await prisma.$transaction(async (tx) => {
+        const listsCount = await tx.list.count({
+            where: { BoardId: body.boardId },
         });
 
-        const responseBody: interfaces.CreateListResponseDto = {
-            list: getListDto(list),
-        };
+        const list = await tx.list.create({
+            data: {
+                BoardId: body.boardId,
+                name: body.name ?? '',
+                position: listsCount,
+            },
+            select: listSelect,
+        });
 
-        ctx.response.status = Status.OK;
-        ctx.response.body = responseBody;
-    } catch (error) {
-        console.log(error);
-    }
+        return list;
+    });
+
+    const responseBody: interfaces.CreateListResponseDto = {
+        list: getListDto(list),
+    };
+
+    ctx.response.status = Status.OK;
+    ctx.response.body = responseBody;
 };

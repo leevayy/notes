@@ -8,15 +8,19 @@ import { createList, deleteList, updateList } from "api/generatedApi";
 import { createEffect, createEvent, createStore, sample } from "effector";
 
 const addList = createEvent<CreateListRequestDto["body"]>();
+
 const changeList = createEvent<{
   listId: EntityId;
   changes: UpdateListRequestDto["body"];
 }>();
+
 const removeList = createEvent<EntityId>();
 
 export const createListFx = createEffect(createList);
+
+export const deleteListFx = createEffect(deleteList);
+
 const updateListFx = createEffect(updateList);
-const deleteListFx = createEffect(deleteList);
 
 sample({
   clock: addList,
@@ -43,7 +47,7 @@ sample({
   target: deleteListFx,
 });
 
-type ListModel = Omit<ListDto, "cards"> & {
+export type ListModel = Omit<ListDto, "cards"> & {
   cardsOrder: EntityId[];
 };
 

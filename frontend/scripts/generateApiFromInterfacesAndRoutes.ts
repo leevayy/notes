@@ -12,7 +12,11 @@ async function generateFetchFunctions() {
       const capitalizedRouteName =
         routeName.charAt(0).toUpperCase() + routeName.slice(1);
 
-      let method = "GET";
+      if (capitalizedRouteName === "Ping") {
+        return;
+      }
+
+      let method = "POST";
 
       if (routeName.startsWith("get")) {
         method = "GET";
