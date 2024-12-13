@@ -16,7 +16,7 @@ export const createBoardController = async (
     const board = await prisma.board.create({
         select: boardSelect,
         data: {
-            Userid: ctx.state.user.id,
+            Userid: ctx.state.userId,
             name: body.name,
         },
     });
