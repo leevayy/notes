@@ -128,6 +128,17 @@ export type GetBoardResponseDto = {
     board: BoardDto;
 };
 
+export type CreateBoardRequestDto = {
+    body: {
+        name: string;
+    }
+};
+
+export type CreateBoardResponseDto = {
+    board: BoardDto;
+};
+
+
 export type UpdateBoardRequestDto = {
     pathParams: {
         id: string;
