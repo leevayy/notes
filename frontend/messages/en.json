@@ -1,5 +1,17 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"born_icy_grizzly_pout": "Loading",
-	"login": "Log In"
+	"login": "Log In",
+	"theme_light": "Light",
+	"theme_dark": "Dark",
+	"update_card_description": "Update",
+	"cancel": "Cancel changes",
+	"you_will_be_redirected": "In 2 seconds you will be redirected to the project page",
+	"register": "Create an account",
+	"displayed_name": "Displayed name",
+	"users_login": "Login",
+	"password": "Password",
+	"confirm_password": "Confirm password",
+	"make_new_list": "Make New List",
+	"logout": "Log Out"
 }

@@ -9,11 +9,13 @@ import {
   TextInput,
 } from "@gravity-ui/uikit";
 import { useUnit } from "effector-react";
+import { t } from "i18next";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { userApi } from "src/entities/User/model";
 import { State } from "src/shared/StateModel/model";
 
+import styles from "./AuthPage.module.css";
 interface AuthPageProps {}
 
 export const AuthPage: React.FC<AuthPageProps> = () => {
@@ -114,27 +116,27 @@ export const AuthPage: React.FC<AuthPageProps> = () => {
   };
 
   return (
-    <Container maxWidth="m">
-      <Card style={{ minWidth: "400px" }}>
+    <Container maxWidth="m" className={styles.wrapper}>
+      <Card className={styles.card} view="raised">
         <Flex direction="column" gap={4}>
           {!isRegistred && (
             <TextInput
               value={username}
-              placeholder="displayed name"
+              placeholder={t("displayed_name")}
               onChange={(event) => setUsername(event.target.value)}
               disabled={isDisabled}
             />
           )}
           <TextInput
             value={login}
-            placeholder="login"
+            placeholder={t("users_login")}
             onChange={(event) => setLogin(event.target.value)}
             disabled={isDisabled}
             autoComplete="username"
           />
           <TextInput
             value={password}
-            placeholder="password"
+            placeholder={t("password")}
             onChange={(event) => setPassword(event.target.value)}
             disabled={isDisabled}
             type="password"
@@ -143,21 +145,21 @@ export const AuthPage: React.FC<AuthPageProps> = () => {
           {!isRegistred && (
             <TextInput
               value={confirmPassword}
-              placeholder="confirm password"
+              placeholder={t("confirm_password")}
               onChange={(event) => setConfirmPassword(event.target.value)}
               type="password"
               disabled={isDisabled}
             />
           )}
           <Button onClick={onSubmit} disabled={isDisabled} loading={isDisabled}>
-            Submit
+            {t(isRegistred ? "login" : "register")}
           </Button>
           <RadioButton
             value={isRegistred ? "login" : "register"}
             onUpdate={(value) => setIsRegistred(value === "login")}
             options={[
-              { value: "login", content: "login" },
-              { value: "register", content: "register" },
+              { value: "login", content: t("login") },
+              { value: "register", content: t("register") },
             ]}
             disabled={isDisabled}
           />
@@ -171,7 +173,7 @@ export const AuthPage: React.FC<AuthPageProps> = () => {
         )}
       </Card>
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        In 2 seconds you will be redirected to the project page
+        {t("you_will_be_redirected")}
       </Modal>
     </Container>
   );

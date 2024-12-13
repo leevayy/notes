@@ -1,0 +1,5 @@
+.drawer {
+    z-index: 100;
+
+    padding: var(--g-spacing-6);
+}

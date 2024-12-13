@@ -1,4 +1,6 @@
 import { CardDto } from "@dto/interfaces";
+import { ArrowUturnCwLeft } from "@gravity-ui/icons";
+import { Button, Icon } from "@gravity-ui/uikit";
 import { useRef, useState } from "react";
 
 import styles from "./MakeNewCard.module.css";
@@ -42,16 +44,17 @@ export default function MakeNewCard({ unshiftCard }: MakeNewCardProps) {
           }
         }}
       />
-      <input
+      <Button
         className={styles.new_card_submit}
-        value=""
         type="submit"
         onClick={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
         ref={inputRef}
-      />
+      >
+        <Icon data={ArrowUturnCwLeft} size="24" />
+      </Button>
     </form>
   );
 }

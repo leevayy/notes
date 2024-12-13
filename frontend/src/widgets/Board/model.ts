@@ -8,7 +8,7 @@ import {
   sample,
 } from "effector";
 import { unique } from "moderndash";
-import { $cards } from "src/entities/Card/model";
+import { $cards, updateCardFx } from "src/features/Card/model";
 import {
   $lists,
   createListFx,
@@ -27,6 +27,23 @@ const changeBoard = createEvent<{
 export const getBoardFx = createEffect(getBoard);
 
 const updateBoardFx = createEffect(updateBoard);
+
+const moveCard = createEvent<{
+  cardId: EntityId;
+  newList: ListModel;
+  newListCardsOrder: EntityId[];
+}>();
+
+sample({
+  clock: moveCard,
+  fn: ({ cardId, newList }) => ({
+    pathParams: { id: String(cardId) },
+    body: {
+      listId: newList.id,
+    },
+  }),
+  target: updateCardFx,
+});
 
 export type BoardModel = Omit<BoardDto, "lists"> & {
   listsOrder: EntityId[];
@@ -197,4 +214,5 @@ sample({
 export const boardApi = {
   fetchBoard,
   changeBoard,
+  moveCard,
 };

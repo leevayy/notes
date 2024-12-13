@@ -13,8 +13,11 @@
     "sync-api": "bash ./scripts/sync-api.sh"
   },
   "dependencies": {
+    "@gravity-ui/date-utils": "^2.5.6",
     "@gravity-ui/icons": "^2.11.0",
-    "@gravity-ui/uikit": "^6.34.0",
+    "@gravity-ui/markdown-editor": "^14.5.1",
+    "@gravity-ui/navigation": "^2.29.0",
+    "@types/i18next": "^13.0.0",
     "@types/node": "^22.9.0",
     "@typescript-eslint/eslint-plugin": "6.21",
     "effector": "^23.2.3",
@@ -29,6 +32,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@gravity-ui/date-components": "^2.11.0",
+    "@gravity-ui/uikit": "^6.38.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",

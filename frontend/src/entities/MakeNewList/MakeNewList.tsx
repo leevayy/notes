@@ -1,5 +1,6 @@
 import { EntityId } from "@dto/interfaces";
 import { useUnit } from "effector-react";
+import { t } from "i18next";
 import { listApi } from "src/features/List/model";
 
 import styles from "./MakeNewList.module.css";
@@ -22,7 +23,7 @@ export default function MakeNewList({ boardId }: MakeNewListProps) {
 
   return (
     <button className={styles.make_new_list} onClick={handleClick}>
-      Make New List
+      {t("make_new_list")}
     </button>
   );
 }

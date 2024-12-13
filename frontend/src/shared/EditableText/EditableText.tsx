@@ -1,3 +1,4 @@
+import { Text, TextProps } from "@gravity-ui/uikit";
 import { useUnit } from "effector-react";
 import { useEffect, useState } from "react";
 
@@ -8,12 +9,13 @@ import {
   editableTextClicked,
 } from "./model";
 
-type EditableTextProps = {
+type EditableTextProps = TextProps & {
   value: string;
   id: string;
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
   alignCenter?: boolean;
   shouldAutoResize?: boolean;
+  onClick?: () => void;
 };
 
 export function EditableText({
@@ -22,6 +24,8 @@ export function EditableText({
   onChange,
   alignCenter,
   shouldAutoResize,
+  onClick,
+  ...textProps
 }: EditableTextProps) {
   const [inEditModeId, handleEditableTextClicked, handleEditableTextBlured] =
     useUnit([$inEditModeId, editableTextClicked, editableTextBlured]);
@@ -49,27 +53,32 @@ export function EditableText({
   return (
     <div
       className={`${styles.editable_text} ${alignCenter ? styles.center : ""}`}
-      onClick={() => handleEditableTextClicked(id)}
+      onClick={() => {
+        onClick?.();
+        handleEditableTextClicked(id);
+      }}
     >
-      {isInEditMode ? (
-        <textarea
-          style={{
-            overflow: shouldAutoResize ? "auto" : "hidden",
-          }}
-          autoFocus={true}
-          onBlur={handleEditableTextBlured}
-          onKeyDown={({ key }) => {
-            if (key === "Enter") {
-              handleEditableTextBlured();
-            }
-          }}
-          value={value}
-          ref={(el) => setTextareaRef(el)}
-          onChange={onChange}
-        />
-      ) : (
-        value
-      )}
+      <Text {...textProps}>
+        {isInEditMode ? (
+          <textarea
+            style={{
+              overflow: shouldAutoResize ? "auto" : "hidden",
+            }}
+            autoFocus={true}
+            onBlur={handleEditableTextBlured}
+            onKeyDown={({ key }) => {
+              if (key === "Enter") {
+                handleEditableTextBlured();
+              }
+            }}
+            value={value}
+            ref={(el) => setTextareaRef(el)}
+            onChange={onChange}
+          />
+        ) : (
+          value
+        )}
+      </Text>
     </div>
   );
 }

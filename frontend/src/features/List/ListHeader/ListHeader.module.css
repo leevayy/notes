@@ -15,7 +15,6 @@
 	font-weight: bold;
 	font-size: var(--big-font-size);
 
-	color: var(--text-color);
 	text-align: center;
 	text-decoration: none;
 
@@ -23,7 +22,7 @@
 }
 
 .list_name_header:has(textarea) {
-	background-color: var(--secondary-color);
+	background-color: var(--primary-color);
 }
 
 .list_name_header textarea {

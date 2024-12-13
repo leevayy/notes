@@ -1,0 +1,8 @@
+.wrapper {
+    padding-top: var(--g-spacing-4);   
+}
+
+.card {
+    padding: var(--g-spacing-4);
+    min-width: 400px;
+}

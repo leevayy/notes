@@ -20,7 +20,7 @@ export const createListFx = createEffect(createList);
 
 export const deleteListFx = createEffect(deleteList);
 
-const updateListFx = createEffect(updateList);
+export const updateListFx = createEffect(updateList);
 
 sample({
   clock: addList,

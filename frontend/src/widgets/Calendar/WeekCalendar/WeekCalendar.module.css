@@ -1,0 +1,16 @@
+.column {
+    width: 100%;
+    height: 100%;
+}
+
+.timeHeader {
+    width: 100%;
+    height: 40px;
+}
+
+.dayHeader {
+    background-color: var(--g-color-private-brand-400-solid);
+    padding: 0 var(--g-spacing-4);
+    width: 100%;
+    height: 40px;
+}

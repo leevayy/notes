@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { EditableText } from "src/shared/EditableText/EditableText";
 import { editableTextClicked } from "src/shared/EditableText/model";
 
-import DeleteButton from "../../../entities/Card/DeleteButton/DeleteButton";
+import DeleteButton from "../../Card/DeleteButton/DeleteButton";
 import { listApi } from "../model";
 import styles from "./ListHeader.module.css";
 
@@ -79,6 +79,7 @@ export default function ListHeader({ list }: ListHeaderProps) {
         value={listName ?? ""}
         id={String(list.id)}
         onChange={handleChange}
+        variant="header-2"
       />
     </h2>
   );

@@ -16,7 +16,7 @@
 }
 
 .make_new_card:has(:focus) {
-	background-color: var(--secondary-color);
+	background-color: var(--primary-color);
 }
 
 input.new_card_text {
@@ -33,8 +33,12 @@ input.new_card_text {
 	width: 100%;
 	height: 30px;
 
-	background-color: var(--bg-color);
+	background-color: var(--g-color-base-background);
 	padding: 4px;
+}
+
+.g-root_theme_dark input.new_card_text  {
+	background-color: #313131;
 }
 
 .new_card_submit {

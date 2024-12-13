@@ -11,7 +11,7 @@
 }
 
 .card:has(:focus) {
-	background-color: var(--secondary-color);
+	background-color: var(--primary-color);
 }
 
 textarea.card_text {

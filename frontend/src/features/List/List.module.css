@@ -4,14 +4,15 @@
 
 	display: grid;
 	grid-template-rows: [header] 40px [main] auto [new-card] 40px;
-	background-color: var(--list-bg-color);
 
 	border-radius: var(--box-radius);
 
 	user-select: none;
 
 	position: relative;
-	z-index: 99;
+	z-index: 0;
+
+	background-color: var(--g-color-base-generic);
 }
 
 .list_cards_wrapper {

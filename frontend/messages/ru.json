@@ -1,5 +1,17 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"born_icy_grizzly_pout": "Загрузка",
-	"login": "Войти"
+	"login": "Войти",
+	"theme_light": "Светлая",
+	"theme_dark": "Темная",
+	"update_card_description": "Обновить",
+	"cancel": "Отменить изменения",
+	"you_will_be_redirected": "Через 2 секунды вы будете перенаправлены на страницу проекта",
+	"register": "Создать аккаунт",
+	"displayed_name": "Отображаемое имя",
+	"users_login": "Имя пользователя",
+	"password": "Пароль",
+	"confirm_password": "Подтвердите пароль",
+	"make_new_list": "Создать новый список",
+	"logout": "Выйти"
 }
