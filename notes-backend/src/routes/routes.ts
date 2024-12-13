@@ -1,7 +1,7 @@
 export const routes = {
     ping: '/ping',
 
-    // createBoard: '/board/new',
+    createBoard: '/board/new',
     getBoard: '/board/:id',
     updateBoard: '/board/update/:id',
     // deleteBoard: '/board/delete/:id',

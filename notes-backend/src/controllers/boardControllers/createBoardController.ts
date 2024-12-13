@@ -8,8 +8,8 @@ import {
 import { boardSelect, getBoardDto } from '../../db/board/boardSelect.ts';
 import { Status } from 'jsr:@oak/commons@1/status';
 
-export const updateBoardController = async (
-    ctx: RouterContext<(typeof routes)['updateBoard']>,
+export const createBoardController = async (
+    ctx: RouterContext<(typeof routes)['createBoard']>,
 ) => {
     const body = await ctx.request.body.json() as CreateBoardRequestDto['body'];
 

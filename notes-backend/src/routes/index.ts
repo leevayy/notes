@@ -74,6 +74,14 @@ router.delete(
 );
 
 // BOARD
+router.post(
+    routes.createBoard,
+    validateRequestData<typeof routes.createBoard>(
+        zodDtoInterfaces.createBoardRequestDtoSchema,
+    ),
+    boardControllers.createBoardController,
+);
+
 router.get(
     routes.getBoard,
     validateRequestData<typeof routes.getBoard>(
