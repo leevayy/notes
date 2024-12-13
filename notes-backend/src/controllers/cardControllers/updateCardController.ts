@@ -13,14 +13,58 @@ export const updateCardController = async (
     const body = await ctx.request.body
         .json() as interfaces.UpdateCardRequestDto['body'];
 
-    const card = await prisma.card.update({
-        where: { id: cardId },
-        data: {
-            List: body.listId ? { connect: { id: body.listId } } : undefined,
-            text: body.text,
-            description: body.description,
-        },
-        select: cardSelect,
+    const card = await prisma.$transaction(async (tx) => {
+        const newListId = body.listId;
+
+        let newPosition;
+
+        if (newListId) {
+            const oldCard = await tx.card.findUnique({
+                where: { id: cardId },
+                select: { ListId: true, position: true },
+            });
+
+            if (!oldCard) {
+                throw new Error('No card with that id');
+            }
+
+            const oldListId = oldCard?.ListId;
+
+            tx.card.updateMany({
+                where: {
+                    id: oldListId,
+                    position: {
+                        gt: oldCard.position,
+                    },
+                },
+                data: {
+                    position: {
+                        decrement: 1,
+                    },
+                },
+            });
+
+            const cardCount = await tx.card.count({
+                where: { ListId: newListId },
+            });
+
+            newPosition = cardCount;
+        }
+
+        const card = await tx.card.update({
+            where: {
+                id: cardId,
+            },
+            data: {
+                ListId: body.listId,
+                text: body.text,
+                description: body.description,
+                position: newPosition,
+            },
+            select: cardSelect,
+        });
+
+        return card;
     });
 
     const responseBody: interfaces.UpdateCardResponseDto = {
