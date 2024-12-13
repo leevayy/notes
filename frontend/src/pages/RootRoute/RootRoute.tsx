@@ -1,4 +1,4 @@
-import { Container, Flex } from "@gravity-ui/uikit";
+import { Flex } from "@gravity-ui/uikit";
 import { useUnit } from "effector-react";
 import { t } from "i18next";
 import React, { useEffect } from "react";
@@ -34,6 +34,12 @@ export const RootRoute: React.FC<RootRouteProps> = () => {
       navigate(Routes.project);
     }
   }, [fetchMyself, navigate, user?.fetchMyselfState]);
+
+  useEffect(() => {
+    if (user?.logoutUserState === State.success) {
+      navigate(Routes.login);
+    }
+  }, [fetchMyself, navigate, user.fetchMyselfState, user?.logoutUserState]);
 
   return (
     <DrawerContextProvider>

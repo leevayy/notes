@@ -180,7 +180,7 @@ sample({
   clock: authLogoutFx.failData,
   source: $user,
   fn: (user, { message }) => ({
-    ...user,
+    ...initialUserModel,
     logoutUserState: State.error,
     error: { message },
   }),

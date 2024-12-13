@@ -6,7 +6,6 @@ import { CardDrawer } from "src/entities/CardDrawer/CardDrawer";
 import { userApi } from "src/entities/User/model";
 import { Board } from "src/widgets/Board/Board";
 import { boardApi, getBoardFx } from "src/widgets/Board/model";
-import { Calendar } from "src/widgets/Calendar/Calendar";
 
 export default function ProjectPage() {
   const { fetchBoard } = useUnit(boardApi);
@@ -32,7 +31,7 @@ export default function ProjectPage() {
       ) : (
         <>
           <Board />
-          <Calendar />
+          {/* <Calendar /> */}
         </>
       )}
       <CardDrawer />

@@ -18,7 +18,12 @@ app.use(async (ctx, next) => {
     ctx.response.headers.set('X-Response-Time', `${ms}ms`);
 });
 
-app.use(oakCors({ origin: ['http://localhost:5173'], credentials: true }));
+app.use(
+    oakCors({
+        origin: ['http://localhost:5173', 'http://localhost:4173'],
+        credentials: true,
+    }),
+);
 app.use(authMiddleware());
 app.use(router.routes());
 app.use(router.allowedMethods());

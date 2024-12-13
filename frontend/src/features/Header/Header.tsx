@@ -10,8 +10,6 @@ import {
 import { useUnit } from "effector-react";
 import { t } from "i18next";
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router";
-import { Routes } from "src/App";
 import { userApi } from "src/entities/User/model";
 import { UserData } from "src/entities/User/UserData";
 import { themeApi } from "src/shared/model";
@@ -29,7 +27,6 @@ export function Header({ boardName }: HeaderProps) {
 
   const { user, logoutUser } = useUnit(userApi);
   const { theme, changeTheme } = useUnit(themeApi);
-  const navigate = useNavigate();
 
   return (
     <header className={styles.header}>
@@ -80,8 +77,6 @@ export function Header({ boardName }: HeaderProps) {
             view="flat"
             onClick={() => {
               logoutUser();
-              navigate(Routes.login);
-              location.reload();
             }}
             loading={user.logoutUserState === State.loading}
             disabled={
