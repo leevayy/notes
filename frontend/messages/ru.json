@@ -6,12 +6,15 @@
 	"theme_dark": "Темная",
 	"update_card_description": "Обновить",
 	"cancel": "Отменить изменения",
-	"you_will_be_redirected": "Через 2 секунды вы будете перенаправлены на страницу проекта",
+	"you_will_be_redirected": "Через 2 секунды вы будете перенаправлены на страницу профиля",
 	"register": "Создать аккаунт",
 	"displayed_name": "Отображаемое имя",
 	"users_login": "Имя пользователя",
 	"password": "Пароль",
 	"confirm_password": "Подтвердите пароль",
 	"make_new_list": "Создать новый список",
-	"logout": "Выйти"
+	"logout": "Выйти",
+	"create_new_board": "Создать новую доску",
+	"board_name": "Название доски",
+	"your_boards": "Ваши доски"
 }

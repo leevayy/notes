@@ -29,7 +29,7 @@ i18next.use(initReactI18next).init({
 export enum Routes {
   root = "/",
   login = "/login",
-  project = "/project",
+  project = "/project/:id",
   profile = "/profile",
 }
 

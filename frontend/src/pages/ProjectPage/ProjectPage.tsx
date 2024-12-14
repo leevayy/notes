@@ -2,6 +2,7 @@ import { Flex, Spin } from "@gravity-ui/uikit";
 import { useUnit } from "effector-react";
 import { t } from "i18next";
 import { useEffect } from "react";
+import { useParams } from "react-router";
 import { CardDrawer } from "src/entities/CardDrawer/CardDrawer";
 import { userApi } from "src/entities/User/model";
 import { Board } from "src/widgets/Board/Board";
@@ -11,13 +12,13 @@ export default function ProjectPage() {
   const { fetchBoard } = useUnit(boardApi);
   const { user } = useUnit(userApi);
 
-  useEffect(() => {
-    const boardId = user.boards[0]?.id;
+  const boardId = useParams().id;
 
+  useEffect(() => {
     if (boardId) {
-      fetchBoard({ boardId });
+      fetchBoard({ boardId: Number(boardId) });
     }
-  }, [fetchBoard, user]);
+  }, [boardId, fetchBoard, user]);
 
   const isPending = useUnit(getBoardFx.pending);
 

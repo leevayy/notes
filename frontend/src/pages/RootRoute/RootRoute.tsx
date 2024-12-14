@@ -29,10 +29,6 @@ export const RootRoute: React.FC<RootRouteProps> = () => {
     if (user?.fetchMyselfState === State.error) {
       navigate(Routes.login);
     }
-
-    if (user?.fetchMyselfState === State.success) {
-      navigate(Routes.project);
-    }
   }, [fetchMyself, navigate, user?.fetchMyselfState]);
 
   useEffect(() => {

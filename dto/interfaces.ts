@@ -118,16 +118,6 @@ export type BoardDto = {
     lists: ListDto[];
 };
 
-export type GetBoardRequestDto = {
-    pathParams: {
-        id: string;
-    }
-};
-
-export type GetBoardResponseDto = {
-    board: BoardDto;
-};
-
 export type CreateBoardRequestDto = {
     body: {
         name: string;
@@ -138,6 +128,15 @@ export type CreateBoardResponseDto = {
     board: BoardDto;
 };
 
+export type GetBoardRequestDto = {
+    pathParams: {
+        id: string;
+    }
+};
+
+export type GetBoardResponseDto = {
+    board: BoardDto;
+};
 
 export type UpdateBoardRequestDto = {
     pathParams: {
@@ -152,6 +151,17 @@ export type UpdateBoardRequestDto = {
 export type UpdateBoardResponseDto = {
     board: BoardDto;
 };
+
+export type DeleteBoardRequestDto = {
+    pathParams: {
+        id: string;
+    }
+};
+
+export type DeleteBoardResponseDto = {
+    success: boolean;
+};
+
 
 export type SimpleBoardsDto = {
     id: EntityId;

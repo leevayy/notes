@@ -1,12 +1,16 @@
 import {
   AuthLoginRequestDto,
   AuthRegisterRequestDto,
+  CreateBoardRequestDto,
+  DeleteBoardRequestDto,
   UserDto,
 } from "@dto/interfaces";
 import {
   authLogin,
   authLogout,
   authRegister,
+  createBoard,
+  deleteBoard,
   getMyself,
 } from "api/generatedApi";
 import { createEffect, createEvent, createStore, sample } from "effector";
@@ -187,10 +191,52 @@ sample({
   target: $user,
 });
 
+// don't know where to put it and i have 2 hours left
+const addBoard = createEvent<CreateBoardRequestDto["body"]>();
+const removeBoard = createEvent<DeleteBoardRequestDto["pathParams"]>();
+
+export const createBoardFx = createEffect(createBoard);
+export const deleteBoardFx = createEffect(deleteBoard);
+
+sample({
+  clock: addBoard,
+  fn: (body) => ({ body }),
+  target: createBoardFx,
+});
+
+sample({
+  clock: createBoardFx.doneData,
+  source: $user,
+  fn: (user, { board }) => ({
+    ...user,
+    boards: [...user.boards, board],
+  }),
+  target: $user,
+});
+
+sample({
+  clock: removeBoard,
+  fn: (pathParams) => ({ pathParams }),
+  target: deleteBoardFx,
+});
+
+sample({
+  clock: deleteBoardFx.done,
+  source: $user,
+  fn: (user, { params }) => ({
+    ...user,
+    boards: user.boards.filter((b) => b.id !== Number(params.pathParams.id)),
+  }),
+  target: $user,
+});
+
 export const userApi = {
   user: $user,
   fetchMyself,
   loginUser,
   registerUser,
   logoutUser,
+
+  addBoard,
+  removeBoard,
 };

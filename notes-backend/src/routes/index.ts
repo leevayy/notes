@@ -98,6 +98,14 @@ router.post(
     boardControllers.updateBoardController,
 );
 
+router.delete(
+    routes.deleteBoard,
+    validateRequestData<typeof routes.deleteBoard>(
+        zodDtoInterfaces.deleteBoardRequestDtoSchema,
+    ),
+    boardControllers.deleteBoardController,
+);
+
 // AUTH
 router.post(
     routes.authRegister,

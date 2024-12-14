@@ -4,7 +4,7 @@ export const routes = {
     createBoard: '/board/new',
     getBoard: '/board/:id',
     updateBoard: '/board/update/:id',
-    // deleteBoard: '/board/delete/:id',
+    deleteBoard: '/board/delete/:id',
 
     createList: '/list/new',
     getList: '/list/:id',

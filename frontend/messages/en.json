@@ -6,12 +6,15 @@
 	"theme_dark": "Dark",
 	"update_card_description": "Update",
 	"cancel": "Cancel changes",
-	"you_will_be_redirected": "In 2 seconds you will be redirected to the project page",
+	"you_will_be_redirected": "In 2 seconds you will be redirected to the profile page",
 	"register": "Create an account",
 	"displayed_name": "Displayed name",
 	"users_login": "Login",
 	"password": "Password",
 	"confirm_password": "Confirm password",
 	"make_new_list": "Make New List",
-	"logout": "Log Out"
+	"logout": "Log Out",
+	"create_new_board": "Create new board",
+	"board_name": "Board name",
+	"your_boards": "Your Boards"
 }
