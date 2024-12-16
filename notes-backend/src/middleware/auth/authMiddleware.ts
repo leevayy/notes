@@ -19,7 +19,7 @@ const ignorePaths: string[] = [
     routes.authRegister,
     routes.authLogin,
     routes.authLogout,
-];
+].flatMap((route) => [route, `/api/${route}`]);
 
 export const authMiddleware = (): Middleware => {
     return async (ctx, next) => {
