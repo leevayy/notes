@@ -1,27 +1,27 @@
 export const routes = {
-    ping: '/ping',
+    ping: '/api/ping',
 
-    createBoard: '/board/new',
-    getBoard: '/board/:id',
-    updateBoard: '/board/update/:id',
-    deleteBoard: '/board/delete/:id',
+    createBoard: '/api/board/new',
+    getBoard: '/api/board/:id',
+    updateBoard: '/api/board/update/:id',
+    deleteBoard: '/api/board/delete/:id',
 
-    createList: '/list/new',
-    getList: '/list/:id',
-    updateList: '/list/update/:id',
-    deleteList: '/list/delete/:id',
+    createList: '/api/list/new',
+    getList: '/api/list/:id',
+    updateList: '/api/list/update/:id',
+    deleteList: '/api/list/delete/:id',
 
-    createCard: '/card/new',
-    getCard: '/card/:id',
-    updateCard: '/card/update/:id',
-    deleteCard: '/card/delete/:id',
+    createCard: '/api/card/new',
+    getCard: '/api/card/:id',
+    updateCard: '/api/card/update/:id',
+    deleteCard: '/api/card/delete/:id',
 
-    authRegister: '/auth/register',
-    authLogin: '/auth/login',
-    authLogout: '/auth/logout',
+    authRegister: '/api/auth/register',
+    authLogin: '/api/auth/login',
+    authLogout: '/api/auth/logout',
 
-    getMyself: '/users/self',
-    getUser: '/users/:id',
+    getMyself: '/api/users/self',
+    getUser: '/api/users/:id',
 } as const;
 
 export type Routes = typeof routes[keyof typeof routes];

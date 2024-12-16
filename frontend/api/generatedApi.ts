@@ -1,5 +1,5 @@
 // Auto-generated fetch functions
-// Generated on 2024-12-14T18:20:56.153Z
+// Generated on 2024-12-16T08:28:44.558Z
 import { interfaces } from "@dto/index";
 
 import { notesFetch } from "./fetcher/notesFetch";
@@ -10,7 +10,7 @@ import { notesFetch } from "./fetcher/notesFetch";
  */
 export async function createBoard(params: interfaces.CreateBoardRequestDto): Promise<interfaces.CreateBoardResponseDto> {
     const response: interfaces.CreateBoardResponseDto = await notesFetch({
-        url: "/board/new", 
+        url: "/api/board/new", 
         method: "POST",
         
         body: params.body,
@@ -26,7 +26,7 @@ export async function createBoard(params: interfaces.CreateBoardRequestDto): Pro
  */
 export async function getBoard(params: interfaces.GetBoardRequestDto): Promise<interfaces.GetBoardResponseDto> {
     const response: interfaces.GetBoardResponseDto = await notesFetch({
-        url: "/board/{id}", 
+        url: "/api/board/{id}", 
         method: "GET",
         pathParams: params.pathParams,
         
@@ -42,7 +42,7 @@ export async function getBoard(params: interfaces.GetBoardRequestDto): Promise<i
  */
 export async function updateBoard(params: interfaces.UpdateBoardRequestDto): Promise<interfaces.UpdateBoardResponseDto> {
     const response: interfaces.UpdateBoardResponseDto = await notesFetch({
-        url: "/board/update/{id}", 
+        url: "/api/board/update/{id}", 
         method: "POST",
         pathParams: params.pathParams,
         body: params.body,
@@ -58,7 +58,7 @@ export async function updateBoard(params: interfaces.UpdateBoardRequestDto): Pro
  */
 export async function deleteBoard(params: interfaces.DeleteBoardRequestDto): Promise<interfaces.DeleteBoardResponseDto> {
     const response: interfaces.DeleteBoardResponseDto = await notesFetch({
-        url: "/board/delete/{id}", 
+        url: "/api/board/delete/{id}", 
         method: "DELETE",
         pathParams: params.pathParams,
         
@@ -74,7 +74,7 @@ export async function deleteBoard(params: interfaces.DeleteBoardRequestDto): Pro
  */
 export async function createList(params: interfaces.CreateListRequestDto): Promise<interfaces.CreateListResponseDto> {
     const response: interfaces.CreateListResponseDto = await notesFetch({
-        url: "/list/new", 
+        url: "/api/list/new", 
         method: "POST",
         
         body: params.body,
@@ -90,7 +90,7 @@ export async function createList(params: interfaces.CreateListRequestDto): Promi
  */
 export async function getList(params: interfaces.GetListRequestDto): Promise<interfaces.GetListResponseDto> {
     const response: interfaces.GetListResponseDto = await notesFetch({
-        url: "/list/{id}", 
+        url: "/api/list/{id}", 
         method: "GET",
         pathParams: params.pathParams,
         
@@ -106,7 +106,7 @@ export async function getList(params: interfaces.GetListRequestDto): Promise<int
  */
 export async function updateList(params: interfaces.UpdateListRequestDto): Promise<interfaces.UpdateListResponseDto> {
     const response: interfaces.UpdateListResponseDto = await notesFetch({
-        url: "/list/update/{id}", 
+        url: "/api/list/update/{id}", 
         method: "POST",
         pathParams: params.pathParams,
         body: params.body,
@@ -122,7 +122,7 @@ export async function updateList(params: interfaces.UpdateListRequestDto): Promi
  */
 export async function deleteList(params: interfaces.DeleteListRequestDto): Promise<interfaces.DeleteListResponseDto> {
     const response: interfaces.DeleteListResponseDto = await notesFetch({
-        url: "/list/delete/{id}", 
+        url: "/api/list/delete/{id}", 
         method: "DELETE",
         pathParams: params.pathParams,
         
@@ -138,7 +138,7 @@ export async function deleteList(params: interfaces.DeleteListRequestDto): Promi
  */
 export async function createCard(params: interfaces.CreateCardRequestDto): Promise<interfaces.CreateCardResponseDto> {
     const response: interfaces.CreateCardResponseDto = await notesFetch({
-        url: "/card/new", 
+        url: "/api/card/new", 
         method: "POST",
         
         body: params.body,
@@ -154,7 +154,7 @@ export async function createCard(params: interfaces.CreateCardRequestDto): Promi
  */
 export async function getCard(params: interfaces.GetCardRequestDto): Promise<interfaces.GetCardResponseDto> {
     const response: interfaces.GetCardResponseDto = await notesFetch({
-        url: "/card/{id}", 
+        url: "/api/card/{id}", 
         method: "GET",
         pathParams: params.pathParams,
         
@@ -170,7 +170,7 @@ export async function getCard(params: interfaces.GetCardRequestDto): Promise<int
  */
 export async function updateCard(params: interfaces.UpdateCardRequestDto): Promise<interfaces.UpdateCardResponseDto> {
     const response: interfaces.UpdateCardResponseDto = await notesFetch({
-        url: "/card/update/{id}", 
+        url: "/api/card/update/{id}", 
         method: "POST",
         pathParams: params.pathParams,
         body: params.body,
@@ -186,7 +186,7 @@ export async function updateCard(params: interfaces.UpdateCardRequestDto): Promi
  */
 export async function deleteCard(params: interfaces.DeleteCardRequestDto): Promise<interfaces.DeleteCardResponseDto> {
     const response: interfaces.DeleteCardResponseDto = await notesFetch({
-        url: "/card/delete/{id}", 
+        url: "/api/card/delete/{id}", 
         method: "DELETE",
         pathParams: params.pathParams,
         
@@ -202,7 +202,7 @@ export async function deleteCard(params: interfaces.DeleteCardRequestDto): Promi
  */
 export async function authRegister(params: interfaces.AuthRegisterRequestDto): Promise<interfaces.AuthRegisterResponseDto> {
     const response: interfaces.AuthRegisterResponseDto = await notesFetch({
-        url: "/auth/register", 
+        url: "/api/auth/register", 
         method: "POST",
         
         body: params.body,
@@ -218,7 +218,7 @@ export async function authRegister(params: interfaces.AuthRegisterRequestDto): P
  */
 export async function authLogin(params: interfaces.AuthLoginRequestDto): Promise<interfaces.AuthLoginResponseDto> {
     const response: interfaces.AuthLoginResponseDto = await notesFetch({
-        url: "/auth/login", 
+        url: "/api/auth/login", 
         method: "POST",
         
         body: params.body,
@@ -234,7 +234,7 @@ export async function authLogin(params: interfaces.AuthLoginRequestDto): Promise
  */
 export async function authLogout(params: interfaces.AuthLogoutRequestDto): Promise<interfaces.AuthLogoutResponseDto> {
     const response: interfaces.AuthLogoutResponseDto = await notesFetch({
-        url: "/auth/logout", 
+        url: "/api/auth/logout", 
         method: "POST",
         
         body: params.body,
@@ -250,7 +250,7 @@ export async function authLogout(params: interfaces.AuthLogoutRequestDto): Promi
  */
 export async function getMyself(params: interfaces.GetMyselfRequestDto): Promise<interfaces.GetMyselfResponseDto> {
     const response: interfaces.GetMyselfResponseDto = await notesFetch({
-        url: "/users/self", 
+        url: "/api/users/self", 
         method: "GET",
         
         
@@ -266,7 +266,7 @@ export async function getMyself(params: interfaces.GetMyselfRequestDto): Promise
  */
 export async function getUser(params: interfaces.GetUserRequestDto): Promise<interfaces.GetUserResponseDto> {
     const response: interfaces.GetUserResponseDto = await notesFetch({
-        url: "/users/{id}", 
+        url: "/api/users/{id}", 
         method: "GET",
         pathParams: params.pathParams,
         

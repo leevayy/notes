@@ -1,6 +1,6 @@
 const isProduction = window.location.hostname === 'notes.leevayy.ru' || window.location.hostname === 'leevayy.ru';
 
-const baseUrl = isProduction ? 'https://leevayy.ru/api' : 'http://localhost:8000';
+const baseUrl = isProduction ? 'https://leevayy.ru' : 'http://localhost:8000';
 
 export type ErrorWrapper<TError> =
     | TError
