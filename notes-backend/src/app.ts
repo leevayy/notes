@@ -20,7 +20,14 @@ app.use(async (ctx, next) => {
 
 app.use(
     oakCors({
-        origin: ['http://localhost:5173', 'http://localhost:4173'],
+        origin: [
+            'http://localhost:5173',
+            'http://localhost:4173',
+            'http://leevayy.ru',
+            'https://leevayy.ru',
+            'http://notes.leevayy.ru',
+            'https://notes.leevayy.ru',
+        ],
         credentials: true,
     }),
 );
