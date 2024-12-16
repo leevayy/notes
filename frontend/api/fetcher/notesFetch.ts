@@ -1,4 +1,4 @@
-const isProduction = window.location.hostname === 'notes.leevayy.ru';
+const isProduction = window.location.hostname === 'notes.leevayy.ru' || window.location.hostname === 'leevayy.ru';
 
 const baseUrl = isProduction ? 'https://notes.leevayy.ru/api' : 'http://localhost:8000';
 
